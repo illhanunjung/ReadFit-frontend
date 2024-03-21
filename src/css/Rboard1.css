@@ -1,0 +1,284 @@
+@font-face {
+  font-family: 'SBAggroB';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/SBAggroB.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
+/* Rboard.css */
+#content {
+  max-width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding-bottom: 80px;
+}
+
+.main-container {
+  max-width: 100%;
+  background-color: #000;
+  color: #fff;
+  padding-top: 20px;
+}
+
+.brand-small {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.download-buttons a {
+  display: inline-block;
+  margin-right: 20px;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+}
+
+.download-buttons a:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.se {
+  background-image: url('../../public/img/back123.png'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 101%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'SBAggroB';
+}
+
+.se_con {
+  font-size: 100px; /* 폰트 사이즈 조정 */
+  color: black;
+  text-align: left;
+  font-weight: bold;
+  max-width: 80%;
+}
+
+.review-container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.review {
+  font-size: 140px; /* '리뷰' 폰트 사이즈 */
+  margin-right: 10px; /* '리뷰'와 옆의 텍스트 사이 간격 */
+}
+
+.side-texts {
+  display: flex; /* 가로로 배치 */
+}
+
+.choice {
+  position: relative;
+  font-size: 20px; /* 글씨 크기 설정 */
+  margin-right: 4px; /* 각 단어 사이 간격 */
+  margin-top: 33px; /* myshoes 아래로 내려주는 간격 */
+  right: 189px;
+}
+
+.my-shoes, .choice {
+  font-size: 30px; /* 글씨 크기 줄임 */
+  margin-right: 4px; /* 각 단어 사이 간격 */
+}
+
+.data {
+  font-size: 140px; /* '데이터로' 폰트 사이즈 */
+
+}
+
+.th-row {
+  color: black;
+  background-color: white;
+  padding: 20px 0;
+  font-family: 'SBAggroB';
+}
+
+.th-col {
+  text-align: center;
+  padding: 20px;
+  position: relative;
+}
+
+.number-circle {
+  font-size: 3rem;
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+  border-radius: 50%;
+  background-color: black;
+  color: white;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.th-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.last{
+  background-color: black;
+  border: none;
+}
+
+.last:hover{
+  background-color:black;
+}
+
+
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+  .number-circle {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+  }
+
+  .th-content h2 {
+    font-size: 2rem;
+  }
+
+  .th-content p {
+    font-size: 1.2rem;
+  }
+}
+
+
+
+
+
+
+/* 반응형 디자인 조정 */
+
+@media (max-width: 908px) {
+  .review {
+    font-size: 80px;
+  }
+
+  .data {
+    font-size: 80px;
+  }
+
+
+}
+
+
+@media (max-width: 671px) {
+  .review {
+    font-size: 60px;
+  }
+
+  .data {
+    font-size: 60px;
+  }
+
+
+}
+
+@media (max-width: 623px) {
+  .review {
+    font-size: 45px;
+  }
+
+  .data {
+    font-size: 45px;
+  }
+
+
+}
+
+@media (max-width: 588px) {
+  .review {
+    font-size: 40px;
+  }
+
+  .data {
+    font-size: 40px;
+  }
+
+  .my-shoes, .choice {
+    font-size: 20px; /* 글씨 크기 줄임 */
+    margin-right: 4px; /* 각 단어 사이 간격 */
+  }
+
+  .choice{
+    display: inline-block;
+    position: relative;
+    left:-130px;
+  }
+
+
+
+ 
+}
+
+@media (max-width: 477px) {
+  .brand-small {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 442px) {
+  .review {
+    font-size: 35px;
+  }
+
+  .data {
+    font-size: 35px;
+  }
+
+  .my-shoes, .choice {
+    font-size: 20px; /* 글씨 크기 줄임 */
+    margin-right: 4px; /* 각 단어 사이 간격 */
+  }
+
+  .choice{
+    display: inline-block;
+    position: relative;
+    left:-130px;
+  }
+}
+
+@media (max-width: 430px) {
+  .review {
+    font-size: 30px;
+  }
+
+  .data {
+    font-size: 30px;
+  }
+
+  @media (max-width: 418px) {
+    .review {
+      font-size: 30px;
+    }
+  
+    .data {
+      font-size: 30px;
+    }
+
+
+
+
+
+}
+
+
+}

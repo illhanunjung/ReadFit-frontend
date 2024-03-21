@@ -1,0 +1,18 @@
+.list{
+    background-color:white;
+    color: black;
+}
+
+.list:hover{
+    background-color: aqua;
+}
+
+#content {
+    max-width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding-bottom: 80px;
+  }
