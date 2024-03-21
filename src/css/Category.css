@@ -1,0 +1,93 @@
+body {
+    font-family: sans-serif;
+    width: auto;
+    align-self: stretch;
+  }
+  
+  #content {
+    max-width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding-bottom: 80px;
+  }
+  
+  .Ctble{
+    width: 100%;
+  }
+
+  th,
+  td {
+    padding: 0.5rem;
+    border: 1px solid white;
+    width: 400px;
+  
+    /* filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25)); */
+    /* box-shadow: inset 0 0 10px red, 0 0 10px blue; */
+  }
+  
+ 
+
+  .sentiment-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .sentiment-indicator .positive {
+    background-color: #90ee90; /* 긍정: 연한 초록색 */
+    color: green; /* 긍정 텍스트 색상 */
+  }
+  
+  .sentiment-indicator .negative {
+    background-color: #ff726f; /* 부정: 연한 빨간색 */
+    color: red; /* 부정 텍스트 색상 */
+  }
+  
+  /* 원형 마커의 공통 스타일 */
+  .sentiment-indicator .marker {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  
+  /* 긍정 마커의 배경 색상 */
+  .sentiment-indicator .positive .marker {
+    background-color: green;
+  }
+  
+  /* 부정 마커의 배경 색상 */
+  .sentiment-indicator .negative .marker {
+    background-color: red;
+  }
+  
+  /* 긍정과 부정 값을 감싸는 div의 스타일 */
+  .sentiment-value {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    padding: 5px;
+    margin: 2px 0;
+    border-radius: 20px; /* 둥근 모서리 */
+  }
+
+  .center-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* 셀의 높이를 채우도록 설정 */
+  }
+  
+.Ctitle{
+  background-color:lightblue;
+}
+
+
+  
+  

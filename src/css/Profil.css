@@ -1,0 +1,308 @@
+#content {
+  max-width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  padding-bottom: 80px;
+}
+
+.h1 {
+  margin: 0;
+  height: 53px;
+  position: relative;
+  font-size: inherit;
+  font-weight: 600;
+  font-family: inherit;
+  display: inline-block;
+}
+.decision-node {
+  align-self: stretch;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 var(--padding-xl) 0 210px;
+}
+.h11 {
+  margin: 0;
+  height: 43px;
+  position: relative;
+  font-size: inherit;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  font-family: inherit;
+  display: inline-block;
+  white-space: nowrap;
+}
+.constant-node {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0 31px;
+}
+.sequence-node-icon {
+  height: 149px;
+  width: 158px;
+  position: relative;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.h12 {
+  margin: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+.div,
+.h12 {
+  height: 43px;
+  position: relative;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  display: inline-block;
+}
+.else-node,
+.error-node,
+.if-node,
+.merge-node,
+.output-node {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.else-node {
+  align-self: stretch;
+  flex-direction: column;
+  gap: 30px 0;
+}
+.error-node,
+.if-node,
+.merge-node,
+.output-node {
+  max-width: 100%;
+}
+.if-node {
+  flex: 1;
+  flex-direction: column;
+  padding: var(--padding-2xs) 0 0;
+  box-sizing: border-box;
+  min-width: 266px;
+}
+.error-node,
+.merge-node,
+.output-node {
+  align-self: stretch;
+}
+.error-node {
+  flex-direction: row;
+  gap: 0 32px;
+}
+.merge-node,
+.output-node {
+  flex-direction: column;
+}
+.merge-node {
+  gap: 24px 0;
+  font-size: var(--font-size-16xl);
+  color: var(--color-darkslategray-100);
+  font-family: var(--font-montserrat);
+}
+.output-node {
+  gap: 48px 0;
+}
+.div1 {
+  position: relative;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.switch-node {
+  flex: 1;
+  border-radius: var(--br-31xl);
+  background-color: rgba(218, 218, 218, 0.53);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 17px var(--padding-xl);
+  box-sizing: border-box;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.input-node,
+.until-node {
+  display: flex;
+  justify-content: flex-start;
+  max-width: 100%;
+}
+.until-node {
+  width: 413px;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0 29px;
+  box-sizing: border-box;
+  font-size: var(--font-size-13xl);
+  color: rgba(0, 0, 0, 0.76);
+  font-family: var(--font-montserrat);
+}
+.input-node {
+  width: 599px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 45px 0;
+}
+.condition-split {
+  width: 1291px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 100%;
+}
+.div2 {
+  position: relative;
+  font-weight: 300;
+  white-space: nowrap;
+}
+.disconnect-node {
+  border-radius: var(--br-31xl);
+  background-color: #477c73;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--padding-sm) 32.5px var(--padding-sm) 42px;
+  white-space: nowrap;
+}
+.connect-node,
+.default-node,
+.macbook-pro-16-9,
+.series-node {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.connect-node {
+  flex-direction: row;
+  padding: 0 18px 30px;
+}
+.default-node,
+.macbook-pro-16-9,
+.series-node {
+  flex-direction: column;
+}
+.series-node {
+  width: 1555px;
+  max-width: 100%;
+}
+.default-node,
+.macbook-pro-16-9 {
+  text-align: left;
+  font-family: var(--font-roboto);
+}
+.default-node {
+  align-self: stretch;
+  max-width: 100%;
+  font-size: var(--font-size-13xl);
+  color: #dec089;
+}
+.macbook-pro-16-9 {
+  width: 100%;
+  position: relative;
+  border-radius: var(--br-31xl);
+  background-color: var(--background-default);
+  overflow: hidden;
+  padding: 206px 65px 72px 194px;
+  box-sizing: border-box;
+  gap: 67px 0;
+  letter-spacing: normal;
+  font-size: 45px;
+  color: rgba(0, 0, 0, 0.65);
+  padding: 15px;
+}
+
+.left-align-button {
+  position: relative;
+  right: 47%;
+}
+
+.custom-button {
+  background-color: #477c73; /* 원하는 색상 코드로 변경 */
+  border-color: #477c73; /* 원하는 색상 코드로 변경 */
+  /* 필요한 경우 다른 스타일 속성 추가 */
+}
+
+@media screen and (max-width: 1225px) {
+  .macbook-pro-16-9 {
+    gap: 33px 0;
+    padding-left: 97px;
+    padding-right: 32px;
+    box-sizing: border-box;
+  }
+}
+@media screen and (max-width: 850px) {
+  .h1 {
+    font-size: 36px;
+  }
+  .h11 {
+    font-size: var(--font-size-3xl);
+  }
+  .sequence-node-icon {
+    flex: 1;
+  }
+  .div,
+  .h12 {
+    font-size: var(--font-size-9xl);
+  }
+  .error-node {
+    flex-wrap: wrap;
+    gap: 0 16px;
+  }
+  .output-node {
+    gap: 24px 0;
+  }
+  .input-node {
+    gap: 22px 0;
+  }
+  .macbook-pro-16-9 {
+    gap: 17px 0;
+    padding-left: 48px;
+    box-sizing: border-box;
+  }
+}
+@media screen and (max-width: 450px) {
+  .h1 {
+    font-size: 27px;
+  }
+  .decision-node {
+    padding-left: var(--padding-xl);
+    box-sizing: border-box;
+  }
+  .div,
+  .h11,
+  .h12 {
+    font-size: var(--font-size-2xl);
+  }
+  .disconnect-node {
+    padding-left: var(--padding-xl);
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 768px) {
+  .h1,
+  .h11 {
+    font-size: 16px; /* 모바일 화면에서 폰트 사이즈 줄이기 */
+  }
+}
+@media (min-width: 769px) and (max-width: 992px) {
+  /* 태블릿 화면을 위한 스타일 */
+}
+@media (min-width: 576px) {
+  /* sm 브레이크포인트부터 적용 */
+  .form-group {
+    max-width: 500px; /* 혹은 원하는 최대 너비 */
+    margin-left: auto; /* 중앙 정렬을 위함 */
+    margin-right: auto; /* 중앙 정렬을 위함 */
+  }
+}

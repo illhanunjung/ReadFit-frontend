@@ -1,0 +1,146 @@
+
+/* .image-11-icon {
+  height: 191px;
+  width: 225px;
+  position: relative;
+  object-fit: cover;
+}
+.value {
+  margin: 0;
+  height: 50px;
+  flex: 1;
+  position: relative;
+  font-size: inherit;
+  letter-spacing: 0.1px;
+  line-height: 20px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-yeon-sung);
+  font-size: 40px;
+}
+.cells,
+.text {
+  display: flex;
+  justify-content: flex-start;
+}
+.text {
+  align-self: stretch;
+  flex-direction: row;
+  align-items: center;
+}
+.cells {
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px var(--padding-5xs);
+  box-sizing: border-box;
+  min-width: 442px;
+  z-index: 1;
+  text-align: center;
+  font-size: 55px;
+  color: #1e5b51;
+  font-family: var(--font-yeon-sung);
+}
+
+
+
+.mainsearch{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0 8px;
+} */
+
+.image-11-icon {
+  height: 191px;
+  width: 225px;
+  position: relative;
+  object-fit: cover;
+}
+
+
+.value{
+  font-family: var(--font-yeon-sung);
+  font-size : 65px;
+  color: #1e5b51;
+}
+
+
+
+
+
+  @import url("https://fonts.googleapis.com/css2?family=Yeon+Sung:wght@400&display=swap");
+
+  :root {
+    /* fonts */
+    --font-yeon-sung: "Yeon Sung";
+  }
+
+
+  @media (max-width: 1747px) {
+    .value{
+      font-size: 60px;
+    }
+}
+
+@media (max-width: 1620px) {
+  .value{
+    font-size: 55px;
+  }
+}
+
+@media (max-width: 1492px) {
+  .value{
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 1364px) {
+  .value{
+    font-size: 45px;
+  }
+}
+
+@media (max-width: 1237px) {
+  .value{
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 1109px) {
+  .value{
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 991px) {
+  .value{
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 910px) {
+  .value{
+    font-size: 45px;
+  }
+}
+
+@media (max-width: 825px) {
+  .value{
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 412px) {
+  .value{
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 328px) {
+  .value{
+    font-size: 25px;
+  }
+}
