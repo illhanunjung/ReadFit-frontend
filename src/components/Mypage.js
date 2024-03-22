@@ -172,6 +172,15 @@ const Mypage = () => {
                             onChange={(e) => setNewPassword(e.target.value)}
                           />
                         </Form.Group>
+                        <Form.Group controlId="newPassword">
+                          <Form.Label>비밀번호 확인</Form.Label>
+                          <Form.Control
+                            type="password"
+                            placeholder="새로운 비밀번호를 입력하세요"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </Form.Group>
                         {/* '입력 완료' 버튼을 추가합니다. */}
                         <Button className="custom-button" type="submit">
                           입력 완료
