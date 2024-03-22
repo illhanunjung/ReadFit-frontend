@@ -18,7 +18,7 @@
 }
 
 .nav-link:hover {
-    color: yellow; /* 호버 시 노란색으로 변경 */
+    color: white; /* 호버 시 노란색으로 변경 */
 }
 
 .navbar-toggler-icon {
@@ -39,7 +39,18 @@
     transform: translateX(-50%); /* 중앙 정렬을 위한 변환 */
 }
 
-/* 호버 시 하이라이트 바 표시 및 색상 변경 */
+.nav-link::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; /* 초기 상태에서 너비를 0으로 설정 */
+    height: 3px; /* 바의 높이 */
+    background-color: transparent; /* 바의 색상을 투명으로 설정 */
+    transition: width 0.3s ease, background-color 0.3s ease; /* 너비와 색상 변경시의 전환 효과 */
+}
+
 .nav-link:hover::after {
     width: 100%; /* 너비를 100%로 확장하여 하이라이트 바 표시 */
     background-color: white; /* 하이라이트 바의 색상을 흰색으로 변경 */

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   useTable,
   useGlobalFilter,
@@ -6,44 +5,54 @@ import {
   usePagination,
 } from "react-table";
 import Search from "./Search";
-import { Button, ButtonGroup, Form } from "react-bootstrap";
-import "../css/Category.css";
+import "../css/board.css";
+import { Button, ButtonGroup, Form, Row, Col } from "react-bootstrap";
 
 function CategoryTable({ columns, data }) {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+    rows,
     prepareRow,
+    setGlobalFilter,
     page,
+    nextPage,
+    previousPage,
     canPreviousPage,
     canNextPage,
     pageOptions,
-    pageCount,
+    state,
     gotoPage,
-    nextPage,
-    previousPage,
+    pageCount,
     setPageSize,
-    state: { pageIndex, pageSize },
-    setGlobalFilter,
   } = useTable(
     { columns, data, initialState: { pageIndex: 0, pageSize: 5 } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
-  // 필요한 CSS 클래스나 스타일을 여기서 정의하거나 CSS 파일에서 불러와서 사용하세요.
+
+  const { pageIndex, pageSize } = state;
+
+  // 검색어를 받아 글로벌 필터로 설정하는 함수
+  const handleSearch = (query) => {
+    console.log("검색어:", query); // 검색어 출력으로 확인
+    setGlobalFilter(query); // 글로벌 필터 설정
+  };
 
   return (
     <>
       <div className="all">
-        {/* <Search onSubmit={setGlobalFilter} /> */}
-        <table {...getTableProps()} className="Ctble">
-          <thead className="Ctitle">
+        <table {...getTableProps()} className="custom-table">
+          <thead className="header1">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    style={{ width: column.width }}
+                  >
                     {column.render("Header")}
                   </th>
                 ))}
@@ -64,19 +73,21 @@ function CategoryTable({ columns, data }) {
           </tbody>
         </table>
       </div>
-      <div className="pagination-container d-flex justify-content-between align-items-center mt-3">
+      <div className="pagination-container d-flex justify-content-center align-items-center mt-3">
         <ButtonGroup>
           <Button
             onClick={() => gotoPage(0)}
             disabled={!canPreviousPage}
-            className="pre1"
+            variant="primary"
+            size="sm"
           >
             {"<<"}
           </Button>
           <Button
             onClick={() => previousPage()}
             disabled={!canPreviousPage}
-            className="pre"
+            variant="primary"
+            size="sm"
           >
             이전
           </Button>
@@ -84,6 +95,8 @@ function CategoryTable({ columns, data }) {
             <Button
               key={index}
               onClick={() => gotoPage(index)}
+              variant="light"
+              size="sm"
               active={pageIndex === index}
             >
               {index + 1}
@@ -92,33 +105,22 @@ function CategoryTable({ columns, data }) {
           <Button
             onClick={() => nextPage()}
             disabled={!canNextPage}
-            className="next"
+            variant="primary"
+            size="sm"
           >
             다음
           </Button>
           <Button
             onClick={() => gotoPage(pageCount - 1)}
             disabled={!canNextPage}
-            className="next1"
+            variant="primary"
+            size="sm"
           >
             {">>"}
           </Button>
         </ButtonGroup>
-        <div className="pagination-info d-flex align-items-center ml-3 show">
-          <Form.Label className="mr-3">Show:</Form.Label>
-          <Form.Select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            className="drop"
-          >
-            {[2, 5, 15].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize}
-              </option>
-            ))}
-          </Form.Select>
-        </div>
       </div>
+      <Search onSubmit={handleSearch} />
     </>
   );
 }

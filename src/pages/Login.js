@@ -74,7 +74,7 @@ function Login() {
               <div className="text-center mb-4">
                 {/* 로고 이미지 */}
                 <img
-                  src="/img/r1.png"
+                  src="/img/logo1.png"
                   alt="Read Fit 로고"
                   className="login-logo"
                 />
@@ -134,12 +134,12 @@ function Login() {
 
                 <br />
               </div>
-
+              {/* 
               <Button variant="warning" className="kakao-login-button mb-3">
                 <FontAwesomeIcon icon={faCommentDots} className="me-2" />{" "}
-                {/* 카카오 아이콘 */}
-                카카오로 간편 가입
-              </Button>
+       
+                카카오 로그인
+              </Button> */}
             </Col>
           </Row>
         </Container>

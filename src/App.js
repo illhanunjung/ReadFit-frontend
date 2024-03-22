@@ -1,5 +1,4 @@
 import React from "react";
-import Home from "./pages/Home";
 import Board from "./pages/Board";
 import Login from "./pages/Login";
 import Rboard from "./pages/Rboard";
@@ -14,7 +13,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Category from "./pages/Cateogory";
 import Dpage from "./pages/Dpage";
-
+import Writepost from "./pages/Writepost";
 function App() {
   return (
     <div className="App">
@@ -24,11 +23,11 @@ function App() {
         <Route path="Board" element={<Board />} />
         <Route path="Category" element={<Category />} />
         <Route path="Rboard" element={<Rboard />} />
-        {/* <Route path="/boards/:review_idx" element={<DetailPage />} /> */}
         <Route path="Register" element={<Register />} />
         <Route path="Main2" element={<Main2 />} />
         <Route path="FindIDPW" element={<FindIDPW />} />
-        <Route path="profil" element={<Profil />} />
+        <Route path="Profil" element={<Profil />} />
+        <Route path="Writepost" element={<Writepost />} />
 
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>

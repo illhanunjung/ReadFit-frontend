@@ -1,0 +1,35 @@
+.Mamenu2{
+    background-color: rgb(117, 117, 252);
+    color: white;
+    width: 100%;
+    border-radius: 25px;
+}
+
+.m2tilte{
+    font-size: 35px;
+}
+
+.t2{
+    text-align: left;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.t2btn{
+    float: right; /* 오른쪽으로 플로팅 */
+    margin-right: 0; /* 오른쪽 여백 없음 */
+    border: none; /* 테두리 제거 */
+    max-width: 115px;
+    background-color: black;
+    border-radius: 45px;
+}
+
+
+@media only screen and (max-width: 992px) { /* 중간 화면 크기 (md) */
+    .t2btn {
+      float: none; /* 플로팅 제거 */
+      display: block; /* 블록으로 전환 */
+      max-width: 100%; /* 너비를 100%로 조정 */
+      margin-top: 10px; /* 위 여백 추가 */
+    }
+  }

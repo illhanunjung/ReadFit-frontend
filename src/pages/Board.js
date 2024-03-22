@@ -38,7 +38,7 @@ function Board() {
         </Row>
         <Row className="mt-3 mt-md-0">
           <Col xs={12} className="d-flex justify-content-end">
-            <Link to="/write">
+            <Link to="/Writepost">
               <Button id="write-button" variant="primary">
                 글쓰기
               </Button>

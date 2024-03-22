@@ -142,7 +142,7 @@ function Register() {
             <Col md={6} className="login-form-container">
               <div className="text-center mb-4">
                 <img
-                  src="/img/r1.png"
+                  src="/img/logo1.png"
                   alt="Read Fit 로고"
                   className="login-logo"
                 />
@@ -229,5 +229,5 @@ function Register() {
     </div>
   );
 }
-//test
+
 export default Register;

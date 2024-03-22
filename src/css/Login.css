@@ -35,8 +35,21 @@
 
 /* Button customization */
 .btn-success {
-  background-color: #5cb85c;
-  border-color: #4cae4c;
+  background-color: black;
+  border-color: black;
+ 
+}
+
+.btn-success:active {
+  background-color: black;
+  border-color: black;
+ 
+}
+
+.btn-success:hover {
+  background-color: black;
+  border-color: black;
+ 
 }
 
 .btn-warning {
@@ -52,7 +65,7 @@
 
 /* Adjust font size for FontAwesome icons if necessary */
 .fa-icon {
-  font-size: 1.25rem;
+  font-size: 1rem; /* 아이콘 크기를 조정 */
 }
 
 .input-group {
@@ -61,19 +74,23 @@
 }
 
 /* 인풋 필드와 아이콘 사이의 경계선을 없애고 전체적인 스타일링을 일치시킵니다. */
+
 .input-group-text,
 .form-control {
+  height: 40px; /* 아이콘과 인풋 필드의 높이를 동일하게 설정 */
+  font-size: 16px; /* 폰트 사이즈도 일치시킵니다 */
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
 }
 
-/* 아이콘을 입력 필드 안에 넣기 위한 스타일 */
 .input-group-text {
+  display: flex; /* flexbox를 사용하여 내부 요소를 정렬 */
+  align-items: center; /* 세로 축 중앙 정렬 */
+  justify-content: center; /* 가로 축 중앙 정렬 */
   border-right: none; /* 오른쪽 테두리 제거 */
   background-color: #e9ecef;
-  border-radius: 0.25rem 0 0 0.25rem; /* 왼쪽 상단과 하단에만 둥근 모서리 적용 */
+  border-radius: 0.25rem 0 0 0.25rem;
 }
-
 /* 입력 필드 오른쪽 둥근 모서리 */
 .form-control {
   border-radius: 0 0.25rem 0.25rem 0; /* 오른쪽 상단과 하단에만 둥근 모서리 적용 */
@@ -100,3 +117,13 @@
 .nlink{
   color: black;
 }
+
+.nlink:hover{
+  color: black;
+}
+
+
+/* 인풋 그룹 내부의 아이콘을 인풋 필드와 동일한 높이와 중앙 정렬로 맞춥니다. */
+
+
+/* FontAwesome 아이콘에 대한 추가적인 스타일 조정 */

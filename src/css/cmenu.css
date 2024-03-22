@@ -1,18 +1,70 @@
-.list{
-    background-color:white;
-    color: black;
+.cmenu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  padding: 10px;
 }
 
-.list:hover{
-    background-color: aqua;
+.main-category {
+  margin: 5px 10px;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  position: relative;
+  cursor: pointer;
+  background-color: rgb(73, 73, 73);
+  border-radius: 5px;
+  color: white;
 }
 
-#content {
-    max-width: 80%;
-    margin: 0 auto;
-    display: flex;
+.sub-category-list {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 5px;
+  width: 100%;
+  color: black;
+}
+
+.sub-category {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.sub-category:last-child {
+  border-bottom: none;
+}
+
+.main-category:hover .sub-category-list,
+.main-category.active .sub-category-list {
+  display: block; /* 호버 또는 클릭으로 활성화된 경우 보여줍니다. */
+}
+
+@media (max-width: 790px) {
+  .cmenu {
     flex-direction: column;
     align-items: center;
-    box-sizing: border-box;
-    padding-bottom: 80px;
   }
+
+  .main-category {
+    width: 100%;
+  }
+
+  .sub-category-list {
+    position: static;
+    width: 100%;
+    display: none; /* Initially hidden on mobile */
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .main-category.active .sub-category-list {
+    display: block; /* Show on click */
+  }
+}

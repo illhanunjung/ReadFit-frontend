@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import Navs from "../components/Nav";
-import "../css/Rboard1.css"; // 스타일시트 경로 확인
+import "../css/Mains1.css"; // 스타일시트 경로 확인
+import { Link } from "react-router-dom";
 
-const Main3 = () => {
+const Main1 = () => {
+  const topRef = useRef(null); // 페이지 최상단을 가리키는 참조 생성
+
+  const scrollToTop = () => {
+    topRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div>
+    <div ref={topRef}>
       <Navs />
       <Container fluid className="main-container">
         <Row className="align-items-center justify-content-center">
           <Col lg={6} className="text-center">
             <div className="brand-small">신발 리뷰 분석 서비스</div>
             <div className="download-buttons mt-4">
-              <a href="#" className="download-link me-3">
+              <Link to="/main2" className="download-link me-3">
                 시작하기
-              </a>
+              </Link>
             </div>
           </Col>
           <Col lg={6}>
@@ -64,12 +71,14 @@ const Main3 = () => {
         </Row>
         <Row>
           <Col lg={12}>
-            <Image src="/img/123.png" fluid />
+            <Image src="/img/back4444.png" fluid />
           </Col>
         </Row>
         <Row>
           <Col lg={12}>
-            <Button className="last">View more</Button>
+            <Button className="last" onClick={scrollToTop}>
+              맨 위로
+            </Button>
           </Col>
         </Row>
       </Container>
@@ -77,4 +86,4 @@ const Main3 = () => {
   );
 };
 
-export default Main3;
+export default Main1;

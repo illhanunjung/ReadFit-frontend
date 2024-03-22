@@ -9,6 +9,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/Mcard.css"; // 스타일 시트 경로를 확인하세요.
+import { Link } from "react-router-dom";
 
 const Mcard = ({ image, likes, dislikes, views, description, reviews }) => {
   const [reviewIndex, setReviewIndex] = useState(0);
@@ -32,12 +33,14 @@ const Mcard = ({ image, likes, dislikes, views, description, reviews }) => {
   return (
     <Col xs={12} sm={6} md={4} lg={3} xl={2} className="mb-4 custom-col">
       <Card className="product-card">
-        <Card.Img
-          variant="top"
-          src={image}
-          alt="Product"
-          className="product-image"
-        />
+        <Link to="/rboard">
+          <Card.Img
+            variant="top"
+            src={image}
+            alt="Product"
+            className="product-image"
+          />
+        </Link>
         <Card.Body className="card-body-custom">
           <Card.Title className="product-title">{description}</Card.Title>
           <div

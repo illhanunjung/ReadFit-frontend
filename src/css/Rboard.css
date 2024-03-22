@@ -15,8 +15,74 @@
     
   }
 
-  .sbt{
+  .ct2{
+    text-align: left;
     font-size: 25px;
+    font-weight: bold;
+    
   }
 
+  .sbt{
+    font-size: 20px;
+  }
 
+/*키워드 및 카테고리 css 시작  */
+  .status-card {
+    transition: transform 0.2s; /* 애니메이션 효과 */
+  }
+  
+  .status-card:hover {
+    transform: scale(1.05); /* 마우스 호버 시 카드 확대 */
+    box-shadow: 0 0 10px rgba(0,0,0,0.15); /* 그림자 효과 */
+  }
+  
+  .active-card {
+    background-color:black; /* 활성 카드 배경색 변경 */
+    color: white; /* 활성 카드 텍스트 색상 변경 */
+  }
+  
+  .active-card .card-text {
+    color: white;
+  }
+
+/*키워드 및 카테고리 css 시작  */
+
+
+  /* 함께좋은 상품 css 시작 */
+  .inventory-card {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border: none;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .inventory-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .inventory-card-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    min-height: 4rem; /* Set a minimum height for the text box */
+  }
+  
+  .inventory-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .inventory-image {
+    height: 200px; /* Set a fixed height for images */
+    object-fit: cover;
+    border-bottom: 1px solid #ddd; /* Optional: add a border below the image */
+  }
+  
+  @media (max-width: 768px) {
+    .inventory-image {
+      height: 150px; /* Adjust the height for mobile */
+    }
+  }
+
+    /* 함께좋은 상품 css 끝 */

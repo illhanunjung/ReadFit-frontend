@@ -94,7 +94,7 @@ function Navs() {
                 <Nav.Link onClick={() => navigateTo("/Login")}>로그인</Nav.Link>
                 {/* 회원가입 페이지로 연결하는 링크 */}
                 <Nav.Link onClick={() => navigateTo("/Register")}>
-                  회원가입
+                  마이페이지
                 </Nav.Link>
               </>
             )}

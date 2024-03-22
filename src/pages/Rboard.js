@@ -5,8 +5,7 @@ import "../css/Rboard.css";
 import Navs from "../components/Nav";
 import Balrating from "../components/Balrating";
 import ExReview from "../components/ReviewCard";
-import InventoryList from "../components/InventoryItem";
-import BoardMenu from "../components/BoardMenu";
+import InventoryList from "../components/InventoryList";
 
 // Chart.js 설정 (차트 데이터와 옵션)
 const chartData = {
@@ -50,12 +49,6 @@ const options = {
 };
 
 const Rboard = () => {
-  const inventoryItems = [
-    { image: "/img/Readfit.png", name: "상품 A" },
-    { image: "/path/to/your/image2.png", name: "상품 B" },
-    { image: "/path/to/your/image3.png", name: "상품 C" },
-    // ... 추가 상품 ...
-  ];
   return (
     <div>
       <Navs />
@@ -65,24 +58,27 @@ const Rboard = () => {
 
           <Row className="mb-4">
             <Col lg={6}>
-              <p className="ct1">운동화</p>
+              <p className="ct2">
+                아디다스 운동화 듀라모 알파바운스 가벼운 발볼넓은 운동화 러닝화
+                남자 남여공용
+              </p>
               <Card className="mb-4">
                 <Row noGutters>
                   <Col md={4} className="text-center">
-                    <Image src="/img/r1.png" fluid rounded />
+                    <Image src="/img/sh2.jpg" fluid rounded />
                   </Col>
                   <Col md={8}>
                     <Card.Body className="sbt">
-                      <Card.Title>상품명</Card.Title>
                       <Card.Text>
-                        아디다스 운동화 듀라모 알파바운스 가벼운 발볼넓은 운동화
-                        러닝화 남자 남여공용
+                        <p>남성패션 남성 신발 운동화 런닝화</p>
+                        <p>가격 100,000 원</p>
+                        <p>❤(4.8) 🗨 (833)</p>
                       </Card.Text>
                     </Card.Body>
                   </Col>
                 </Row>
               </Card>
-              <BoardMenu />
+
               <ExReview />
             </Col>
             {/* 리뷰 현황 */}
@@ -90,51 +86,31 @@ const Rboard = () => {
               <p className="ct1">월별 리뷰 현황</p>
               <Card className="mb-4">
                 <Card.Body>
-                  <Card.Title>리뷰 현황</Card.Title>
                   <div style={{ height: "300px" }}>
                     <Bar data={chartData} options={options} />
                   </div>
                 </Card.Body>
               </Card>
-
-              {/* 별점 정보 */}
-              <Balrating />
-
-              {/* 옵션 */}
-              <Card>
-                <Card.Body>
-                  <Card.Title>옵션</Card.Title>
-                  사이즈
-                  <ProgressBar now={60} label={`60%`} className="mb-2" />
-                  착용감
-                  <ProgressBar now={30} label={`30%`} className="mb-2" />
-                </Card.Body>
-              </Card>
-
               {/* 유사제품 */}
               <Row className="mb-4">
-                <Col md={12}>
-                  <Card>
-                    <Card.Header>유사 제품</Card.Header>
-                    <Card.Body>
-                      {inventoryItems.map((item, index) => (
-                        <Row key={index} className="align-items-center mb-2">
-                          <Col xs={2}>
-                            <Image
-                              src={item.image}
-                              thumbnail
-                              style={{ width: "50px", height: "50px" }}
-                            />
-                          </Col>
-                          <Col xs={10}>
-                            <span>{item.name}</span>
-                          </Col>
-                        </Row>
-                      ))}
-                    </Card.Body>
-                  </Card>
-                </Col>
+                <p className="ct1">함께보면 좋은 상품</p>
+
+                <InventoryList />
               </Row>
+
+              {/* 별점 정보 */}
+              <p className="ct1">별점 비율</p>
+              <Balrating />
+              <br></br>
+              {/* 옵션 */}
+              <p className="ct1">키워드 긍/부정</p>
+              <Card>
+                <Card.Body>
+                  <div style={{ height: "300px" }}>
+                    <Bar data={chartData} options={options} />
+                  </div>
+                </Card.Body>
+              </Card>
             </Col>
           </Row>
         </Container>

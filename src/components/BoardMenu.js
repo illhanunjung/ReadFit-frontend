@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faHeart,
-  faBell,
-  faCheckCircle,
-  faCircle,
-} from "@fortawesome/free-solid-svg-icons";
 
 const StatusCard = ({ icon, title, isActive, onClick }) => {
   return (
@@ -37,17 +30,27 @@ const BoardMenu = () => {
   const handleCardClick = (index) => {
     setActiveIndex(index);
   };
-
-  const iconList = [faCircle, faHeart, faBell, faCheckCircle, faBell];
-  const titleList = ["디자인", "색상", "착용감", "가격", "품질"];
+  const titleList = [
+    "디자인",
+    "치수/사이즈",
+    "착화감",
+    "내구성",
+    "사용성",
+    "기능성",
+    "가격",
+    "무게",
+    "소재",
+    "색상",
+    "품질",
+    "굽",
+  ];
 
   return (
     <Container>
       <Row className="justify-content-center">
-        {iconList.map((icon, index) => (
+        {titleList.map((index) => (
           <Col xs={3} key={index}>
             <StatusCard
-              icon={icon}
               title={titleList[index]}
               isActive={activeIndex === index}
               onClick={() => handleCardClick(index)}
