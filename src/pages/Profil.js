@@ -2,7 +2,7 @@ import Nav from "../components/Nav";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/Profil.css";
-import MacBookPro16 from "../components/MacBookPro16";
+import Mypage from "../components/Mypage";
 import CategoryTable from "../components/CategoryTable";
 import { Link } from "react-router-dom";
 import { Button, Form, InputGroup } from "react-bootstrap";
@@ -28,7 +28,7 @@ function Profil() {
     <div className="Board">
       <Nav />
       <div id="content">
-        <MacBookPro16 />
+        <Mypage />
 
         <Button variant="success" className="left-align-button custom-button">
           관심상품

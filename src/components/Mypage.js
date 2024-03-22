@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import EllipseImage from "../components/ellipse-126@2x.png";
 import axios from "axios";
 
-const MacBookPro16 = () => {
+const Mypage = () => {
   const [member, setMember] = useState({ mem_name: "", mem_birthdate: "" });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
 
@@ -133,4 +133,4 @@ const MacBookPro16 = () => {
     </Container>
   );
 };
-export default MacBookPro16;
+export default Mypage;
