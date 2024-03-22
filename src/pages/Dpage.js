@@ -1,32 +1,52 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
 import {
-  Container,
-  Image,
-  Card,
-  Button,
-  Form,
-  FormControl,
-  ListGroup,
-  Row,
-  Col,
-} from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart,
   faCommentDots,
   faEdit,
+  faHeart,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import "../css/Dpage.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  FormControl,
+  Image,
+  ListGroup,
+  Row,
+} from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import Navs from "../components/Nav";
+import "../css/Dpage.css";
 
 function Dpage() {
   const { board_seq } = useParams();
   const [boardDetail, setBoardDetail] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
+
+
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     await axios.post(
+  //       `http://localhost:8081/api/boards/${board_seq}/comments`,
+  //       { content: commentText }
+  //     );
+  //     // 댓글 작성 후 새로고침 없이 댓글 목록 갱신
+  //     const commentsResponse = await axios.get(
+  //       `http://localhost:8081/api/boards/${board_seq}/comments`
+  //     );
+  //     setComments(commentsResponse.data);
+  //     setCommentText(""); // 입력 폼 초기화
+  //   } catch (error) {
+  //     console.error("댓글을 작성하는 도중 오류 발생:", error);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchBoardDetail = async () => {
@@ -41,27 +61,33 @@ function Dpage() {
         console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
       }
     };
-
     fetchBoardDetail();
   }, [board_seq]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post(
-        `http://localhost:8081/api/boards/${board_seq}/comments`,
-        { content: commentText }
-      );
-      // 댓글 작성 후 새로고침 없이 댓글 목록 갱신
-      const commentsResponse = await axios.get(
-        `http://localhost:8081/api/boards/${board_seq}/comments`
-      );
-      setComments(commentsResponse.data);
-      setCommentText(""); // 입력 폼 초기화
-    } catch (error) {
-      console.error("댓글을 작성하는 도중 오류 발생:", error);
-    }
+          alert("댓글 등록 버튼이 클릭되었습니다.");
+          alert(board_seq);
+          alert(commentText);
+          const response = await axios.post(`/api/boards/${board_seq}/comments`, {
+              board_seq: board_seq,
+              comment: commentText,
+              loginMember : "tester1"
+          });
+          if (response.status === 200) {
+              alert("댓글 등록이 완료되었습니다.");
+          } else {
+              alert("댓글 등록이 실패하였습니다.");
+              window.location.href = "Dpage";
+          }
+      } catch (error) {
+          console.error("댓글 작성 중 오류 발생:", error);
+      }
   };
+
+
+
 
   // 현재 로그인한 사용자를 나타내는 상태 (실제 애플리케이션에서는 서버에서 받아옵니다.)
   const [currentUser, setCurrentUser] = useState("tester1");
@@ -157,20 +183,6 @@ function Dpage() {
             {comments.length}
           </Card.Footer>
 
-          <Form className="my-3 d-flex" onSubmit={handleSubmit}>
-            <FormControl
-              as="textarea"
-              placeholder="댓글을 입력해주세요"
-              className="flex-grow-1 mr-2"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              style={{ resize: "none" }}
-            />
-            <Button variant="primary" type="submit" id="submitCommentButton">
-              등록
-            </Button>
-          </Form>
-
           <ListGroup className="comments-list">
             {comments.map((comment) => (
               <ListGroup.Item key={comment.id} className="comment-item">
@@ -199,13 +211,13 @@ function Dpage() {
                             variant="outline-secondary"
                             className="action-button"
                           >
-                            <FontAwesomeIcon icon={faEdit} />
+                          <FontAwesomeIcon icon={faEdit} />
                           </Button>
                           <Button
                             variant="outline-danger"
                             className="action-button"
                           >
-                            <FontAwesomeIcon icon={faTrash} />
+                          <FontAwesomeIcon icon={faTrash} />
                           </Button>
                         </>
                       )}
@@ -215,6 +227,20 @@ function Dpage() {
               </ListGroup.Item>
             ))}
           </ListGroup>
+
+          <Form className="my-3 d-flex" onSubmit={handleSubmit}>
+            <FormControl
+              as="textarea"
+              placeholder="댓글을 입력해주세요"
+              className="flex-grow-1 mr-2"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+              style={{ resize: "none" }}
+            />
+            <Button variant="primary" type="submit" id="submitCommentButton">
+              등록
+            </Button>
+          </Form>
         </Card>
       </Container>
     </div>

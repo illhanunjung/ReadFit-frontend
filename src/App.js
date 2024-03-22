@@ -3,17 +3,18 @@ import Board from "./pages/Board";
 import Login from "./pages/Login";
 import Rboard from "./pages/Rboard";
 
-import Register from "./pages/Register";
+import FindIDPW from "./pages/FindIDPW";
 import Main1 from "./pages/Main1";
 import Main2 from "./pages/Main2";
-import FindIDPW from "./pages/FindIDPW";
 import Profil from "./pages/Profil";
+import Register from "./pages/Register";
 
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Category from "./pages/Cateogory";
 import Dpage from "./pages/Dpage";
 import Writepost from "./pages/Writepost";
+
 function App() {
   return (
     <div className="App">

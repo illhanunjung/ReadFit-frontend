@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Paginated from "../components/Paginated";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Container, Row, Col, Button } from "react-bootstrap";
 import Nav from "../components/Nav";
+import Paginated from "../components/Paginated";
 import "../css/board.css";
 
 function formatDate(dateString) {
