@@ -1,47 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import EllipseImage from "../components/ellipse-126@2x.png";
+import mypage from "../components/mypage.png";
 import axios from "axios";
 
 const Mypage = () => {
-  const [member, setMember] = useState({ mem_name: "", mem_birthdate: "" });
+  const [member, setMember] = useState({
+    mem_name: "",
+    mem_phone: "",
+    mem_pw: "",
+  });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
+  const [password, setPassword] = useState(""); // 비밀번호 상태
 
   useEffect(() => {
     const fetchMemberData = async () => {
       try {
         // 세션 스토리지에서 'loginMember' 값을 가져옵니다.
         let storedMember = window.sessionStorage.getItem("mem_name");
+        let storedMember2 = window.sessionStorage.getItem("mem_phone");
+
         console.log(storedMember);
-
+        console.log(storedMember2);
         if (storedMember != null) {
-          setMember({ mem_name: storedMember, mem_phone: "" });
+          setMember({ mem_name: storedMember, mem_phone: storedMember2 });
         }
-
-        // try {
-        //   // 세션에 'loginMember' 값이 있는 경우 파싱하여 사용합니다.
-        //   loginMember = storedMember ? JSON.parse(storedMember) : null;
-        //   console.log(loginMember);
-        // } catch (parseError) {
-        //   console.error('세션 스토리지의 "loginMember" 파싱 에러:', parseError);
-        // }
-
-        // if (loginMember && loginMember.mb_id) {
-        //   // 사용자의 프로필 정보를 가져오는 요청
-        //   const profileResponse = await axios.get(
-        //     "http://localhost:8081/api/profile",
-        //     {
-        //       withCredentials: true,
-        //     } // URL을 올바르게 수정합니다.
-        //   );
-        //   setMember({
-        //     mb_name: profileResponse.data.mb_name, // 응답에서 mb_name 값을 가져옵니다.
-        //     mb_birthdate: profileResponse.data.mb_birthdate, // 응답에서 mb_birthdate 값을 가져옵니다.
-        //   });
-        // } else {
-        //   console.log(storedMember);
-        //   console.log("로그인한 회원 정보가 세션 스토리지에 없습니다.");
-        // }
       } catch (error) {
         console.error("회원 데이터를 가져오는데 에러가 발생했습니다:", error);
       }
@@ -51,12 +34,18 @@ const Mypage = () => {
   }, []);
   // 입력 필드가 변경될 때 호출될 함수
   const handleNameChange = (e) => {
-    setMember({ ...member, mb_name: e.target.value });
+    setMember({ ...member, mem_name: e.target.value });
   };
 
   const handleBirthdateChange = (e) => {
-    setMember({ ...member, mb_birthdate: e.target.value });
+    setMember({ ...member, mem_phone: e.target.value });
   };
+
+  // 비밀번호 변경 입력란 변경 시 호출될 함수
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
   // 프로필 이미지 선택 시 핸들러
   const handleFileChange = (e) => {
     setProfileImage(e.target.files[0]); // 선택된 파일 상태에 저장
@@ -89,43 +78,70 @@ const Mypage = () => {
       console.error("프로필 이미지 업로드에 실패했습니다:", error);
     }
   };
+
   return (
     <Container>
       <Row className="justify-content-center my-5">
         <Col xs={12} sm={8} md={6} lg={4}>
           <div className="text-center">
-            <h1>마이페이지</h1>
+            <h1 className="text">MY FIT</h1>
             <img
               src={EllipseImage}
               className="rounded-circle mb-3"
               alt="프로필 이미지"
               style={{ width: "150px", height: "150px" }}
             />
-            {/* 이미지 업로드를 위한 Form 추가 */}
-            <Form onSubmit={handleProfileUpdate}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="이름"
-                  value={member.mb_name || ""}
-                  onChange={handleNameChange} // 이름 변경을 위한 핸들러
-                />
+            <Form>
+              {/* 이름 필드 */}
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={8}>
+                  <Form.Control
+                    type="text"
+                    placeholder="이름"
+                    value={member.mem_name || ""}
+                    onChange={handleNameChange}
+                  />
+                </Col>
+                <Col sm={4}>
+                  <Button className="custom-button" type="submit">
+                    이름 변경
+                  </Button>
+                </Col>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="text"
-                  placeholder="생년월일"
-                  value={member.mb_birthdate || ""}
-                  onChange={handleBirthdateChange}
-                />
+
+              {/* 휴대전화 필드 */}
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={8}>
+                  <Form.Control
+                    type="text"
+                    placeholder="휴대전화"
+                    value={member.mem_phone || ""}
+                    onChange={handleBirthdateChange}
+                  />
+                </Col>
+                <Col sm={4}>
+                  <Button className="custom-button" type="submit">
+                    휴대전화 변경
+                  </Button>
+                </Col>
               </Form.Group>
-              {/* 이미지를 선택하는 input 필드 */}
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Control type="file" onChange={handleFileChange} />
+
+              {/* 비밀번호 필드 */}
+              <Form.Group as={Row} className="mb-3">
+                <Col sm={8}>
+                  <Form.Control
+                    type="password"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={handlePasswordChange} // 비밀번호 변경 시 호출될 함수 설정
+                  />
+                </Col>
+                <Col sm={4}>
+                  <Button className="custom-button" type="submit">
+                    비밀번호 변경
+                  </Button>
+                </Col>
               </Form.Group>
-              <Button className="custom-button" type="submit">
-                정보 변경 완료
-              </Button>
             </Form>
           </div>
         </Col>

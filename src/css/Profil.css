@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "JalnanGothic";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_231029@1.1/JalnanGothic.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 #content {
   max-width: 80%;
   margin: 0 auto;
@@ -228,8 +236,8 @@
 }
 
 .custom-button {
-  background-color: #477c73; /* 원하는 색상 코드로 변경 */
-  border-color: #477c73; /* 원하는 색상 코드로 변경 */
+  background-color: black; /* 원하는 색상 코드로 변경 */
+  border-color: black; /* 원하는 색상 코드로 변경 */
   /* 필요한 경우 다른 스타일 속성 추가 */
 }
 
@@ -305,4 +313,11 @@
     margin-left: auto; /* 중앙 정렬을 위함 */
     margin-right: auto; /* 중앙 정렬을 위함 */
   }
+}
+.h1_2 {
+  text-align: left;
+}
+
+.text {
+  font-family: "JalnanGothic";
 }
