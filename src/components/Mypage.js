@@ -157,7 +157,7 @@ const Mypage = () => {
                 </Col>
               </Form.Group>
 
-              {/* 비밀번호 필드 */}
+              {/* 휴대전화 필드 */}
               <Form.Group as={Row} className="mb-3">
                 <Col sm={6}>
                   <Button
