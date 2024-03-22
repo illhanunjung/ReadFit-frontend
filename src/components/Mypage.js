@@ -37,7 +37,7 @@ const Mypage = () => {
     setMember({ ...member, mem_name: e.target.value });
   };
 
-  const handleBirthdateChange = (e) => {
+  const handlePhoneChange = (e) => {
     setMember({ ...member, mem_phone: e.target.value });
   };
 
@@ -116,7 +116,7 @@ const Mypage = () => {
                     type="text"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
-                    onChange={handleBirthdateChange}
+                    onChange={handlePhoneChange}
                   />
                 </Col>
                 <Col sm={4}>
