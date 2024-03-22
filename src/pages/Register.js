@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faLock,
-  faCommentDots,
-  faCheckCircle,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faLock, faCommentDots, faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "../css/Login.css";
 import Navs from "../components/Nav";
@@ -28,74 +22,84 @@ function Register() {
   const [isVerified, setIsVerified] = useState(false);
   const [isIdValid, setIsIdValid] = useState(false);
 
+  useEffect(() => {
+    // Kakao SDK 초기화
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.init('a7136d2423bac4c6ee019af8674d9c2c'); // REST API 키
+    }
+  }, []);
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    if (name === "mem_id") {
-      if (value.length < 8) {
-        alert("아이디는 8글자 이상이어야 합니다.");
-        setIsIdValid(false);
-      } else {
-        setIsIdValid(true);
-      }
+  
+ const handleCheckDuplicate = async () => {
+    if (formData.mem_id.length < 8) {
+      alert('아이디는 8글자 이상이어야 합니다.');
+      setIsIdValid(false);
+      return;
     }
-  };
-
-  const handleCheckDuplicate = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8081/api/members/checkId/${formData.mem_id}`
-      );
-      const isDuplicate = response.data;
-      setIsIdValid(!isDuplicate);
-      if (isDuplicate) {
-        alert("이미 사용 중인 아이디입니다.");
+      const response = await axios.get(`http://localhost:8081/members/checkId/${formData.mem_id}`);
+      setIsIdValid(!response.data);
+      if(response.data) {
+        alert('이미 사용 중인 아이디입니다.');
+      } else {
+        alert('사용 가능한 아이디입니다.');
       }
     } catch (error) {
       console.error("아이디 중복 확인 실패:", error);
     }
   };
-
-  useEffect(() => {
-    // Kakao SDK 초기화
-    if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init("87fcd32c8be8f2ad27893ee83bb4bcc5"); // 앱 키
-    }
-  }, []);
-
+  
+  
   const handleKakaoLogin = () => {
-    if (window.Kakao && window.Kakao.isInitialized()) {
-      window.Kakao.Auth.login({
-        scope: "name, birthday, birthyear, profile_image_url, phone_number",
-        success: (authObj) => {
-          setIsVerified(true);
-          window.Kakao.API.request({
-            url: "/v2/user/me",
-            success: (res) => {
-              const kakao_account = res.kakao_account;
-              setFormData({
-                ...formData,
-                mem_name: kakao_account.profile.nickname,
-                mem_birth: `${kakao_account.birthyear}+${kakao_account.birthday}`,
-                mem_profile: kakao_account.profile.profile_image_url,
-                mem_phone: kakao_account.phone_number,
-              });
-            },
-            fail: (error) => {
-              console.log(error);
-            },
-          });
-        },
-        fail: (err) => {
-          console.error(err);
-        },
-      });
+    window.Kakao.Auth.login({
+      scope: 'name, birthday, birthyear, profile_image_url, phone_number',
+      success: (authObj) => {
+        window.Kakao.API.request({
+          url: '/v2/user/me',
+          success: (res) => {
+            const kakao_account = res.kakao_account;
+            setFormData({
+              ...formData, 
+              mem_name: kakao_account.name, 
+              mem_birth: `${kakao_account.birthyear}-${kakao_account.birthday}`,
+              mem_profile: kakao_account.profile_image,
+              mem_phone: kakao_account.phone_number
+            });
+            setIsVerified(true);
+          },
+          fail: (error) => {
+            console.error(error);
+          }
+        });
+      },
+      fail: (err) => {
+        console.error(err);
+      }
+    });
+  };
+
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+  
+    // 아이디 입력 필드에서 포커스를 잃었을 때의 로직
+    if (name === "mem_id") {
+      if (value.length < 8) {
+        // 아이디가 8글자 미만이라면 사용자에게 경고
+        alert('아이디는 8글자 이상이어야 합니다.');
+        setIsIdValid(false); // 아이디 유효성 상태를 무효로 설정
+      } else {
+        // 아이디가 8글자 이상이라면 유효성 검사를 통과
+        setIsIdValid(true); // 아이디 유효성 상태를 유효로 설정
+      }
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,27 +116,42 @@ function Register() {
       return;
     }
 
-    // 회원가입 요청
-    try {
-      const response = await axios.post(
-        "http://localhost:8081/api/members/register",
-        {
-          mem_id: formData.mem_id,
-          mem_pw: formData.mem_pw,
-          mem_name: formData.mem_name,
-          mem_birth: formData.mem_birth,
-          mem_profile: formData.mem_profile,
-          mem_phone: formData.mem_phone,
-        }
-      );
-      console.log("회원가입 성공:", response.data);
-      navigate("/login"); // 회원가입 성공 후 로그인 페이지로 리디렉션
-    } catch (error) {
-      console.error("회원가입 실패:", error.response.data);
-      alert("회원가입에 실패하였습니다: " + error.response.data.message);
-    }
-  };
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      if (!isVerified) {
+        alert('본인인증을 해주세요.');
+        return;
+      }
+      if (!isIdValid) {
+        alert('아이디 중복 확인을 해주세요.');
+        return;
+      }
+      if (formData.mem_pw !== formData.confirm_pw) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return;
+      };
 
+
+
+  // 회원가입 요청
+  try {
+    const response = await axios.post('http://localhost:8081/members/register', {
+      mem_id: formData.mem_id,
+      mem_pw: formData.mem_pw,
+      mem_name: formData.mem_name,
+      mem_birth: formData.mem_birth,
+      mem_profile: formData.mem_profile,
+      mem_phone: formData.mem_phone
+    });
+    console.log("회원가입 성공:", response.data);
+    navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
+  } catch (error) {
+    console.error("회원가입 실패:", error.response.data);
+    alert('회원가입에 실패하였습니다: ' + error.response.data.message);
+  }
+};
+
+  
   return (
     <div>
       <Navs />
