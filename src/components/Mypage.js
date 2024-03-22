@@ -8,7 +8,6 @@ const Mypage = () => {
   const [member, setMember] = useState({
     mem_name: "",
     mem_phone: "",
-    mem_pw: "",
   });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
@@ -94,7 +93,7 @@ const Mypage = () => {
             <Form>
               {/* 이름 필드 */}
               <Form.Group as={Row} className="mb-3">
-                <Col sm={8}>
+                <Col sm={12}>
                   <Form.Control
                     type="text"
                     placeholder="이름"
@@ -102,16 +101,11 @@ const Mypage = () => {
                     onChange={handleNameChange}
                   />
                 </Col>
-                <Col sm={4}>
-                  <Button className="custom-button" type="submit">
-                    이름 변경
-                  </Button>
-                </Col>
               </Form.Group>
 
               {/* 휴대전화 필드 */}
               <Form.Group as={Row} className="mb-3">
-                <Col sm={8}>
+                <Col sm={12}>
                   <Form.Control
                     type="text"
                     placeholder="휴대전화"
@@ -119,24 +113,16 @@ const Mypage = () => {
                     onChange={handlePhoneChange}
                   />
                 </Col>
-                <Col sm={4}>
-                  <Button className="custom-button" type="submit">
-                    휴대전화 변경
-                  </Button>
-                </Col>
               </Form.Group>
 
               {/* 비밀번호 필드 */}
               <Form.Group as={Row} className="mb-3">
-                <Col sm={8}>
-                  <Form.Control
-                    type="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={handlePasswordChange} // 비밀번호 변경 시 호출될 함수 설정
-                  />
+                <Col sm={6}>
+                  <Button className="custom-button" type="submit">
+                    휴대전화 변경
+                  </Button>
                 </Col>
-                <Col sm={4}>
+                <Col sm={6}>
                   <Button className="custom-button" type="submit">
                     비밀번호 변경
                   </Button>
