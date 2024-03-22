@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
 import EllipseImage from "../components/ellipse-126@2x.png";
-import mypage from "../components/mypage.png";
+import CameraIcon from "../components/CameraIcon.png";
 import axios from "axios";
 
 const Mypage = () => {
@@ -11,6 +11,13 @@ const Mypage = () => {
   });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
+  const fileInputRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const [newPassword, setNewPassword] = useState(""); // 새 비밀번호를 위한 상태
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -36,18 +43,23 @@ const Mypage = () => {
     setMember({ ...member, mem_name: e.target.value });
   };
 
-  const handleBirthdateChange = (e) => {
+  const handlePhoneChange = (e) => {
     setMember({ ...member, mem_phone: e.target.value });
   };
 
   // 비밀번호 변경 입력란 변경 시 호출될 함수
-  const handlePasswordChange = (e) => {
+  const handleChangePassword = (e) => {
     setPassword(e.target.value);
+    handleCloseModal();
   };
 
   // 프로필 이미지 선택 시 핸들러
   const handleFileChange = (e) => {
-    setProfileImage(e.target.files[0]); // 선택된 파일 상태에 저장
+    const file = e.target.files[0];
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+      // TODO: 파일을 서버에 업로드 처리 로직
+    }
   };
 
   // 프로필 업데이트 제출 핸들러
@@ -56,7 +68,7 @@ const Mypage = () => {
 
     // FormData 객체를 생성하고 파일을 추가
     const formData = new FormData();
-    formData.append("image", profileImage); // 'image' 키에 파일 추가
+    formData.append("image", e.target.image.files[0]); // 'image' 키에 파일 추가
 
     try {
       // 서버에 프로필 이미지 업로드 요청
@@ -84,12 +96,34 @@ const Mypage = () => {
         <Col xs={12} sm={8} md={6} lg={4}>
           <div className="text-center">
             <h1 className="text">MY FIT</h1>
+            <div
+              style={{ position: "relative", display: "inline-block" }}
+            ></div>
             <img
               src={EllipseImage}
               className="rounded-circle mb-3"
               alt="프로필 이미지"
               style={{ width: "150px", height: "150px" }}
             />
+            <img
+              src={CameraIcon}
+              onClick={() => fileInputRef.current.click()}
+              style={{
+                position: "relative",
+                right: "28px",
+                bottom: "-35px",
+                width: "50px",
+                height: "32px",
+              }}
+            />
+            <Form.Control
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              accept="image/*"
+            />
+
             <Form>
               {/* 이름 필드 */}
               <Form.Group as={Row} className="mb-3">
@@ -110,7 +144,7 @@ const Mypage = () => {
                     type="text"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
-                    onChange={handleBirthdateChange}
+                    onChange={handlePhoneChange}
                   />
                 </Col>
               </Form.Group>
@@ -123,7 +157,38 @@ const Mypage = () => {
                   </Button>
                 </Col>
                 <Col sm={6}>
-                  <Button className="custom-button" type="submit">
+                  <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>비밀번호 변경</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form onSubmit={handleChangePassword}>
+                        <Form.Group controlId="newPassword">
+                          <Form.Label>새 비밀번호</Form.Label>
+                          <Form.Control
+                            type="password"
+                            placeholder="새로운 비밀번호를 입력하세요"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Form.Group controlId="newPassword">
+                          <Form.Label>비밀번호 확인</Form.Label>
+                          <Form.Control
+                            type="password"
+                            placeholder="새로운 비밀번호를 입력하세요"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </Form.Group>
+                        {/* '입력 완료' 버튼을 추가합니다. */}
+                        <Button className="custom-button" type="submit">
+                          입력 완료
+                        </Button>
+                      </Form>
+                    </Modal.Body>
+                  </Modal>
+                  <Button className="custom-button" onClick={handleShowModal}>
                     비밀번호 변경
                   </Button>
                 </Col>
