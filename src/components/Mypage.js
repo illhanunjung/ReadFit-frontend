@@ -11,13 +11,18 @@ const Mypage = () => {
   });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
+
   const fileInputRef = useRef(null);
+
+  // 비밀번호 모달
   const [showModal, setShowModal] = useState(false);
+  const [phoneModal, setphoneModal] = useState(false);
 
-  const [newPassword, setNewPassword] = useState(""); // 새 비밀번호를 위한 상태
+  const [newPassword, setNewPassword] = useState("");
+  const [newPassword1, setNewPassword1] = useState("");
 
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  // 새 비밀번호를 위한 상태
+  const [newPhone, setNewPhone] = useState("");
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -47,10 +52,13 @@ const Mypage = () => {
     setMember({ ...member, mem_phone: e.target.value });
   };
 
+  const handlePhoneChangeSubmit = (e) => {
+    setNewPhone(e.target.value);
+  };
+
   // 비밀번호 변경 입력란 변경 시 호출될 함수
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
-    handleCloseModal();
   };
 
   // 프로필 이미지 선택 시 핸들러
@@ -110,7 +118,7 @@ const Mypage = () => {
               onClick={() => fileInputRef.current.click()}
               style={{
                 position: "relative",
-                right: "28px",
+                right: "3px",
                 bottom: "-35px",
                 width: "50px",
                 height: "32px",
@@ -152,12 +160,40 @@ const Mypage = () => {
               {/* 비밀번호 필드 */}
               <Form.Group as={Row} className="mb-3">
                 <Col sm={6}>
-                  <Button className="custom-button" type="submit">
+                  <Button
+                    onClick={() => setphoneModal(true)}
+                    className="custom-button"
+                  >
                     휴대전화 변경
                   </Button>
                 </Col>
                 <Col sm={6}>
-                  <Modal show={showModal} onHide={handleCloseModal}>
+                  {/* 휴대전화 변경 모달 */}
+                  <Modal show={phoneModal} onHide={() => setphoneModal(false)}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>휴대전화 변경</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {/* 휴대전화 변경 폼 */}
+                      <Form onSubmit={handlePhoneChangeSubmit}>
+                        <Form.Group controlId="formNewPhone">
+                          <Form.Label>새로운 휴대전화</Form.Label>
+                          <Form.Control
+                            type="text"
+                            placeholder="새로운 휴대전화를 입력하세요"
+                            value={newPhone}
+                            onChange={(e) => setNewPhone(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Button className="custom-button">취소</Button>
+                        <Button className="custom-button" type="submit">
+                          확인
+                        </Button>
+                      </Form>
+                    </Modal.Body>
+                  </Modal>
+
+                  <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>
                       <Modal.Title>비밀번호 변경</Modal.Title>
                     </Modal.Header>
@@ -176,9 +212,9 @@ const Mypage = () => {
                           <Form.Label>비밀번호 확인</Form.Label>
                           <Form.Control
                             type="password"
-                            placeholder="새로운 비밀번호를 입력하세요"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="비밀번호 확인하세요"
+                            value={newPassword1}
+                            onChange={(e) => setNewPassword1(e.target.value)}
                           />
                         </Form.Group>
                         {/* '입력 완료' 버튼을 추가합니다. */}
@@ -188,7 +224,10 @@ const Mypage = () => {
                       </Form>
                     </Modal.Body>
                   </Modal>
-                  <Button className="custom-button" onClick={handleShowModal}>
+                  <Button
+                    onClick={() => setShowModal(true)}
+                    className="custom-button"
+                  >
                     비밀번호 변경
                   </Button>
                 </Col>
