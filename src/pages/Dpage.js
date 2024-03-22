@@ -27,26 +27,7 @@ function Dpage() {
   const [boardDetail, setBoardDetail] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
-
-
-
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-  //   try {
-  //     await axios.post(
-  //       `http://localhost:8081/api/boards/${board_seq}/comments`,
-  //       { content: commentText }
-  //     );
-  //     // 댓글 작성 후 새로고침 없이 댓글 목록 갱신
-  //     const commentsResponse = await axios.get(
-  //       `http://localhost:8081/api/boards/${board_seq}/comments`
-  //     );
-  //     setComments(commentsResponse.data);
-  //     setCommentText(""); // 입력 폼 초기화
-  //   } catch (error) {
-  //     console.error("댓글을 작성하는 도중 오류 발생:", error);
-  //   }
-  // };
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태
 
   useEffect(() => {
     const fetchBoardDetail = async () => {
@@ -85,9 +66,6 @@ function Dpage() {
           console.error("댓글 작성 중 오류 발생:", error);
       }
   };
-
-
-
 
   // 현재 로그인한 사용자를 나타내는 상태 (실제 애플리케이션에서는 서버에서 받아옵니다.)
   const [currentUser, setCurrentUser] = useState("tester1");
