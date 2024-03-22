@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, Modal } from "react-bootstrap";
 import EllipseImage from "../components/ellipse-126@2x.png";
 import CameraIcon from "../components/CameraIcon.png";
 import axios from "axios";
@@ -12,6 +12,12 @@ const Mypage = () => {
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
   const fileInputRef = useRef(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const [newPassword, setNewPassword] = useState(""); // 새 비밀번호를 위한 상태
+
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -42,8 +48,9 @@ const Mypage = () => {
   };
 
   // 비밀번호 변경 입력란 변경 시 호출될 함수
-  const handlePasswordChange = (e) => {
+  const handleChangePassword = (e) => {
     setPassword(e.target.value);
+    handleCloseModal();
   };
 
   // 프로필 이미지 선택 시 핸들러
@@ -150,7 +157,29 @@ const Mypage = () => {
                   </Button>
                 </Col>
                 <Col sm={6}>
-                  <Button className="custom-button" type="submit">
+                  <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                      <Modal.Title>비밀번호 변경</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form onSubmit={handleChangePassword}>
+                        <Form.Group controlId="newPassword">
+                          <Form.Label>새 비밀번호</Form.Label>
+                          <Form.Control
+                            type="password"
+                            placeholder="새로운 비밀번호를 입력하세요"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </Form.Group>
+                        {/* '입력 완료' 버튼을 추가합니다. */}
+                        <Button className="custom-button" type="submit">
+                          입력 완료
+                        </Button>
+                      </Form>
+                    </Modal.Body>
+                  </Modal>
+                  <Button className="custom-button" onClick={handleShowModal}>
                     비밀번호 변경
                   </Button>
                 </Col>
