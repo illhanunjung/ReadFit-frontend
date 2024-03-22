@@ -12,6 +12,7 @@ function formatDate(dateString) {
 }
 
 function Board() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태
   const [boards, setBoards] = useState([]);
 
   useEffect(() => {
@@ -27,6 +28,21 @@ function Board() {
     fetchBoards();
   }, []);
 
+  useEffect(() => {
+    fetch("/api/checkLoginStatus")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.isLoggedIn) {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
   return (
     <div>
       <Nav />
@@ -38,11 +54,23 @@ function Board() {
         </Row>
         <Row className="mt-3 mt-md-0">
           <Col xs={12} className="d-flex justify-content-end">
-            <Link to="/Writepost">
-              <Button id="write-button" variant="primary">
-                글쓰기
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link to="/Writepost">
+                  <Button id="write-button" variant="primary">
+                    글쓰기
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/Login">
+                  <Button id="write-button" variant="primary">
+                    글쓰기
+                  </Button>
+                </Link>
+              </>
+            )}
           </Col>
         </Row>
         <Paginated
