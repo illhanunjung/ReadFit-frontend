@@ -47,7 +47,7 @@ const WritePost = () => {
       <Navs />
       <Container className="writePostContainer">
         <h2 className="mt-5">커뮤니티 글쓰기</h2>
-        <Row className="justify-content-center mt-5">
+        <Row className="justify-content-center mt-3">
           <Col xs={12} md={8} lg={12}>
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
@@ -63,7 +63,8 @@ const WritePost = () => {
                 {/* <Form.Label>내용</Form.Label> */}
                 <Form.Control
                   as="textarea"
-                  rows={15}
+                  style={{ height: "30rem" }}
+                  // rows={8}
                   placeholder="내용을 입력하세요."
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
