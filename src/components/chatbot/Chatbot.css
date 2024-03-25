@@ -1,0 +1,68 @@
+.chatbot-container {
+    max-width: 350px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    
+  }
+  
+  .chatbot-navigation {
+    display: flex;
+    justify-content: space-around;
+    background: black;
+    padding: 10px 0;
+  }
+  
+  .chatbot-navigation button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .chatbot-navigation button:hover {
+    background-color: #6c757d;
+  }
+
+.rsc-input-container {
+  display: none ;
+}
+
+.rsc-footer{
+    display: none;
+}
+
+
+.inquiry-button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    margin-top: 20px; /* 버튼 위치 조정 */
+    width: 100%;
+    bottom: 35px;
+    
+  }
+
+  .rsc-header{
+    display: none;
+  }
+
+  .dBkBFi{
+    border-radius: 0px;
+  }
+
+
+  /* 문의하기버튼 상자 */
+  .jKLQUD{
+    background-color: black;
+    height: 45px;
+  } 
