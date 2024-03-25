@@ -119,12 +119,34 @@ const Mypage = () => {
       });
   };
 
+  // 카메라 아이콘 클릭 핸들러
+  const handleCameraIconClick = () => {
+    fileInputRef.current.click();
+  };
+
   // 프로필 이미지 선택 시 핸들러
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setProfileImage(URL.createObjectURL(file));
       // TODO: 파일을 서버에 업로드 처리 로직
+      const formData = new FormData();
+      formData.append("image", file);
+
+      axios
+        .post("/api/profile/upload", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          // 서버에서 프로필 이미지 URL을 받았다고 가정합니다.
+          // 이 URL을 프로필 사진 상태로 설정합니다.
+          setProfileImage(response.data.imageUrl);
+        })
+        .catch((error) => {
+          console.error("프로필 이미지 업로드에 실패했습니다:", error);
+        });
     }
   };
 
@@ -208,7 +230,7 @@ const Mypage = () => {
               <Form.Group as={Row} className="mb-3">
                 <Col sm={12}>
                   <Form.Control
-                    type="text"
+                    type="tnumber"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
                     onChange={handlePhoneChange}
@@ -239,7 +261,7 @@ const Mypage = () => {
                         <Form.Group controlId="formNewPhone">
                           <Form.Label>새로운 휴대전화</Form.Label>
                           <Form.Control
-                            type="text"
+                            type="number"
                             placeholder="새로운 휴대전화를 입력하세요"
                             value={newPhone}
                             onChange={(e) => setNewPhone(e.target.value)}
