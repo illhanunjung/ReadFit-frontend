@@ -42,7 +42,8 @@ function Login() {
           console.log(data);
 
           if (data != null) {
-            window.sessionStorage.setItem("mem_id", data.id);
+            window.sessionStorage.setItem("mem_name", data.name);
+            window.sessionStorage.setItem("mem_phone", data.phone);
             // 로그인 성공
             // 예: 리다이렉트 or 다른 작업 수행
             window.location.href = "../";
