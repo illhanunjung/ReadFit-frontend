@@ -28,11 +28,12 @@ const Mypage = () => {
     const fetchMemberData = async () => {
       try {
         // 세션 스토리지에서 'loginMember' 값을 가져옵니다.
+
         let storedMember = window.sessionStorage.getItem("mem_name");
         let storedMember2 = window.sessionStorage.getItem("mem_phone");
 
         console.log(storedMember);
-        console.log(storedMember2);
+
         if (storedMember != null) {
           setMember({ mem_name: storedMember, mem_phone: storedMember2 });
         }
@@ -43,6 +44,7 @@ const Mypage = () => {
 
     fetchMemberData();
   }, []);
+
   // 입력 필드가 변경될 때 호출될 함수
   const handleNameChange = (e) => {
     setMember({ ...member, mem_name: e.target.value });
@@ -141,6 +143,7 @@ const Mypage = () => {
                     placeholder="이름"
                     value={member.mem_name || ""}
                     onChange={handleNameChange}
+                    readOnly
                   />
                 </Col>
               </Form.Group>
@@ -153,6 +156,7 @@ const Mypage = () => {
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
                     onChange={handlePhoneChange}
+                    readOnly
                   />
                 </Col>
               </Form.Group>
