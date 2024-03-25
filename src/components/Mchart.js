@@ -74,7 +74,7 @@ const Mchart = () => {
           <Card className="mb-4">
             <Card.Body>
               <Card.Title>리뷰 현황</Card.Title>
-              <div style={{ height: "300px" }}>
+              <div style={{ height: "500px" }}>
                 <Bar data={chartData} options={options} />
               </div>
             </Card.Body>

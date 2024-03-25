@@ -79,7 +79,7 @@ const FindIDPW = () => {
           <Col lg={6} md={8} sm={10} xs={12} className="text-center">
             {/* 로고 이미지 */}
             <img
-              src="/img/r1.png"
+              src="/img/logo1.png"
               alt="Read Fit 로고"
               className="login-logo mb-4"
             />

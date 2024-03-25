@@ -18,7 +18,7 @@ function Category() {
       board_content: "내용 1",
       board_at: "2021-01-01",
       board_re_at: "2021-01-02",
-      board_img: "/img/r1.png",
+      board_img: "/img/sh1.jpg",
       isFavorited: false, // 관심 상품 상태 추가
     },
     {
@@ -28,13 +28,13 @@ function Category() {
       board_content: "내용 1",
       board_at: "2022-01-01",
       board_re_at: "2022-01-02",
-      board_img: "/img/logo1.png",
+      board_img: "/img/sh2.jpg",
       isFavorited: false, // 관심 상품 상태 추가
     },
     // 추가 게시글 데이터...
   ];
 
-  const [boards, setBoards] = useState([initialBoards]);
+  const [boards, setBoards] = useState(initialBoards);
 
   const positivePercentage = 70;
   const negativePercentage = 30;
@@ -86,7 +86,7 @@ function Category() {
           <Col lg={12}>
             <CategoryTable
               data={boards.map((board, cnt) => ({
-                productImage: "/img/r1.png/",
+                productImage: boards[cnt].board_img,
                 idx: boards[cnt].board_seq,
                 id: boards[cnt].mem_id,
                 title: (
@@ -126,7 +126,7 @@ function Category() {
                   accessor: "productImage",
                   Cell: ({ value }) => (
                     <img
-                      src={"/img/r1.png"}
+                      src={value}
                       alt="product"
                       style={{ width: "90px", height: "auto" }}
                     />
