@@ -54,13 +54,69 @@ const Mypage = () => {
     setMember({ ...member, mem_phone: e.target.value });
   };
 
+  // 핸드폰 변경 처리를 위한 함수
   const handlePhoneChangeSubmit = (e) => {
-    setNewPhone(e.target.value);
+    e.preventDefault();
+    if (!newPhone.trim()) {
+      alert("새 전화번호가 입력되지 않았습니다.");
+      return;
+    }
+
+    axios
+      .post(
+        "/api/updatePhone",
+        { newPhone },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        window.sessionStorage.setItem("mem_phone", newPhone);
+        setphoneModal(false);
+        setMember({ ...member, mem_phone: newPhone });
+      })
+      .catch((error) => {
+        console.error("핸드폰 변경에 실패했습니다:", error);
+        alert("핸드폰 변경에 실패했습니다.");
+      });
   };
 
   // 비밀번호 변경 입력란 변경 시 호출될 함수
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
+  };
+
+  const handlePasswordChangeSubmit = (e) => {
+    e.preventDefault();
+
+    if (newPassword !== newPassword1) {
+      alert("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    // 데이터를 제대로 보내고 있는지 확인합니다.
+    const payload = {
+      newPassword: newPassword,
+    };
+
+    axios
+      .post("/api/updatePassword", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          // 필요하다면 여기에 인증 토큰 등의 헤더를 추가합니다.
+        },
+      })
+      .then((response) => {
+        setShowModal(false);
+        // 비밀번호 변경 성공 후 필요한 상태 업데이트나 네비게이션 로직
+      })
+      .catch((error) => {
+        console.error("비밀번호 변경에 실패했습니다:", error.response);
+        // 에러 응답의 내용을 통해 더 구체적인 에러 메시지를 표시할 수 있습니다.
+        alert(`비밀번호 변경에 실패했습니다: ${error.response.data.message}`);
+      });
   };
 
   // 프로필 이미지 선택 시 핸들러
@@ -202,7 +258,7 @@ const Mypage = () => {
                       <Modal.Title>비밀번호 변경</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                      <Form onSubmit={handleChangePassword}>
+                      <Form onSubmit={handlePasswordChangeSubmit}>
                         <Form.Group controlId="newPassword">
                           <Form.Label>새 비밀번호</Form.Label>
                           <Form.Control
