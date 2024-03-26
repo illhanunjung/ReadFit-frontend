@@ -8,6 +8,7 @@ import Moption from "../components/Moption";
 import Mcard from "../components/Mcard";
 import Mnav from "../components/Mnav";
 import { Link } from "react-router-dom";
+import SocialKakao from "../api/kakaoApi";
 
 const Main2 = () => {
   // Sample data array with 10 entries
@@ -207,6 +208,7 @@ const Main2 = () => {
             </Col>
           </Row>
         </Container>
+        <SocialKakao />
       </div>
     </div>
   );
