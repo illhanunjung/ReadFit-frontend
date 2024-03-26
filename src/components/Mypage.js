@@ -231,7 +231,6 @@ const Mypage = () => {
                 <Col sm={12}>
                   <Form.Control
                     type="number"
-                    type="tnumber"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
                     onChange={handlePhoneChange}
