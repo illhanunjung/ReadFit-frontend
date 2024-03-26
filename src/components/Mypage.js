@@ -31,11 +31,18 @@ const Mypage = () => {
 
         let storedMember = window.sessionStorage.getItem("mem_name");
         let storedMember2 = window.sessionStorage.getItem("mem_phone");
+        let storedProfileImageName = window.sessionStorage.getItem(
+          "mem_profile"
+        );
 
         console.log(storedMember);
 
         if (storedMember != null) {
           setMember({ mem_name: storedMember, mem_phone: storedMember2 });
+          const profileImagePath = storedProfileImageName
+            ? `/img/${storedProfileImageName}`
+            : EllipseImage;
+          setProfileImage(profileImagePath);
         }
       } catch (error) {
         console.error("회원 데이터를 가져오는데 에러가 발생했습니다:", error);
@@ -188,7 +195,7 @@ const Mypage = () => {
               style={{ position: "relative", display: "inline-block" }}
             ></div>
             <img
-              src={EllipseImage}
+              src={profileImage || EllipseImage}
               className="rounded-circle mb-3"
               alt="프로필 이미지"
               style={{ width: "150px", height: "150px" }}
