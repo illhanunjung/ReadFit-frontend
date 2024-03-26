@@ -16,6 +16,7 @@ import Dpage from "./pages/Dpage";
 import Writepost from "./pages/Writepost";
 import Chatbot from "./components/chatbot/ChatBot ";
 import logo from "./navlogo.png";
+import closeIcon from "./closeicon.png";
 
 function App() {
   const [chatOpen, setChatOpen] = useState(false);
@@ -26,7 +27,14 @@ function App() {
     <div className="App">
       <div onClick={toggleChat} className="chat-icon">
         {/* 아이콘을 클릭하면 챗봇이 토글됩니다 */}
-        <img src={logo} className="chat-icon " alt="Chat Icon" />
+        <div onClick={toggleChat} className="chat-icon">
+          <img
+            src={chatOpen ? closeIcon : logo}
+            className="chat-icon-img"
+            alt="Chat Icon"
+          />
+        </div>
+        <Chatbot isOpen={chatOpen} toggleChat={toggleChat} />
       </div>
       <Chatbot isOpen={chatOpen} toggleChat={toggleChat} />
       <Routes>

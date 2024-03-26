@@ -208,7 +208,7 @@ const Mypage = () => {
               <Form.Group as={Row} className="mb-3">
                 <Col sm={12}>
                   <Form.Control
-                    type="text"
+                    type="number"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
                     onChange={handlePhoneChange}
@@ -239,7 +239,7 @@ const Mypage = () => {
                         <Form.Group controlId="formNewPhone">
                           <Form.Label>새로운 휴대전화</Form.Label>
                           <Form.Control
-                            type="text"
+                            type="number"
                             placeholder="새로운 휴대전화를 입력하세요"
                             value={newPhone}
                             onChange={(e) => setNewPhone(e.target.value)}

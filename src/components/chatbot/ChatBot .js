@@ -3,7 +3,9 @@ import ChatBot from "react-simple-chatbot";
 import { ThemeProvider } from "styled-components";
 import ConversationPage from "./ConversationPage"; // 대화 페이지 컴포넌트 임포트
 import CustomHeader from "./CustomHeader";
+import ConversationListPage from "./ConversationListPage"; // 대화 리스트 페이지 컴포넌트 임포트
 import "./Chatbot.css";
+import "./ConversationListPage.css";
 
 const theme = {
   background: "#ffffff",
@@ -19,15 +21,30 @@ const theme = {
 
 const Chatbot = ({ isOpen, toggleChat }) => {
   const [inConversation, setInConversation] = useState(false); // 대화 중인지 여부 상태
+  const [showConversationList, setShowConversationList] = useState(false); // 대화 리스트 보기 상태
 
   // 대화 페이지로 이동하는 핸들러 함수
   const handleInquiry = () => {
     setInConversation(true); // 대화 중 상태로 변경
+    setShowConversationList(false); // 대화 리스트를 숨김
   };
 
   // 홈 버튼 클릭 시 챗봇 첫 화면으로 이동하는 핸들러 함수
   const handleGoToHomePage = () => {
     setInConversation(false); // 대화 중인지 여부 상태를 false로 설정하여 챗봇 첫 화면으로 이동
+    setShowConversationList(false); // 대화 리스트를 숨김
+  };
+
+  // 대화 리스트 페이지로 이동하는 핸들러 함수
+  const handleShowConversationList = () => {
+    setShowConversationList(true); // 대화 리스트 페이지를 보여줌
+    setInConversation(false); // 대화 중 상태를 비활성화
+  };
+
+  const handleNewConversationStart = () => {
+    console.log("Starting new conversation"); // 로그 추가
+    setInConversation(true);
+    setShowConversationList(false);
   };
 
   // 챗봇의 스텝 정의
@@ -47,16 +64,22 @@ const Chatbot = ({ isOpen, toggleChat }) => {
       ),
       end: true,
     },
-    // 추가 스텝 정의
+    // 추가 스텝 정의는 여기에...
   ];
 
-  // 챗봇 바디를 동적으로 변경하는 함수
   const renderChatBody = () => {
-    if (inConversation) {
-      // 대화 중일 때는 ConversationPage 컴포넌트 렌더링
+    if (showConversationList) {
+      // 대화 리스트 페이지에 새 대화 시작 이벤트를 처리할 핸들러를 전달합니다.
+      return (
+        <ConversationListPage
+          onNewConversationStart={handleNewConversationStart}
+        />
+      );
+    } else if (inConversation) {
+      // 대화 페이지 컴포넌트를 렌더링합니다.
       return <ConversationPage />;
     } else {
-      // 그렇지 않으면 표준 챗봇 렌더링
+      // 기본 챗봇 컴포넌트를 렌더링합니다.
       return (
         <ThemeProvider theme={theme}>
           <ChatBot steps={steps} />
@@ -75,8 +98,9 @@ const Chatbot = ({ isOpen, toggleChat }) => {
         <div className="chatbot-navigation">
           {/* 네비게이션 버튼들 */}
           <button onClick={handleGoToHomePage}>홈</button>
-          <button>대화</button>
-          <button>설정</button>
+          <button onClick={handleShowConversationList}>대화</button>
+          <button onClick={() => {}}>설정</button>{" "}
+          {/* 설정 페이지로의 이동을 구현하려면 이 부분을 수정하세요. */}
         </div>
       </div>
     );
