@@ -148,7 +148,7 @@ const Mypage = () => {
       console.log("아이디", member.mem_id);
 
       axios
-        .post("/api/img/upload/profile", formData, {
+        .post("http://localhost:8081/api/img/upload/profile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -161,34 +161,6 @@ const Mypage = () => {
         .catch((error) => {
           console.error("프로필 이미지 업로드에 실패했습니다:", error);
         });
-    }
-  };
-
-  // 프로필 업데이트 제출 핸들러
-  const handleProfileUpdate = async (e) => {
-    e.preventDefault(); // 폼 제출 이벤트의 기본 동작 방지
-
-    // FormData 객체를 생성하고 파일을 추가
-    const formData = new FormData();
-    formData.append("image", e.target.image.files[0]); // 'image' 키에 파일 추가
-
-    try {
-      // 서버에 프로필 이미지 업로드 요청
-      // 서버의 실제 업로드 URL로 교체해야 합니다.
-      const response = await axios.post(
-        "http://localhost:8081/api/profile/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      // 업로드 완료 후 추가 동작이 필요한 경우 여기에 로직 추가
-      console.log("업로드 성공:", response.data);
-    } catch (error) {
-      console.error("프로필 이미지 업로드에 실패했습니다:", error);
     }
   };
 
