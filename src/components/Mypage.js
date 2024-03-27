@@ -8,6 +8,7 @@ const Mypage = () => {
   const [member, setMember] = useState({
     mem_name: "",
     mem_phone: "",
+    mem_id: "",
   });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
@@ -34,13 +35,17 @@ const Mypage = () => {
         let storedProfileImageName = window.sessionStorage.getItem(
           "mem_profile"
         );
-
+        const userId = window.sessionStorage.getItem("mem_id");
         console.log(storedMember);
 
         if (storedMember != null) {
-          setMember({ mem_name: storedMember, mem_phone: storedMember2 });
+          setMember({
+            mem_name: storedMember,
+            mem_phone: storedMember2,
+            mem_id: userId,
+          });
           const profileImagePath = storedProfileImageName
-            ? `/img/${storedProfileImageName}`
+            ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
             : EllipseImage;
           setProfileImage(profileImagePath);
         }
@@ -139,9 +144,11 @@ const Mypage = () => {
       // TODO: 파일을 서버에 업로드 처리 로직
       const formData = new FormData();
       formData.append("image", file);
+      formData.append("mem_id", member.mem_id);
+      console.log("아이디", member.mem_id);
 
       axios
-        .post("/api/profile/upload", formData, {
+        .post("/api/img/upload/profile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

@@ -42,6 +42,7 @@ function Login() {
           console.log(data);
 
           if (data != null) {
+            window.sessionStorage.setItem("mem_id", username);
             window.sessionStorage.setItem("mem_name", data.name);
             window.sessionStorage.setItem("mem_phone", data.phone);
             window.sessionStorage.setItem("mem_profile", data.profile);
