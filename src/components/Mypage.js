@@ -141,7 +141,7 @@ const Mypage = () => {
       formData.append("image", file);
 
       axios
-        .post("/api/profile/upload", formData, {
+        .post("/api/member/uploadProfile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
