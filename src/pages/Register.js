@@ -34,10 +34,10 @@ function Register() {
   useEffect(() => {
     // Kakao SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init(REST_API_KEY); // REST API 키
+      window.Kakao.init('a7136d2423bac4c6ee019af8674d9c2c'); // REST API 키 직접 사용
     }
   }, []);
-
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -107,6 +107,7 @@ function Register() {
   };
   
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isVerified) {
@@ -124,12 +125,12 @@ function Register() {
         // 회원가입 요청
     try {
       const response = await axios.post('http://localhost:8081/members/register', {
-        mem_id: formData.mem_id,
-        mem_pw: formData.mem_pw,
-        mem_name: formData.mem_name,
-        mem_birth: formData.mem_birth,
-        mem_profile: formData.mem_profile,
-        mem_phone: formData.mem_phone
+        // mem_id: formData.mem_id,
+        // mem_pw: formData.mem_pw,
+        // mem_name: formData.mem_name,
+        // mem_birth: formData.mem_birth,
+        // mem_profile: formData.mem_profile,
+        // mem_phone: formData.mem_phone
         });
         console.log("회원가입 성공:", response.data);
         navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
@@ -138,6 +139,7 @@ function Register() {
         alert('회원가입에 실패하였습니다: ' + error.response.data.message);
         }
         };
+      
         
         return (
         <div>

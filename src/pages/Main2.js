@@ -8,7 +8,7 @@ import Moption from "../components/Moption";
 import Mcard from "../components/Mcard";
 import Mnav from "../components/Mnav";
 import { Link } from "react-router-dom";
-import SocialKakao from "../api/kakaoApi";
+// import SocialKakao from "../api/kakaoApi";
 import PieChart from "../components/PieChart";
 
 const Main2 = () => {
@@ -210,7 +210,7 @@ const Main2 = () => {
             </Col>
           </Row>
         </Container>
-        <SocialKakao />
+        {/* <SocialKakao /> */}
       </div>
     </div>
   );
