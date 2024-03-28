@@ -13,22 +13,22 @@
   right: 80px;
   cursor: pointer;
   /* 추가적인 스타일링 */
-  width: 100px;
+  width: 75px;
   height: auto;
   z-index: 1000;
   background-color: black;
-  border-radius: 50px;
+  border-radius: 40px;
 }
 
 .chat-icon-img {
-  width: 100px; /* 아이콘 크기, 필요에 따라 조정 가능 */
-  height: 100px; /* 아이콘 크기, 필요에 따라 조정 가능 */
+  width: 75px; /* 아이콘 크기, 필요에 따라 조정 가능 */
+  height: 75px; /* 아이콘 크기, 필요에 따라 조정 가능 */
 }
 
 .chatbot-container {
   position: fixed;
   right: 60px;
-  bottom: 190px; /* 아이콘 위에 나타나도록 조정 */
+  bottom: 170px; /* 아이콘 위에 나타나도록 조정 */
   z-index: 1000; /* 로고 위에 오도록 z-index를 높게 설정 */
 }
 

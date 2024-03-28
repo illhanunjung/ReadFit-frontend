@@ -8,6 +8,7 @@ const Mypage = () => {
   const [member, setMember] = useState({
     mem_name: "",
     mem_phone: "",
+    mem_id: "",
   });
   const [profileImage, setProfileImage] = useState(null); // 프로필 이미지 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
@@ -31,11 +32,22 @@ const Mypage = () => {
 
         let storedMember = window.sessionStorage.getItem("mem_name");
         let storedMember2 = window.sessionStorage.getItem("mem_phone");
-
+        let storedProfileImageName = window.sessionStorage.getItem(
+          "mem_profile"
+        );
+        const userId = window.sessionStorage.getItem("mem_id");
         console.log(storedMember);
 
         if (storedMember != null) {
-          setMember({ mem_name: storedMember, mem_phone: storedMember2 });
+          setMember({
+            mem_name: storedMember,
+            mem_phone: storedMember2,
+            mem_id: userId,
+          });
+          const profileImagePath = storedProfileImageName
+            ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
+            : EllipseImage;
+          setProfileImage(profileImagePath);
         }
       } catch (error) {
         console.error("회원 데이터를 가져오는데 에러가 발생했습니다:", error);
@@ -132,17 +144,21 @@ const Mypage = () => {
       // TODO: 파일을 서버에 업로드 처리 로직
       const formData = new FormData();
       formData.append("image", file);
+      formData.append("mem_id", member.mem_id);
+      console.log("아이디", member.mem_id);
 
       axios
-        .post("/api/profile/upload", formData, {
+
+        .post("/api/img/upload/profile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         })
         .then((response) => {
-          // 서버에서 프로필 이미지 URL을 받았다고 가정합니다.
-          // 이 URL을 프로필 사진 상태로 설정합니다.
-          setProfileImage(response.data.imageUrl);
+          const newImagePath = response.data; // 가정: 응답으로 이미지 경로(URL)를 받음
+          setProfileImage(newImagePath); // 상태 업데이트
+          window.sessionStorage.setItem("profileImage", newImagePath); // 세션 스토리지에 저장
+          alert("프로필 이미지가 성공적으로 업로드되었습니다.");
         })
         .catch((error) => {
           console.error("프로필 이미지 업로드에 실패했습니다:", error);
@@ -188,7 +204,7 @@ const Mypage = () => {
               style={{ position: "relative", display: "inline-block" }}
             ></div>
             <img
-              src={EllipseImage}
+              src={profileImage || EllipseImage}
               className="rounded-circle mb-3"
               alt="프로필 이미지"
               style={{ width: "150px", height: "150px" }}
@@ -231,7 +247,6 @@ const Mypage = () => {
                 <Col sm={12}>
                   <Form.Control
                     type="number"
-                    type="tnumber"
                     placeholder="휴대전화"
                     value={member.mem_phone || ""}
                     onChange={handlePhoneChange}
