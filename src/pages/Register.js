@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faCommentDots, faCheckCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faLock,
+  faCommentDots,
+  faCheckCircle,
+  faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import "../css/Login.css";
 import Navs from "../components/Nav";
@@ -39,17 +45,19 @@ function Register() {
   
   const handleCheckDuplicate = async () => {
     if (formData.mem_id.length < 8) {
-      alert('아이디는 8글자 이상이어야 합니다.');
+      alert("아이디는 8글자 이상이어야 합니다.");
       setIsIdValid(false);
       return;
     }
     try {
-      const response = await axios.get(`http://localhost:8081/members/checkId/${formData.mem_id}`);
+      const response = await axios.get(
+        `http://localhost:8081/members/checkId/${formData.mem_id}`
+      );
       setIsIdValid(!response.data);
-      if(response.data) {
-        alert('이미 사용 중인 아이디입니다.');
+      if (response.data) {
+        alert("이미 사용 중인 아이디입니다.");
       } else {
-        alert('사용 가능한 아이디입니다.');
+        alert("사용 가능한 아이디입니다.");
       }
     } catch (error) {
       console.error("아이디 중복 확인 실패:", error);
@@ -61,7 +69,7 @@ function Register() {
       scope: 'name, birthday, birthyear, profile_image, phone_number',
       success: (authObj) => {
         window.Kakao.API.request({
-          url: '/v2/user/me',
+          url: "/v2/user/me",
           success: (res) => {
             const kakao_account = res.kakao_account;
             setFormData({
@@ -75,18 +83,18 @@ function Register() {
           },
           fail: (error) => {
             console.error(error);
-          }
+          },
         });
       },
       fail: (err) => {
         console.error(err);
-      }
+      },
     });
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-  
+
     // 아이디 입력 필드에서 포커스를 잃었을 때의 로직
     if (name === "mem_id") {
       if (value.length < 8) {
@@ -97,6 +105,7 @@ function Register() {
       }
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -185,21 +194,28 @@ function Register() {
               />
             </InputGroup>
 
-            <Button variant="success" type="submit" className="w-100">
-              회원가입
-            </Button>
+                <Button
+                  variant="success"
+                  type="submit"
+                  className="login-button mb-3"
+                >
+                  회원가입
+                </Button>
 
-            <Button variant="warning" className="w-100 mt-3" onClick={handleKakaoLogin}>
-              <FontAwesomeIcon icon={faCommentDots} className="me-2" />
-              카카오로 본인인증
-            </Button>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
-  </div>
-</div>
-);
+                <Button
+                  variant="warning"
+                  className="kakao-login-button mb-3"
+                  onClick={handleKakaoLogin}
+                >
+                  <FontAwesomeIcon icon={faCommentDots} className="me-2" />
+                  카카오로 본인인증
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </div>
+  );
 }
-
 export default Register;

@@ -4,29 +4,59 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import CMenu from "../components/CMenu";
 import CategoryTable from "../components/CategoryTable";
+import Cagtogorytbar from "../components/Cagtogorytbar";
 import { Container, Row, Col } from "react-bootstrap";
 import "../css/Category.css";
 
 function Category() {
-  const [boards, setBoards] = useState([]);
-  // 서버로부터 데이터를 받아올 때 각 항목에 isFavorited 필드를 추가합니다.
-  useEffect(() => {
-    const fetchBoards = async () => {
-      try {
-        const response = await axios.get("http://localhost:8081/api/boards");
-        // 받아온 데이터에 isFavorited 필드를 추가하여 초기값을 false로 설정합니다.
-        const updatedBoards = response.data.map((board) => ({
-          ...board,
-          isFavorited: false,
-        }));
-        setBoards(updatedBoards);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const initialBoards = [
+    // 예시 데이터, 실제 데이터 구조에 맞게 조정이 필요합니다.
+    {
+      board_seq: 1,
+      mem_id: "user1",
+      board_title: "게시글 제목 1",
+      board_content: "내용 1",
+      board_at: "2021-01-01",
+      board_re_at: "2021-01-02",
+      board_img: "/img/sh1.jpg",
+      isFavorited: false, // 관심 상품 상태 추가
+    },
+    {
+      board_seq: 2,
+      mem_id: "user1",
+      board_title: "게시글 제목 1",
+      board_content: "내용 1",
+      board_at: "2022-01-01",
+      board_re_at: "2022-01-02",
+      board_img: "/img/sh2.jpg",
+      isFavorited: false, // 관심 상품 상태 추가
+    },
+    // 추가 게시글 데이터...
+  ];
 
-    fetchBoards();
-  }, []);
+  const [boards, setBoards] = useState(initialBoards);
+
+  const positivePercentage = 70;
+  const negativePercentage = 30;
+
+  // 서버로부터 데이터를 받아올 때 각 항목에 isFavorited 필드를 추가합니다.
+  // useEffect(() => {
+  //   const fetchBoards = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:8081/api/boards");
+  //       // 받아온 데이터에 isFavorited 필드를 추가하여 초기값을 false로 설정합니다.
+  //       const updatedBoards = response.data.map((board) => ({
+  //         ...board,
+  //         isFavorited: false,
+  //       }));
+  //       setBoards(updatedBoards);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+
+  //   fetchBoards();
+  // }, []);
 
   // 관심 상품을 토글하는 함수
   const toggleFavorite = (boardSeq) => {
@@ -56,7 +86,7 @@ function Category() {
           <Col lg={12}>
             <CategoryTable
               data={boards.map((board, cnt) => ({
-                productImage: "/img/r1.png/",
+                productImage: boards[cnt].board_img,
                 idx: boards[cnt].board_seq,
                 id: boards[cnt].mem_id,
                 title: (
@@ -65,33 +95,28 @@ function Category() {
                   </Link>
                 ),
                 time: boards[cnt].board_at,
-                sentiment: { positive: 48, negative: 52 },
+                sentiment: { positivePercentage: 60, negativePercentage: 40 },
                 rating: 5,
                 cate: "운동화",
               }))}
               columns={[
                 {
                   Header: "관심상품",
-                  accessor: "board_seq", // 여기서 board_seq를 이용하여 각 상품을 식별합니다.
+                  accessor: "board_seq",
                   Cell: ({ value }) => {
-                    // 현재 상품의 isFavorited 상태를 찾습니다.
                     const isFavorited = boards.find(
                       (board) => board.board_seq === value
                     )?.isFavorited;
                     return (
                       <img
-                        src={
-                          isFavorited
-                            ? "/img/filled-heart.png"
-                            : "/img/empty-heart.png"
-                        } // 조건부 이미지 경로
+                        src={isFavorited ? "/img/ha.png" : "/img/noha.png"} // 이미지 경로는 실제 경로로 변경해야 합니다.
                         alt="favorite"
                         style={{
                           cursor: "pointer",
                           width: "24px",
                           height: "24px",
                         }}
-                        onClick={() => toggleFavorite(value)} // 클릭 이벤트 핸들러
+                        onClick={() => toggleFavorite(value)}
                       />
                     );
                   },
@@ -101,7 +126,7 @@ function Category() {
                   accessor: "productImage",
                   Cell: ({ value }) => (
                     <img
-                      src={"/img/r1.png"}
+                      src={value}
                       alt="product"
                       style={{ width: "90px", height: "auto" }}
                     />
@@ -117,16 +142,13 @@ function Category() {
                 },
                 {
                   Header: "긍/부정",
+                  width: "20%",
                   accessor: "sentiment",
                   Cell: ({ value }) => (
-                    <div className="sentiment-indicator">
-                      <div className="sentiment-value positive">
-                        <span className="marker"></span>긍정 {value.positive}%
-                      </div>
-                      <div className="sentiment-value negative">
-                        <span className="marker"></span>부정 {value.negative}%
-                      </div>
-                    </div>
+                    <Cagtogorytbar
+                      positivePercentage={positivePercentage}
+                      negativePercentage={negativePercentage}
+                    />
                   ),
                 },
                 {
@@ -134,23 +156,14 @@ function Category() {
                   accessor: "rating",
                   Cell: ({ value }) => (
                     <>
-                      {[...Array(value)].map(
-                        (
-                          _,
-                          i // 평점 값만큼 이미지 태그를 반복합니다.
-                        ) => (
-                          <img
-                            key={i}
-                            src="/img/fit1.jpg"
-                            alt="star"
-                            style={{
-                              width: "15px",
-                              height: "15px",
-                              marginRight: "2px",
-                            }}
-                          />
-                        )
-                      )}
+                      {/* 별 한 개를 표시하고 평점 숫자를 괄호와 함께 표시 */}
+                      <span style={{ marginRight: "5px" }}>
+                        <img
+                          src="/img/Star.png"
+                          style={{ width: "15px", height: "auto" }}
+                        />
+                      </span>
+                      ({value.toFixed(1)})
                     </>
                   ),
                 },
