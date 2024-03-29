@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { Container, Image, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Navbar, Nav, Container, Image } from "react-bootstrap";
 import "../css/Nav.css";
 
 function Navs() {
@@ -24,6 +24,7 @@ function Navs() {
         console.log("로그아웃 성공");
         setIsLoggedIn(false);
         // 세션이 제거되었으므로 원하는 페이지로 이동합니다.
+        window.sessionStorage.setItem("mem_id", "");
         navigateTo("../");
       } else {
         // 로그아웃 실패 시 에러 처리를 수행합니다.

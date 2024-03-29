@@ -16,12 +16,10 @@
   text-align: left;
   border: none;
   text-align: center;
- 
 }
 
 .custom-table th {
   white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
- 
 }
 
 /* 헤더 스타일링 */
