@@ -25,6 +25,8 @@ function Login() {
   const handleLogin = (e) => {
     e.preventDefault();
     try {
+      console.log(username)
+      console.log(password)
       console.log("로그인 버튼이 클릭되었습니다.");
 
       let response = fetch("/api/login", {
