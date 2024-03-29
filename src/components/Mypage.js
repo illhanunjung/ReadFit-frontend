@@ -35,7 +35,10 @@ const Mypage = () => {
         let storedProfileImageName = window.sessionStorage.getItem(
           "mem_profile"
         );
+        let profileImage = window.sessionStorage.getItem("profileImage");
+
         const userId = window.sessionStorage.getItem("mem_id");
+
         console.log(storedMember);
 
         if (storedMember != null) {
@@ -44,7 +47,13 @@ const Mypage = () => {
             mem_phone: storedMember2,
             mem_id: userId,
           });
-          const profileImagePath = storedProfileImageName
+          // const profileImagePath = storedProfileImageName
+          //   ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
+          //   : EllipseImage;
+
+          const profileImagePath = profileImage
+            ? `http://localhost:8081/img/uploads/profile/${profileImage}`
+            : storedProfileImageName
             ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
             : EllipseImage;
           setProfileImage(profileImagePath);
@@ -136,33 +145,62 @@ const Mypage = () => {
     fileInputRef.current.click();
   };
 
-  // 프로필 이미지 선택 시 핸들러
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setProfileImage(URL.createObjectURL(file));
-      // TODO: 파일을 서버에 업로드 처리 로직
       const formData = new FormData();
       formData.append("image", file);
       formData.append("mem_id", member.mem_id);
       console.log("아이디", member.mem_id);
 
-      axios
-
-        .post("/api/img/upload/profile", formData, {
+      try {
+        const response = await axios.post("/api/img/upload/profile", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        })
-        .then((response) => {
-          const newImagePath = response.data; // 가정: 응답으로 이미지 경로(URL)를 받음
-          setProfileImage(newImagePath); // 상태 업데이트
-          window.sessionStorage.setItem("profileImage", newImagePath); // 세션 스토리지에 저장
-          alert("프로필 이미지가 성공적으로 업로드되었습니다.");
-        })
-        .catch((error) => {
-          console.error("프로필 이미지 업로드에 실패했습니다:", error);
         });
+
+        const newImagePath = response.data; // 가정: 응답으로 이미지 경로(URL)를 받음
+        setProfileImage(newImagePath); // 상태 업데이트
+        window.sessionStorage.setItem("profileImage", newImagePath); // 세션 스토리지에 저장
+        alert("프로필 이미지가 성공적으로 업로드되었습니다.");
+
+        const fetchMemberData = async () => {
+          try {
+            // 세션 스토리지에서 'loginMember' 값을 가져옵니다.
+
+            let storedMember = window.sessionStorage.getItem("mem_name");
+            let storedMember2 = window.sessionStorage.getItem("mem_phone");
+            let storedProfileImageName = window.sessionStorage.getItem(
+              "profileImage"
+            );
+            const userId = window.sessionStorage.getItem("mem_id");
+
+            if (storedMember != null) {
+              setMember({
+                mem_name: storedMember,
+                mem_phone: storedMember2,
+                mem_id: userId,
+              });
+              const profileImagePath = storedProfileImageName
+                ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
+                : EllipseImage;
+              setProfileImage(profileImagePath);
+            }
+          } catch (error) {
+            console.error(
+              "회원 데이터를 가져오는데 에러가 발생했습니다:",
+              error
+            );
+          }
+        };
+
+        fetchMemberData();
+      } catch (error) {
+        console.error("프로필 이미지 업로드에 실패했습니다:", error);
+        alert("프로필 이미지 업로드에 실패했습니다."); // 사용자에게 오류 통지
+      }
     }
   };
 

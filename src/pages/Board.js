@@ -57,7 +57,14 @@ function Board() {
             {isLoggedIn ? (
               <>
                 <Link to="/Writepost">
-                  <Button id="write-button" variant="primary">
+                  <Button
+                      id="write-button"
+                      variant="primary"
+                      onClick={() => {
+                        // window.sessionStorage.setItem("clickWritePostButton", JSON.stringify(true));
+                        window.sessionStorage.setItem("editPost", JSON.stringify(null));
+                      }}
+                    >
                     글쓰기
                   </Button>
                 </Link>
