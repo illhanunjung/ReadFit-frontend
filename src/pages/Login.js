@@ -1,22 +1,21 @@
-import React, { useState, useCallback } from "react";
 import {
-  Container,
-  Row,
-  Col,
-  Form,
+  faLock,
+  faUser
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useCallback, useState } from "react";
+import {
   Button,
+  Col,
+  Container,
+  Form,
   InputGroup,
   Nav,
+  Row,
 } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import {
-  faUser,
-  faLock,
-  faCommentDots,
-} from "@fortawesome/free-solid-svg-icons";
-import "../css/Login.css"; // CSS 파일의 실제 경로로 확인하세요.
 import Navs from "../components/Nav";
+import "../css/Login.css"; // CSS 파일의 실제 경로로 확인하세요.
 
 function Login() {
   const navigate = useNavigate();
@@ -37,29 +36,34 @@ function Login() {
       });
 
       response
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
+      .then((res) => {
+        // 서버로투버 JSON 데이터를 받아옴
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
 
-          if (data != null) {
-            window.sessionStorage.setItem("mem_id", username);
-            window.sessionStorage.setItem("mem_name", data.name);
-            window.sessionStorage.setItem("mem_phone", data.phone);
-            window.sessionStorage.setItem("mem_profile", data.profile);
-            // 로그인 성공
-            // 예: 리다이렉트 or 다른 작업 수행
-            window.location.href = "../";
-            console.log("로그인 성공");
-          } else {
-            // 로그인 실패
-            // 예: 에러 메시지 표시
-            console.log(username);
-            console.log(password);
-            window.location.href = "Login";
-            console.log("로그인 실패 돌아가");
-          }
-        });
-      // console.log(response);
+        if(data.name){
+          // 로그인 성공 시 처리
+          // 예 : 세션에 로그인 정보 저장, 리다이렉트 등
+          window.sessionStorage.setItem("mem_id", data.id);
+          window.sessionStorage.setItem("mem_name", data.name);
+          window.sessionStorage.setItem("mem_birth", data.birth);
+          window.sessionStorage.setItem("mem_profile", data.profile);
+          window.sessionStorage.setItem("mem_phone", data.phone);
+          window.sessionStorage.setItem("mem_role", data.role);
+          window.location.href = "../"; //메인 페이지로 이동
+          console.log("로그인 성공");
+        } else{
+          //로그인 실패 시 처리
+          // 예 : 에러 메세지 표시, 로그인 페이지로 다시 이동 등
+          console.log("로그인 실패")
+          window.location.href = "Login"; //로그인 페이지로 이동
+        }
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
     } catch (error) {
       console.error("Error:", error);
     }
@@ -137,10 +141,9 @@ function Login() {
 
                 <br />
               </div>
-              {/* 
+              {/*
               <Button variant="warning" className="kakao-login-button mb-3">
                 <FontAwesomeIcon icon={faCommentDots} className="me-2" />{" "}
-       
                 카카오 로그인
               </Button> */}
             </Col>
