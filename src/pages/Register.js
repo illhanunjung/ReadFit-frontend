@@ -12,7 +12,7 @@ import axios from "axios";
 import "../css/Login.css";
 import Navs from "../components/Nav";
 import { useNavigate } from "react-router-dom";
-import { getKakaoLoginLink} from "../api/kakaoApi";
+import { handleKakaoLogin } from "../api/kakaoApi";
 
 
 
@@ -34,7 +34,7 @@ function Register() {
   useEffect(() => {
     // Kakao SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init('a7136d2423bac4c6ee019af8674d9c2c'); // REST API 키 직접 사용
+      window.Kakao.init('87fcd32c8be8f2ad27893ee83bb4bcc5'); // REST API 키 직접 사용
     }
   }, []);
   
@@ -91,6 +91,7 @@ function Register() {
       },
     });
   };
+  
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
@@ -122,24 +123,28 @@ function Register() {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
+
+       // 카카오 로그인으로 받은 정보와 사용자 입력 정보를 합친 객체를 생성
+       const userData = {
+        mem_id: formData.mem_id,
+        mem_pw: formData.mem_pw,
+        mem_name: formData.mem_name,
+        mem_birth: formData.mem_birth,
+        mem_profile: formData.mem_profile,
+        mem_phone: formData.mem_phone,
+      };
+
+
         // 회원가입 요청
     try {
-      const response = await axios.post('http://localhost:8081/members/register', {
-        // mem_id: formData.mem_id,
-        // mem_pw: formData.mem_pw,
-        // mem_name: formData.mem_name,
-        // mem_birth: formData.mem_birth,
-        // mem_profile: formData.mem_profile,
-        // mem_phone: formData.mem_phone
-        });
-        console.log("회원가입 성공:", response.data);
-        navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
-        } catch (error) {
-        console.error("회원가입 실패:", error.response.data);
-        alert('회원가입에 실패하였습니다: ' + error.response.data.message);
-        }
-        };
-      
+      await axios.post('http://localhost:8081/members/register', userData);
+      console.log("회원가입 성공");
+      navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert('회원가입에 실패하였습니다: ' + error.message);
+    }
+  };
         
         return (
         <div>

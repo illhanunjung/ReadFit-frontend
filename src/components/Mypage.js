@@ -226,7 +226,7 @@ const Mypage = () => {
               onChange={handleFileChange}
               style={{ display: "none" }}
               accept="image/*"
-            />
+            /> 
 
             <Form>
               {/* 이름 필드 */}
