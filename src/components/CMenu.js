@@ -1,48 +1,75 @@
-import React, { useState } from "react";
-import "../css/cmenu.css"; // 적절한 경로로 변경해주세요.
+// CMenu.js
 
-function CMenu() {
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../css/cmenu.css";
+
+function CMenu({ onCategorySelect }) {
+  const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
 
-  // 예시 카테고리 데이터
-  const categories = {
-    "운동화/스니커즈": ["나이키", "아디다스", "뉴발란스"],
-    구두: ["정장화", "캐주얼화", "로퍼"],
-    "슬리퍼/실내화": ["비치슬리퍼", "일상용 슬리퍼", "욕실 슬리퍼"],
-    기능화: ["기능화", "드라이빙화", "보트슈즈"],
-    드라이빙화: ["나이키", "아디다스", "뉴발란스"],
-    보트슈즈: ["정장화", "캐주얼화", "로퍼"],
-    샌들: ["비치슬리퍼", "일상용 슬리퍼", "욕실 슬리퍼"],
-    워커부츠: ["기능화", "드라이빙화", "보트슈즈"],
-    "모카신/털신": ["기능화", "드라이빙화", "보트슈즈"],
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/api/categories")
+      .then((response) => {
+        const categoryData = response.data;
+        const groupedCategories = categoryData.reduce((acc, cur) => {
+          const key = cur.parent_category_seq;
+          if (!acc[key]) {
+            acc[key] = {
+              categorySeq: key,
+              parentCategorySeq: cur.parent_category_seq, // 수정
+              parentCategorySeqName: cur.parent_category_seq_name,
+              subCategories: [],
+            };
+          }
+          if (cur.category) {
+            // 서브 카테고리가 실제로 존재하는 경우에만 추가
+            acc[key].subCategories.push(cur.category);
+          }
+          return acc;
+        }, {});
 
-  // 카테고리 클릭 핸들러
-  const handleToggleCategory = (category) => {
-    // 이미 활성화된 카테고리를 다시 클릭하면 닫히도록 설정
-    setActiveCategory(activeCategory === category ? null : category);
+        setCategories(Object.values(groupedCategories));
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
+
+  const handleToggleCategory = (categorySeq, parentCategorySeqName) => {
+    setActiveCategory(activeCategory === categorySeq ? null : categorySeq);
+    // 부모 카테고리를 선택하면 해당 카테고리의 이름을 부모 컴포넌트에 전달합니다.
+    onCategorySelect(parentCategorySeqName);
   };
 
   return (
     <div className="cmenu my-5">
-      {Object.entries(categories).map(([mainCategory, subCategories]) => (
+      {categories.map((mainCategory) => (
         <div
-          key={mainCategory}
+          key={mainCategory.categorySeq}
           className={`main-category ${
-            activeCategory === mainCategory ? "active" : ""
+            activeCategory === mainCategory.categorySeq ? "active" : ""
           }`}
-          onClick={() => handleToggleCategory(mainCategory)}
+          onClick={() =>
+            handleToggleCategory(
+              mainCategory.categorySeq,
+              mainCategory.parentCategorySeqName
+            )
+          }
         >
-          {mainCategory}
-          {activeCategory === mainCategory && (
-            <div className="sub-category-list">
-              {subCategories.map((subCategory) => (
-                <div key={subCategory} className="sub-category">
-                  {subCategory}
-                </div>
-              ))}
-            </div>
-          )}
+          {mainCategory.parentCategorySeq} {/* 수정 */}
+          {/* 서브 카테고리가 있고, 현재 카테고리가 활성화된 경우에만 드롭다운 메뉴를 표시합니다. */}
+          {activeCategory === mainCategory.categorySeq &&
+            mainCategory.subCategories.length > 0 && (
+              <div className="sub-category-list">
+                {mainCategory.subCategories.map((subCategory, index) => (
+                  <div key={index} className="sub-category">
+                    {subCategory}
+                  </div>
+                ))}
+              </div>
+            )}
         </div>
       ))}
     </div>
