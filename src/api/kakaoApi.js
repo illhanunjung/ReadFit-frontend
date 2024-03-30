@@ -6,7 +6,7 @@ const redirect_uri = 'http://localhost:3000/Register'; // 리다이렉트될 URI
 
 // 카카오 SDK 초기화
 if (window.Kakao && !window.Kakao.isInitialized()) {
-  window.Kakao.init(rest_api_key);
+  window.Kakao.init('87fcd32c8be8f2ad27893ee83bb4bcc5');
 }
 
 // 카카오 로그인 링크를 생성하는 함수
@@ -38,21 +38,37 @@ export const getAccessToken = async (authCode) => {
   }
 };
 
+// 아이디 중복
+export const checkId = async (userId) => {
+  try {
+    const response = await axios.get(`http://localhost:8081/api/checkId/${userId}`);
+    return response.data; // isAvailable이 true/false로 반환될 것임
+  } catch (error) {
+    console.error('Failed to check ID:', error);
+    throw error;
+  }
+};
+
+
 // 카카오 로그인 처리 함수
 export const handleKakaoLogin = () => {
   window.location.href = getKakaoLoginLink();
 };
 
-// 회원가입 API 호출 함수
 export const registerUser = async (userData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/members/register`, userData);
-    return response.data; // 성공적인 응답 처리
+      const response = await axios.post('http://localhost:8081/api/members/register', userData, {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      console.log("회원가입 성공:", response.data);
   } catch (error) {
-    console.error('Failed to register user:', error.response.data);
-    throw error;
+      console.error("회원가입 실패:", error.response ? error.response.data : error.message);
   }
 };
+
+
 
 export const fetchKakaoUserInfo = async (accessToken) => {
   try {

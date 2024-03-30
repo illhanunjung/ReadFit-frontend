@@ -12,7 +12,7 @@ import axios from "axios";
 import "../css/Login.css";
 import Navs from "../components/Nav";
 import { useNavigate } from "react-router-dom";
-import { handleKakaoLogin } from "../api/kakaoApi";
+import { registerUser  } from "../api/kakaoApi";
 
 
 
@@ -30,11 +30,12 @@ function Register() {
 
   const [isVerified, setIsVerified] = useState(false);
   const [isIdValid, setIsIdValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   useEffect(() => {
     // Kakao SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
-      window.Kakao.init('87fcd32c8be8f2ad27893ee83bb4bcc5'); // REST API 키 직접 사용
+      window.Kakao.init('87fcd32c8be8f2ad27893ee83bb4bcc5'); 
     }
   }, []);
   
@@ -50,9 +51,8 @@ function Register() {
       return;
     }
     try {
-      const response = await axios.get(
-        `http://localhost:8081/members/checkId/${formData.mem_id}`
-      );
+      // 백엔드와 일치하는 URL로 변경
+      const response = await axios.get(`http://localhost:8081/api/checkId/${formData.mem_id}`);
       setIsIdValid(!response.data);
       if (response.data) {
         alert("이미 사용 중인 아이디입니다.");
@@ -71,14 +71,25 @@ function Register() {
         window.Kakao.API.request({
           url: "/v2/user/me",
           success: (res) => {
-            const kakao_account = res.kakao_account;
-            setFormData({
-              ...formData, 
-              mem_name: res.kakao_account.name, 
-              mem_birth: `${res.kakao_account.birthyear}-${res.kakao_account.birthday}`,
-              mem_profile: res.kakao_account.profile_image,
-              mem_phone: res.kakao_account.phone_number            
-            });
+            const birthyear = res.kakao_account.birthyear;
+            const birthday = res.kakao_account.birthday.padStart(4, '0'); // MMDD 형식을 확보합니다.
+            const birth =`${birthyear}-${birthday.substring(0, 2)}-${birthday.substring(2, 4)}`;
+            const profile = res.kakao_account.profile_image_url ? res.kakao_account.profile_image_url : '1711768852850_star-icon.png';
+            const phone = formatPhoneNumber(res.kakao_account.phone_number);
+            const name = res.kakao_account.name;
+            
+
+            // 로그 출력은 상태 설정 외부에서 수행합니다.
+            console.log("이름", name, "생년월일", birth, "프로필 이미지", profile, "전화번호", phone);
+  
+            // 상태를 업데이트합니다.
+            setFormData(prevFormData => ({
+              ...prevFormData,
+              mem_name: name,
+              mem_birth: birth,
+              mem_profile: profile,
+              mem_phone: phone
+            }));
             setIsVerified(true);
           },
           fail: (error) => {
@@ -91,6 +102,7 @@ function Register() {
       },
     });
   };
+  
   
 
   const handleBlur = (e) => {
@@ -136,16 +148,34 @@ function Register() {
 
 
         // 회원가입 요청
-    try {
-      await axios.post('http://localhost:8081/members/register', userData);
-      console.log("회원가입 성공");
-      navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
-    } catch (error) {
-      console.error("회원가입 실패:", error);
-      alert('회원가입에 실패하였습니다: ' + error.message);
-    }
-  };
+        try {
+          // 환경 변수 대신 직접 URL 사용하여 회원가입 요청
+          await axios.post('http://localhost:8081/api/members/register', userData, {
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
+          console.log("회원가입 성공");
+          navigate('/login'); // 회원가입 성공 후 로그인 페이지로 리디렉션
+        } catch (error) {
+          console.error("회원가입 실패:", error);
+          setErrorMessage('회원가입에 실패하였습니다: ', error.response ? error.response.data : error.message);
+        }
         
+      };
+        
+      function formatPhoneNumber(phoneNumber) {
+        // 국가 코드와 공백을 제거합니다.
+        let formattedNumber = phoneNumber.replace('+82 ', '');
+        // 하이픈을 제거합니다.
+        formattedNumber = formattedNumber.replace(/-/g, '');
+        // "010"으로 시작하도록 수정합니다.
+        if (formattedNumber.startsWith('10')) {
+          formattedNumber = '010' + formattedNumber.substring(2);
+        }
+        return formattedNumber;
+      }
+      
         return (
         <div>
         <Navs />
@@ -225,4 +255,5 @@ function Register() {
     </div>
   );
 }
+
 export default Register;
