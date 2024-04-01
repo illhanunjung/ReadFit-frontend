@@ -7,7 +7,8 @@ import FindIDPW from "./pages/FindIDPW";
 import Main1 from "./pages/Main1";
 import Main2 from "./pages/Main2";
 import Profil from "./pages/Profil";
-import Register from "./pages/Register";
+import Register from './pages/Register';
+import Exp from "./pages/Exp";
 
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -49,6 +50,8 @@ function App() {
         <Route path="Profil" element={<Profil />} />
         <Route path="Writepost" element={<Writepost />} />
         <Route path="/chat" element={<Chatbot />} />
+        <Route path="/Exp" element={<Exp />} />
+
 
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>
