@@ -9,6 +9,28 @@ import { Link } from "react-router-dom";
 import { Button, Form, InputGroup, Row, Col } from "react-bootstrap";
 
 function Profil() {
+  const memid = window.sessionStorage.getItem("mem_id");
+  const [favorites, setFavorites] = useState([]); // 관심상품 목록 상태
+
+  useEffect(() => {
+    // 컴포넌트 마운트 시 관심상품 목록 가져오기
+    const fetchFavorites = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8081/api/favorites",
+          {
+            params: { mem_id: memid },
+          }
+        );
+        setFavorites(response.data); // 상태 업데이트
+      } catch (error) {
+        console.error("관심 상품 목록 가져오기 실패:", error);
+      }
+    };
+
+    fetchFavorites();
+  }, [memid]); // memid가 변경될 때마다 fetchFavorites 실행
+
   const initialBoardss = [
     // 예시 데이터, 실제 데이터 구조에 맞게 조정이 필요합니다.
     {
@@ -38,22 +60,6 @@ function Profil() {
 
   const positivePercentage = 70;
   const negativePercentage = 30;
-
-  // useEffect(() => {
-  //   // 서버로부터 멤버 목록을 받아오는 함수
-  //   const fetchBoards = async () => {
-  //     try {
-  //       const response = await axios.get("http://localhost:8081/api/boards");
-  //       setBoards(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching members:", error);
-  //     }
-  //   };
-
-  //   // 컴포넌트가 마운트될 때 멤버 목록을 받아오도록 함
-  //   fetchBoards();
-  // }, []); // 빈 배열을 전달하여 한 번만 호출되도록 함
-  // 관심 상품을 토글하는 함수
 
   const toggleFavorite = (boardSeq) => {
     const updatedBoards = boards.map((board) =>
@@ -103,19 +109,19 @@ function Profil() {
         <Row>
           <Col lg={12}>
             <CategoryTable
-              data={boards.map((board, cnt) => ({
-                productImage: "/img/r1.png/",
-                idx: boards[cnt].board_seq,
-                id: boards[cnt].mem_id,
+              data={favorites.map((favorite) => ({
+                productImage: favorite.image || "/img/black_log.png",
+                idx: favorite.id,
+                id: favorite.mem_id,
                 title: (
-                  <Link to={`/boards/${boards[cnt].board_seq}`}>
-                    {boards[cnt].board_title}
+                  <Link to={`/boards/${favorite.shoe_seq}`}>
+                    {favorite.board_title}
                   </Link>
                 ),
-                time: boards[cnt].board_at,
+                time: favorite.createdAt,
                 sentiment: { positivePercentage: 60, negativePercentage: 40 },
                 rating: 5,
-                cate: "운동화",
+                cate: favorite.category || "운동화",
               }))}
               columns={[
                 {
