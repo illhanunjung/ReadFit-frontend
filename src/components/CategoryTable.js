@@ -6,7 +6,7 @@ import {
   useSortBy,
   usePagination,
 } from "react-table";
-import Search from "./Search";
+import SearchCategory from "./SearchCategory";
 import "../css/board.css";
 
 function CategoryTable({ columns, data }) {
@@ -133,7 +133,7 @@ function CategoryTable({ columns, data }) {
           </Button>
         </ButtonGroup>
       </div>
-      <Search onSubmit={handleSearch} />
+      <SearchCategory onSubmit={handleSearch} />
     </>
   );
 }

@@ -10,7 +10,7 @@ import "../css/Category.css";
 
 function Category() {
   const [shoes, setShoes] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState({});
   const [favorites, setFavorites] = useState(new Set());
 
   const loginMemberid = window.sessionStorage.getItem("mem_id");
@@ -18,17 +18,29 @@ function Category() {
   const positivePercentage = 70;
   const negativePercentage = 30;
 
-  const handleCategorySelect = (categorySeq) => {
-    setSelectedCategory(categorySeq);
-    console.log(categorySeq);
+  const handleCategorySelect = (categorySeq, parentCategoryName = null) => {
+    // 선택된 카테고리 정보를 객체로 관리
+    setSelectedCategory({ categorySeq, parentCategoryName });
   };
 
   useEffect(() => {
     const fetchShoes = () => {
-      const apiUrl = selectedCategory
-        ? `http://localhost:8081/api/shoe/${selectedCategory}`
-        : "http://localhost:8081/api/shoe";
-
+      let apiUrl = "http://localhost:8081/api/shoe";
+      // 1차 카테고리 선택 시
+      if (
+        selectedCategory.categorySeq &&
+        !selectedCategory.parentCategoryName
+      ) {
+        apiUrl += `/${selectedCategory.categorySeq}`;
+      }
+      // 서브 카테고리 선택 시
+      else if (
+        selectedCategory.categorySeq &&
+        selectedCategory.parentCategoryName
+      ) {
+        apiUrl += `/${selectedCategory.parentCategoryName}/${selectedCategory.categorySeq}`;
+      }
+      // 상품 데이터 요청
       axios
         .get(apiUrl)
         .then((response) => {
@@ -121,6 +133,7 @@ function Category() {
                   : shoes[cnt].parent_category_seq,
                 isFavorited: favorites.has(shoe.shoe_seq),
                 toggleFavorite: () => toggleFavorite(shoe.shoe_seq),
+                don: shoes[cnt].shoe_price + "원",
               }))}
               columns={[
                 // Other columns
@@ -146,6 +159,10 @@ function Category() {
                   ),
                 },
                 {
+                  Header: "카테고리",
+                  accessor: "cate",
+                },
+                {
                   Header: "상품이미지",
                   accessor: "productImage",
                   Cell: ({ value }) => (
@@ -165,17 +182,6 @@ function Category() {
                   accessor: "idx",
                 },
                 {
-                  Header: "긍/부정",
-                  width: "20%",
-                  accessor: "sentiment",
-                  Cell: ({ value }) => (
-                    <Cagtogorytbar
-                      positivePercentage={positivePercentage}
-                      negativePercentage={negativePercentage}
-                    />
-                  ),
-                },
-                {
                   Header: "평점",
                   accessor: "rating",
                   Cell: ({ value }) => (
@@ -191,8 +197,20 @@ function Category() {
                   ),
                 },
                 {
-                  Header: "카테고리",
-                  accessor: "cate",
+                  Header: "긍/부정",
+                  width: "20%",
+                  accessor: "sentiment",
+                  Cell: ({ value }) => (
+                    <Cagtogorytbar
+                      positivePercentage={positivePercentage}
+                      negativePercentage={negativePercentage}
+                    />
+                  ),
+                },
+
+                {
+                  Header: "가격",
+                  accessor: "don",
                 },
               ]}
             />
