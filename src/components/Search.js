@@ -7,6 +7,8 @@ function Search({ onSubmit }) {
     onSubmit(event.target.elements.filter.value);
   };
 
+
+
   return (
     <div className="searchiv">
       <form onSubmit={handleSubmit} className="search">
