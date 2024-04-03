@@ -51,6 +51,7 @@ function App() {
         <Route path="Writepost" element={<Writepost />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/Exp" element={<Exp />} />
+        <Route path="/rboard/:shoe_seq" element={<Rboard />} />
 
 
         <Route path="/boards/:board_seq" element={<Dpage />} />
