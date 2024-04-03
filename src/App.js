@@ -9,6 +9,7 @@ import Main2 from "./pages/Main2";
 import Profil from "./pages/Profil";
 import Register from './pages/Register';
 import Exp from "./pages/Exp";
+import Admin from "./pages/Admin";
 
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -18,6 +19,7 @@ import Writepost from "./pages/Writepost";
 import Chatbot from "./components/chatbot/ChatBot ";
 import logo from "./navlogo.png";
 import closeIcon from "./closeicon.png";
+
 
 function App() {
   const [chatOpen, setChatOpen] = useState(false);
@@ -53,7 +55,7 @@ function App() {
         <Route path="/Exp" element={<Exp />} />
         <Route path="/rboard/:shoe_seq" element={<Rboard />} />
 
-
+        <Route path="/admin" element={<Admin />} />
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>
     </div>

@@ -19,6 +19,7 @@ const Main2 = () => {
     parentCategoryName: "",
     categoryName: "운동화/스니커즈", // 기본값으로 '운동화/스니커즈' 설정
   });
+  const [keywords, setKeywords] = useState([]);
 
   const handleCategorySelect = (selectedCategory) => {
     setSelectedCategory({
@@ -50,7 +51,26 @@ const Main2 = () => {
         });
     };
 
+    const fetchKeywords = () => {
+      let apiUrl = "http://localhost:8081/api/keywords/top/running";
+
+      if (selectedCategory.parentCategoryName) {
+        apiUrl = `http://localhost:8081/api/keywords/top/${selectedCategory.parentCategoryName}`;
+      }
+
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setKeywords(response.data); // 키워드 데이터 상태 업데이트
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching keywords data:", error);
+        });
+    };
+
     fetchShoes();
+    fetchKeywords();
   }, [selectedCategory.parentCategoryName]);
 
   return (
@@ -108,7 +128,7 @@ const Main2 = () => {
               <Card className="mb-4">
                 <Row noGutters>
                   {/* <Moption /> */}
-                  <PieChart />
+                  <PieChart data={keywords} />
                 </Row>
               </Card>
             </Col>

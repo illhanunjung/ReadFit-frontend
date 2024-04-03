@@ -41,6 +41,26 @@ function Register() {
   
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "mem_id") {
+      const validId = validateId(value);
+      setIsIdValid(validId);
+      // 유효하지 않은 경우 에러 메시지를 설정합니다.
+      if (!validId) {
+        setErrorMessage('아이디는 영문과 숫자만 포함하며, 최소 8자 이상이어야 합니다.');
+      } else {
+        setErrorMessage('');
+      }
+    }
+    if (name === "confirm_pw") {
+      const matching = isPasswordMatching(formData.mem_pw, value);
+      if (!matching) {
+        setErrorMessage('비밀번호가 일치하지 않습니다.');
+      } else {
+        setErrorMessage('');
+      }
+    }
+  
+    // 나머지 상태 업데이트는 동일하게 유지합니다.
     setFormData({ ...formData, [name]: value });
   };
   
@@ -74,7 +94,7 @@ function Register() {
             const birthyear = res.kakao_account.birthyear;
             const birthday = res.kakao_account.birthday.padStart(4, '0'); // MMDD 형식을 확보합니다.
             const birth =`${birthyear}-${birthday.substring(0, 2)}-${birthday.substring(2, 4)}`;
-            const profile = res.kakao_account.profile_image_url ? res.kakao_account.profile_image_url : '1711768852850_star-icon.png';
+            const profile = res.kakao_account.profile_image_url || '1711768852850_star-icon.png';
             const phone = formatPhoneNumber(res.kakao_account.phone_number);
             const name = res.kakao_account.name;
             
@@ -102,7 +122,15 @@ function Register() {
       },
     });
   };
-  
+  // 아이디 정규식.
+function validateId(id) {
+  const re = /^[A-Za-z0-9]{8,}$/;
+  return re.test(id);
+}
+
+function isPasswordMatching(password, confirmPassword) {
+  return password === confirmPassword;
+}
   
 
   const handleBlur = (e) => {
@@ -205,6 +233,8 @@ function Register() {
         <FontAwesomeIcon icon={faTimesCircle} className="text-danger" />
         )}
         </InputGroup>
+
+
         <InputGroup className="mb-3">
               <InputGroup.Text>
                 <FontAwesomeIcon icon={faLock} />
@@ -229,7 +259,10 @@ function Register() {
                 value={formData.confirm_pw}
                 onChange={handleInputChange}
               />
-            </InputGroup>
+              <Form.Text className={isPasswordMatching(formData.mem_pw, formData.confirm_pw) ? 'text-success' : 'text-danger'}>
+                {isPasswordMatching(formData.mem_pw, formData.confirm_pw) ? '비밀번호가 일치합니다.' : '비밀번호가 불일치합니다.'}
+              </Form.Text>
+            </InputGroup> 
 
                 <Button
                   variant="success"
