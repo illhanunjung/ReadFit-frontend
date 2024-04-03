@@ -7,32 +7,14 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 // 차트에 플러그인을 등록합니다.
 Chart.register(ChartDataLabels);
 
-const PieChart = () => {
-  // 원본 데이터와 라벨
-  const rawData = [
-    { label: "디자인", value: 85 },
-    { label: "사이즈", value: 15 },
-    { label: "착화감", value: 45 },
-    { label: "내구성", value: 23 },
-    { label: "사용성", value: 150 },
-    { label: "기능성", value: 45 },
-    { label: "가격", value: 35 },
-    { label: "무게", value: 53 },
-    { label: "소재", value: 70 },
-    { label: "색상", value: 14 },
-    { label: "품질", value: 42 },
-    { label: "굽", value: 24 },
-  ];
-
-  // 값에 따라 내림차순 정렬
-  rawData.sort((a, b) => b.value - a.value);
-
-  // 정렬된 데이터에서 값과 라벨 추출
-  const dataValues = rawData.map((item) => item.value);
-  const labels = rawData.map((item) => item.label);
+const PieChart = ({ data }) => {
+  // 받은 데이터를 기반으로 라벨과 값 배열 생성
+  const labels = data.map((item) => item.keywordName);
+  const dataValues = data.map((item) => item.totalCount);
   const total = dataValues.reduce((acc, curr) => acc + curr, 0);
 
-  const data = {
+  // 차트 데이터 구성
+  const chartData = {
     labels,
     datasets: [
       {
@@ -63,16 +45,15 @@ const PieChart = () => {
         color: "#000000",
         anchor: "center",
         align: "center",
-
         font: {
           weight: "bold",
-          size: 12, // 폰트 사이즈를 더 줄여 겹침을 최소화합니다. 실제 차트 크기에 따라 조정이 필요할 수 있습니다.
+          size: 12,
         },
         formatter: (value, context) => {
           const percentage = ((value / total) * 100).toFixed(2) + "%";
-          return (
-            context.chart.data.labels[context.dataIndex] + "\n" + percentage
-          ); // 세로로 라벨과 백분율을 나열합니다.
+          return `${
+            context.chart.data.labels[context.dataIndex]
+          }\n${percentage}`;
         },
       },
       legend: {
@@ -81,11 +62,6 @@ const PieChart = () => {
           boxWidth: 20,
         },
       },
-      //   title: {
-      //     display: true,
-      //     text: "키워드 랭킹",
-      //     position: "top",
-      //   },
     },
   };
 
@@ -96,7 +72,12 @@ const PieChart = () => {
           <Card>
             <Card.Title>키워드 랭킹</Card.Title>
             <Card.Body>
-              <Pie data={data} options={options} width={570} height={570} />
+              <Pie
+                data={chartData}
+                options={options}
+                width={570}
+                height={570}
+              />
             </Card.Body>
           </Card>
         </Col>
