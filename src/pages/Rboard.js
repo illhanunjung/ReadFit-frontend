@@ -1,16 +1,14 @@
-import React from "react";
-import { Container, Row, Col, Card, ProgressBar, Image } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
-import "../css/Rboard.css";
 import Navs from "../components/Nav";
-import Balrating from "../components/Balrating";
-import ExReview from "../components/ReviewCard";
-import InventoryList from "../components/InventoryList";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import { Bar } from "react-chartjs-2";
+import Balrating from "../components/Balrating";
+import ExReview from "../components/ReviewCard";
+import InventoryList from "../components/InventoryList";
+import "../css/Rboard.css";
 
-// Chart.js 설정 (차트 데이터와 옵션)
 const chartData = {
   labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월"],
   datasets: [
@@ -52,26 +50,18 @@ const options = {
 };
 
 const Rboard = () => {
-
   const { shoe_seq } = useParams();
-  const [reviewCount, setReviewCount] = useState(0);
-  const [averageRating, setAverageRating] = useState(0);
   const [shoes, setShoes] = useState([]);
-  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`http://localhost:8081/api/rboard/${shoe_seq}`);
         setShoes(response.data);
-
-        const totalCount = response.data.length;
-        const totalRating = response.data.reduce((total, review) => total + parseFloat(review.review_rating), 0);
-        const averageRating = totalCount > 0 ? (totalRating / totalCount).toFixed(1) : 0;    
-        setReviewCount(totalCount);
-        setAverageRating(averageRating);
-
         console.log(response.data);
+      
+
+        
       } catch (error) {
         console.error('Error fetching shoe data:', error);
       }
@@ -79,28 +69,30 @@ const Rboard = () => {
 
     fetchData();
   }, [shoe_seq]);
-  
+
+
   return (
     <div>
       <Navs />
       <div id="content">
         <Container fluid className="my-5">
+        {shoes.map((shoe, index) => (
           <Row className="mb-4">
             <Col lg={6}>
               <p className="ct2">
-                {shoes && shoes[0].shoe}
+                {shoe.shoe}
               </p>
               <Card className="mb-4">
                 <Row noGutters>
                   <Col md={4} className="text-center">
-                    <Image src={shoes && shoes[0].shoe_img} fluid rounded />
+                    <Image src={shoe.shoe_img} fluid rounded />
                   </Col>
                   <Col md={8}>
                     <Card.Body className="sbt">
                       <Card.Text>
-                        <p>가격 : {shoes && shoes[0].shoe_price}원</p>
-                        <p><img src="/img/Star.png" style={{ width: "15px", height: "auto" }}/> ({averageRating})</p>
-                        <p>리뷰수 ({reviewCount})</p>
+                        <p>가격 :{shoe.shoe_price}원</p>
+                        <p><img src="/img/Star.png" style={{ width: "15px", height: "auto" }}/>({shoe.averageRating.toFixed(1)})</p>
+                        <p>리뷰수 : ({shoe.reviewCount})</p>
                       </Card.Text>
                     </Card.Body>  
                   </Col>
@@ -110,35 +102,27 @@ const Rboard = () => {
               <Card className="mb-4">
                 <Card.Body>
                   <div style={{ height: "300px" }}>
-                    <Bar data={chartData} options={options} />
+                    <Bar data={chartData} options={options} />{/* 차트 표시 */}
                   </div>
                 </Card.Body>
               </Card>
-             
-                {/* 별점 정보 */}
-              <p className="ct1">별점 비율</p>
-              <Balrating />
-               {/* 유사제품 */}
-               <Row className="mb-4">
-                <p className="ct1">함께보면 좋은 상품</p>
               
-                <InventoryList />
+              
+              <p className="ct1">별점 비율</p>
+              <Balrating reviews={shoe.reviews}/>{/* 별점 비율 표시 */}
               <br></br>
+              <Row className="mb-4">
+                <p className="ct1">함께보면 좋은 상품</p>
+                <InventoryList />{/* 함께 보면 좋은 상품 리스트 표시 */}
               </Row>
-
-             
             </Col>
-            {/* 리뷰 현황 */}
+            
             <Col lg={6}>
-            {shoes.map((shoe, index) => (
-              <ExReview                 
-                key={index}
-                reviews={shoe.reviews}/>
-                ))}
+              
+              <ExReview reviews={shoe.reviews}/>
             </Col>
-         
           </Row>
-          
+              ))}
         </Container>
       </div>
     </div>

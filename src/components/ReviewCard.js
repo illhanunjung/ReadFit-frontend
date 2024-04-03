@@ -9,6 +9,7 @@ import {
   Modal,
 } from "react-bootstrap";
 import { useWindowWidth } from "@react-hook/window-size"; // 창 크기를 감지하는 Hook
+import { format, parseISO } from 'date-fns';
 
 const StatusCard = ({ title, isActive, onClick }) => {
   return (
@@ -61,76 +62,76 @@ const BoardMenu = () => {
   );
 };
 
-const reviewsData = new Array(20).fill(0).map((_, i) => ({
-  title: `리뷰 제목 ${i + 1}`,
-  rating: 5,
-  date: "2023-01-01",
-  id: `user${i + 1}`,
-  content:
-    "이 제품은 정말 대단해요! 내용이 길어질 수 있으니, 여기서 축약해서 보여줍니다. 내용이 매우 길어질 수 있는데, 이 경우에는 더보기 버튼을 통해 내용을 전체 볼 수 있도록 합니다.",
-  image: i % 3 === 0 ? null : "https://via.placeholder.com/45",
-}));
+// const reviewsData = new Array(20).fill(0).map((_, i) => ({
+//   title: `리뷰 제목 ${i + 1}`,
+//   rating: 5,
+//   date: "2023-01-01",
+//   id: `user${i + 1}`,
+//   content:
+//     "이 제품은 정말 대단해요! 내용이 길어질 수 있으니, 여기서 축약해서 보여줍니다. 내용이 매우 길어질 수 있는데, 이 경우에는 더보기 버튼을 통해 내용을 전체 볼 수 있도록 합니다.",
+//   image: i % 3 === 0 ? null : "https://via.placeholder.com/45",
+// }));
+
+
 
 const ReviewCard = ({ review }) => {
   const [expanded, setExpanded] = useState(false);
-  const [showImageModal, setShowImageModal] = useState(false);
 
   const handleReadMore = () => {
     setExpanded(!expanded);
   };
 
-  const handleImageModal = () => {
-    setShowImageModal(!showImageModal);
-  };
+  // ISO 문자열을 Date 객체로 파싱한 후, 원하는 형식으로 포맷팅
+  const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
+  
+  const reviewPolarity = review.review_polarity;
+  let polarityText, polarityColor;
+  switch (reviewPolarity) {
+    case 1:
+      polarityText = "부정";
+      polarityColor = "red";
+      break;
+    case 2:
+      polarityText = "긍정";
+      polarityColor = "blue";
+      break;
+    case 0:
+      polarityText = "중립";
+      polarityColor = "black";
+      break;
+    default:
+      polarityText = "미정";
+      polarityColor = "gray";
+  }
 
   return (
-    <>
-      <Card className="mb-3">
-        <Card.Body>
-          <div className="d-flex justify-content-between align-items-start">
-            <div className="me-3">
-              <div className="d-flex align-items-center">
-                <span className="me-2">{"⭐".repeat(review.rating)}</span>
-              </div>
-              <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
-                <h5 className="my-2 mb-2 ">{review.title}</h5>
-                &nbsp;&nbsp;&nbsp;<span>{review.date}</span>
-              </Card.Subtitle>
-              <Card.Text>
-                {expanded
-                  ? review.content
-                  : `${review.content.substring(0, 100)}... `}
-                {review.content.length > 100 && (
-                  <Button variant="link" onClick={handleReadMore}>
-                    {expanded ? "숨기기" : "더보기"}
-                  </Button>
-                )}
-              </Card.Text>
+    <Card className="mb-3">
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-start">
+          <div className="me-3">
+            <div className="d-flex align-items-center">
+  
+              <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>&nbsp;&nbsp;&nbsp;<span>{formattedDate}</span>&nbsp;&nbsp;&nbsp;<span style={{ color: polarityColor }}>{polarityText}</span>
             </div>
-            {review.image && (
-              <div className="ms-auto">
-                <img
-                  src={review.image}
-                  alt="Review"
-                  style={{ width: "50px", height: "50px", cursor: "pointer" }}
-                  onClick={handleImageModal}
-                />
-              </div>
-            )}
+            <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
+              <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
+              
+            </Card.Subtitle>
+            <Card.Text>
+              {expanded
+                ? review.review
+                : `${review.review.substring(0, 100)}... `}
+              {review.review.length > 100 && (
+                <Button variant="link" onClick={handleReadMore}>
+                  {expanded ? "숨기기" : "더보기"}
+                </Button>
+              )}
+            </Card.Text>
           </div>
-        </Card.Body>
-      </Card>
-
-      {/* 이미지 모달 */}
-      <Modal show={showImageModal} onHide={handleImageModal} centered size="lg">
-        <Modal.Header closeButton>
-          <Modal.Title>상품 이미지</Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="text-center">
-          <img src={review.image} alt="Review" style={{ width: "100%" }} />
-        </Modal.Body>
-      </Modal>
-    </>
+          {/* 이미지 처리 관련 주석 처리된 코드 생략 */}
+        </div>
+      </Card.Body>
+    </Card>
   );
 };
 const ReviewsList = ({ reviews }) => {
@@ -139,11 +140,21 @@ const ReviewsList = ({ reviews }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [visibleReviews, setVisibleReviews] = useState(3); // 모바일에서 초기 보여질 리뷰 수
 
+  const totalReviews = reviews.length;
+  const totalPages = Math.ceil(totalReviews / visibleReviews);
   const lastIndex = currentPage * visibleReviews;
   const firstIndex = lastIndex - visibleReviews;
   const currentReviews = reviews.slice(firstIndex, lastIndex);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+
+
+    // 페이지네이션 버튼의 최대 개수를 제한하기 위한 로직
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(reviews.length / visibleReviews) && i <= 10; i++) {
+      pageNumbers.push(i);
+    }
+  
 
   const showMoreReviews = () => {
     setVisibleReviews((prev) => prev + 5);
@@ -151,9 +162,22 @@ const ReviewsList = ({ reviews }) => {
 
   useEffect(() => {
     if (!isMobile) {
-      setVisibleReviews(3); // 웹보여질 처음
+      setVisibleReviews(4); // 웹보여질 처음
     }
   }, [isMobile]);
+
+  console.log("3",reviews);
+
+    // 이전 페이지로 이동
+    const handlePrev = () => {
+      setCurrentPage(currentPage => Math.max(currentPage - 1, 1));
+    };
+  
+    // 다음 페이지로 이동
+    const handleNext = () => {
+      setCurrentPage(currentPage => Math.min(currentPage + 1, totalPages));
+    };
+  
 
   return (
     <>
@@ -173,25 +197,25 @@ const ReviewsList = ({ reviews }) => {
         )
       ) : (
         <Pagination className="justify-content-center my-4">
-          {Array.from(
-            { length: Math.ceil(reviews.length / visibleReviews) },
-            (_, i) => (
-              <Pagination.Item
-                key={i}
-                active={i + 1 === currentPage}
-                onClick={() => paginate(i + 1)}
-              >
-                {i + 1}
-              </Pagination.Item>
-            )
-          )}
-        </Pagination>
+        <Pagination.Prev onClick={handlePrev} disabled={currentPage === 1} />
+        {Array.from({ length: totalPages }, (_, i) => i + 1)
+          .slice(Math.max(0, currentPage - 5), Math.min(currentPage + 4, totalPages))
+          .map(number => (
+            <Pagination.Item key={number} active={number === currentPage} onClick={() => setCurrentPage(number)}>
+              {number}
+            </Pagination.Item>
+          ))}
+        <Pagination.Next onClick={handleNext} disabled={currentPage === totalPages} />
+      </Pagination>
+
       )}
     </>
   );
 };
 
-const ExReview = () => {
+const ExReview = ({reviews}) => {
+  console.log("2",reviews);
+
   return (
     <>
       <p className="ct1">키워드</p>
@@ -218,7 +242,7 @@ const ExReview = () => {
       <Container>
         <Row>
           <Col md={12}>
-            <ReviewsList reviews={reviewsData} />
+            <ReviewsList reviews={reviews} />
           </Col>
         </Row>
       </Container>
