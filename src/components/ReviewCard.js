@@ -197,6 +197,24 @@ const ExReview = () => {
       <p className="ct1">키워드</p>
       <BoardMenu />
       <p className="ct1">리뷰</p>
+      
+      <Container>
+      <Row>
+        <Col md={12}>
+        <Card className="mb-3">
+        <Card.Body>
+        
+              <Card.Text>
+       dddd
+              </Card.Text>
+
+   
+        </Card.Body>
+      </Card>
+        </Col>
+      </Row>
+      </Container>
+      <p className="ct1">리뷰</p>
       <Container>
         <Row>
           <Col md={12}>
