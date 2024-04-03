@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
 import {
-  useTable,
   useGlobalFilter,
-  useSortBy,
   usePagination,
+  useSortBy,
+  useTable,
 } from "react-table";
-import Search from "./Search";
 import "../css/board.css";
+import Search from "./Search";
 
 function CategoryTable({ columns, data }) {
   const {

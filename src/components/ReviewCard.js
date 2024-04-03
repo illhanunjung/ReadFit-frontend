@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Pagination,
-  Modal,
-} from "react-bootstrap";
 import { useWindowWidth } from "@react-hook/window-size"; // 창 크기를 감지하는 Hook
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Modal,
+  Pagination,
+  Row,
+} from "react-bootstrap";
+
+
 
 const StatusCard = ({ title, isActive, onClick }) => {
+  
   return (
     <Card
       className={`text-center status-card ${isActive ? "active-card" : ""}`}
@@ -23,8 +26,47 @@ const StatusCard = ({ title, isActive, onClick }) => {
   );
 };
 
+// const BoardMenu = () => {
+//   const [activeCategory, setActiveCategory] = useState(null);
+//   const titleList = [
+//     "디자인",
+//     "사이즈",
+//     "착화감",
+//     "내구성",
+//     "사용성",
+//     "기능성",
+//     "가격",
+//     "무게",
+//     "소재",
+//     "색상",
+//     "품질",
+//     "굽",
+//   ];
+
+//   const handleCardClick = (title) => {
+//     setActiveCategory(title);
+//   };
+
+//   return (
+//     <Container>
+//       <Row className="justify-content-center">
+//         {titleList.map((title, index) => (
+//           <Col xs={6} sm={4} md={3} key={index} className="mb-3">
+//             <StatusCard
+//               title={title}
+//               isActive={activeCategory === title}
+//               onClick={() => handleCardClick(title)}
+//             />
+//           </Col>
+//         ))}
+//       </Row>
+//     </Container>
+//   );
+// };
+
 const BoardMenu = () => {
   const [activeCategory, setActiveCategory] = useState(null);
+
   const titleList = [
     "디자인",
     "사이즈",
@@ -41,7 +83,37 @@ const BoardMenu = () => {
   ];
 
   const handleCardClick = (title) => {
-    setActiveCategory(title);
+    if (activeCategory === title) {
+      setActiveCategory(null); // 이미 활성화된 카테고리를 클릭하면 비활성화합니다.
+    } else {
+      setActiveCategory(title); // 다른 카테고리를 클릭하면 활성화합니다.
+    }
+  };
+  
+
+  const [KeywordReviewSummary, setKeywordReviewSummary] = useState([]);
+  useEffect(() => {
+    // 페이지가 렌더링될 때 호출하고자 하는 함수를 호출합니다.
+    fetchData(); // 이전에 작성한 컨트롤러 함수 호출
+  }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 호출되도록 설정합니다.
+
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:8081/api/rboard'); // 서버의 URL로 요청을 보냅니다.
+      const data = await response.json();
+      console.log(data); // 응답을 콘솔에 출력하거나 다른 작업을 수행합니다.
+      // 가져온 데이터를 상태로 설정합니다.
+      console.log(data.reviewSummary);
+      setKeywordReviewSummary(data.reviewSummary);
+      console.log(KeywordReviewSummary);
+
+      // console.log("아래는 KeywordReviewSummary[0] 입니다."); 
+      // console.log(KeywordReviewSummary.KeywordReviewSummary[0]['착화감']); 
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   return (
@@ -57,9 +129,25 @@ const BoardMenu = () => {
           </Col>
         ))}
       </Row>
+
+      {/* 선택된 카테고리에 대한 컴포넌트 표시 */}
+      {activeCategory && (
+        <Row className="justify-content-center mt-3">
+          <Col>
+            <Card className="mb-3">
+              <Card.Body>
+                {/* 여기에 선택된 카테고리에 대한 컴포넌트를 표시하세요 */}
+                <p>{KeywordReviewSummary[activeCategory]}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };
+
+
 
 const reviewsData = new Array(20).fill(0).map((_, i) => ({
   title: `리뷰 제목 ${i + 1}`,

@@ -1,11 +1,11 @@
 import React from "react";
-import { Container, Row, Col, Card, ProgressBar, Image } from "react-bootstrap";
+import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import "../css/Rboard.css";
-import Navs from "../components/Nav";
 import Balrating from "../components/Balrating";
-import ExReview from "../components/ReviewCard";
 import InventoryList from "../components/InventoryList";
+import Navs from "../components/Nav";
+import ExReview from "../components/ReviewCard";
+import "../css/Rboard.css";
 
 // Chart.js 설정 (차트 데이터와 옵션)
 const chartData = {
@@ -49,6 +49,24 @@ const options = {
 };
 
 const Rboard = () => {
+
+  // useEffect(() => {
+  //   // 페이지가 렌더링될 때 호출하고자 하는 함수를 호출합니다.
+  //   fetchData(); // 이전에 작성한 컨트롤러 함수 호출
+  // }, []); // 빈 배열을 전달하여 컴포넌트가 처음 렌더링될 때만 호출되도록 설정합니다.
+
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8081/api/rboard'); // 서버의 URL로 요청을 보냅니다.
+  //     const data = await response.json();
+  //     console.log(data); // 응답을 콘솔에 출력하거나 다른 작업을 수행합니다.
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
+
+
   return (
     <div>
       <Navs />
