@@ -1,12 +1,14 @@
-import Navs from "../components/Nav";
 import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Container, Row, Col, Card, Image } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Card, Col, Container, Image, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
+import { useParams } from "react-router-dom";
 import Balrating from "../components/Balrating";
-import ExReview from "../components/ReviewCard";
 import InventoryList from "../components/InventoryList";
+
+import Navs from "../components/Nav";
+import ExReview from "../components/ReviewCard";
+
 import "../css/Rboard.css";
 
 const chartData = {
@@ -59,7 +61,6 @@ const Rboard = () => {
         const response = await axios.get(`http://localhost:8081/api/rboard/${shoe_seq}`);
         setShoes(response.data);
         console.log(response.data);
-      
 
         
       } catch (error) {
@@ -69,7 +70,6 @@ const Rboard = () => {
 
     fetchData();
   }, [shoe_seq]);
-
 
   return (
     <div>
