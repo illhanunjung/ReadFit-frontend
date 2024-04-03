@@ -55,7 +55,7 @@ function App() {
         <Route path="/Exp" element={<Exp />} />
         <Route path="/rboard/:shoe_seq" element={<Rboard />} />
 
-        <Route path="/admin" element={<admin />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>
     </div>
