@@ -6,7 +6,7 @@ import {
   useSortBy,
   usePagination,
 } from "react-table";
-import Search from "./Search";
+import SearchCategory from "./SearchCategory";
 import "../css/board.css";
 
 function CategoryTable({ columns, data }) {
@@ -36,7 +36,7 @@ function CategoryTable({ columns, data }) {
     console.log("검색어:", query); // 검색어 출력으로 확인
     setGlobalFilter(query); // 글로벌 필터 설정
   };
-
+  
   // 페이지 번호를 계산하여 반환하는 함수
   const getPageNumbers = () => {
     const pages = [];
@@ -133,7 +133,10 @@ function CategoryTable({ columns, data }) {
           </Button>
         </ButtonGroup>
       </div>
-      <Search onSubmit={handleSearch} />
+
+
+      <SearchCategory onSubmit={handleSearch} />
+
     </>
   );
 }

@@ -1,13 +1,11 @@
 import React from "react";
 import "../css/board.css";
 // Search.js
-function Search({ onSubmit }) {
+function SearchCategory({ onSubmit }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit(event.target.elements.filter.value);
   };
-
-
 
   return (
     <div className="searchiv">
@@ -20,4 +18,4 @@ function Search({ onSubmit }) {
   );
 }
 
-export default Search;
+export default SearchCategory;

@@ -1,5 +1,3 @@
-// CMenu.js
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../css/cmenu.css";
@@ -25,7 +23,11 @@ function CMenu({ onCategorySelect }) {
           }
           if (cur.category) {
             // 서브 카테고리가 실제로 존재하는 경우에만 추가
-            acc[key].subCategories.push(cur.category);
+            acc[key].subCategories.push({
+              categorySeq: cur.category_seq, // 서브 카테고리의 category_seq 추가
+              parentCategorySeqName: cur.parent_category_seq_name,
+              name: cur.category,
+            });
           }
           return acc;
         }, {});
@@ -43,6 +45,18 @@ function CMenu({ onCategorySelect }) {
     onCategorySelect(parentCategorySeqName);
   };
 
+  const handleSubCategoryClick = (
+    subCategorySeq,
+    parentCategorySeqName,
+    event
+  ) => {
+    event.stopPropagation(); // 상위 요소로의 이벤트 전파 방지
+    // 서브 카테고리의 category_seq와 parentCategorySeqName을 전달
+    onCategorySelect(subCategorySeq, parentCategorySeqName);
+    setActiveCategory(null); // 현재 활성화된 카테고리를 비활성화하여 드롭다운 메뉴를 닫습니다.
+    console.log(subCategorySeq, parentCategorySeqName);
+  };
+
   return (
     <div className="cmenu my-5">
       {categories.map((mainCategory) => (
@@ -58,14 +72,23 @@ function CMenu({ onCategorySelect }) {
             )
           }
         >
-          {mainCategory.parentCategorySeq} {/* 수정 */}
-          {/* 서브 카테고리가 있고, 현재 카테고리가 활성화된 경우에만 드롭다운 메뉴를 표시합니다. */}
+          {mainCategory.parentCategorySeq} {/* 이 부분을 이름으로 변경 */}
           {activeCategory === mainCategory.categorySeq &&
             mainCategory.subCategories.length > 0 && (
               <div className="sub-category-list">
                 {mainCategory.subCategories.map((subCategory, index) => (
-                  <div key={index} className="sub-category">
-                    {subCategory}
+                  <div
+                    key={index}
+                    className="sub-category"
+                    onClick={(e) =>
+                      handleSubCategoryClick(
+                        subCategory.categorySeq,
+                        mainCategory.parentCategorySeqName,
+                        e
+                      )
+                    } // parentCategorySeqName을 여기에서 전달
+                  >
+                    {subCategory.name}
                   </div>
                 ))}
               </div>

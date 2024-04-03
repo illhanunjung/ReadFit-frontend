@@ -53,8 +53,9 @@ function App() {
         <Route path="Writepost" element={<Writepost />} />
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/Exp" element={<Exp />} />
-        <Route path="/Admin" element={<Admin />} />
-        
+        <Route path="/rboard/:shoe_seq" element={<Rboard />} />
+
+        <Route path="/admin" element={<admin />} />
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>
     </div>
