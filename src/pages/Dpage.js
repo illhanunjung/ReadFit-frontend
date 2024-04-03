@@ -373,55 +373,47 @@ function Dpage() {
                     )}
                   </Col>
                   <Col xs={2} md={1} className="d-flex justify-content-end">
-                    {loginMember === comment.mem_id &&
-                      (isEditingComment === comment.comment_seq ? (
-                        // '수정완료' 버튼 표시
-                        <Button
-                          variant="primary"
-                          size="sm"
-                          onClick={() => handleCommentUpdate()}
-                          style={{
-                            width: "100%",
-                            maxWidth: "150px",
-                            marginLeft: "auto",
-                            height:
-                              "80px" /* 높이를 자동으로 조정하도록 설정 */,
-                            display:
-                              "inline-block" /* 인라인 박스로 표시하여 높이 속성이 적용되도록 함 */,
-                          }}
-                        >
-                          수정완료
-                        </Button>
-                      ) : (
-                        // faEdit 및 faTrash 버튼 표시
-                        <div className="comment-actions">
-                          <Row className="align-items-center">
-                            <Col>
-                              <Button
-                                variant="outline-secondary"
-                                className="me-2 action-button"
-                                onClick={() => handleCommentEdit(comment)}
-                              >
-                                <FontAwesomeIcon icon={faEdit} />
-                              </Button>
-                            </Col>
-                            <Col>
-                              <Button
-                                variant="outline-danger"
-                                className="action-button"
-                                onClick={() =>
-                                  handleDeleteComment(comment.comment_seq)
-                                }
-                              >
-                                <FontAwesomeIcon icon={faTrash} />
-                              </Button>
-                            </Col>
-                          </Row>
-                        </div>
-                      ))}
-                  </Col>
-                </Row>
-              </ListGroup.Item>
+                  {loginMember === comment.mem_id && !isEditingComment && (
+                    // 수정 버튼 표시
+                    <Button
+                      variant="outline-secondary"
+                      className="me-2 action-button"
+                      onClick={() => handleCommentEdit(comment)}
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Button>
+                  )}
+                  {isEditingComment === comment.comment_seq ? (
+                    // '수정완료' 버튼 표시
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => handleCommentUpdate()}
+                      style={{
+                        width: "100%",
+                        maxWidth: "150px",
+                        marginLeft: "auto",
+                        height: "80px",
+                        display: "inline-block",
+                      }}
+                    >
+                      수정완료
+                    </Button>
+                  ) : (
+                    (loginMember === comment.mem_id || window.sessionStorage.getItem("mem_role") === "0") && (
+                      // 삭제 버튼 표시
+                      <Button
+                        variant="outline-danger"
+                        className="action-button"
+                        onClick={() => handleDeleteComment(comment.comment_seq)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                    )
+                  )}
+                </Col>
+              </Row>
+            </ListGroup.Item>
             ))}
           </ListGroup>
 
