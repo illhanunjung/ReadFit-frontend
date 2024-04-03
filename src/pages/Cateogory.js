@@ -1,5 +1,5 @@
 import Nav from "../components/Nav";
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CMenu from "../components/CMenu";
@@ -10,42 +10,99 @@ import "../css/Category.css";
 
 function Category() {
   const [shoes, setShoes] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState({});
+  const [favorites, setFavorites] = useState(new Set());
+
+  const loginMemberid = window.sessionStorage.getItem("mem_id");
 
   const positivePercentage = 70;
   const negativePercentage = 30;
 
-  useEffect(() => {
-    // 조건에 따라 API 경로를 결정합니다.
-    const apiUrl = selectedCategory
-      ? `http://localhost:8081/api/shoe/${selectedCategory}`
-      : "http://localhost:8081/api/shoe";
-
-    axios
-      .get(apiUrl)
-      .then((response) => {
-        setShoes(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, [selectedCategory]); // selectedCategory 변화에 따라 실행
-
-  // CMenu로부터 카테고리 선택 정보를 받는 함수
-  const handleCategorySelect = (categorySeq) => {
-    setSelectedCategory(categorySeq);
-    console.log(categorySeq);
+  const handleCategorySelect = (categorySeq, parentCategoryName = null) => {
+    // 선택된 카테고리 정보를 객체로 관리
+    setSelectedCategory({ categorySeq, parentCategoryName });
   };
 
-  // 관심 상품을 토글하는 함수
-  // const toggleFavorite = (boardSeq) => {
-  //   const updatedBoards = boards.map((board) =>
-  //     board.board_seq === boardSeq
-  //       ? { ...board, isFavorited: !board.isFavorited }
-  //       : board
-  //   );
-  //   setBoards(updatedBoards);
-  // };
+  useEffect(() => {
+    const fetchShoes = () => {
+      let apiUrl = "http://localhost:8081/api/shoe";
+      // 1차 카테고리 선택 시
+      if (
+        selectedCategory.categorySeq &&
+        !selectedCategory.parentCategoryName
+      ) {
+        apiUrl += `/${selectedCategory.categorySeq}`;
+      }
+      // 서브 카테고리 선택 시
+      else if (
+        selectedCategory.categorySeq &&
+        selectedCategory.parentCategoryName
+      ) {
+        apiUrl += `/${selectedCategory.parentCategoryName}/${selectedCategory.categorySeq}`;
+      }
+      // 상품 데이터 요청
+      axios
+        .get(apiUrl)
+        .then((response) => {
+          setShoes(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    };
+
+    const fetchFavorites = (memberId) => {
+      if (memberId) {
+        axios
+          .get(`http://localhost:8081/api/favorites?mem_id=${memberId}`)
+          .then((response) => {
+            const fetchedFavorites = new Set(
+              response.data.map((fav) => fav.shoe_seq)
+            );
+            setFavorites(fetchedFavorites);
+          })
+          .catch((error) => console.error("Error fetching favorites:", error));
+      }
+    };
+
+    fetchShoes();
+    fetchFavorites(loginMemberid); // loginMemberid를 fetchFavorites에 전달하여 호출
+  }, [selectedCategory, loginMemberid]); // loginMemberid를 useEffect 의존성 배열에 추가
+
+  const toggleFavorite = (shoe_seq) => {
+    const updatedFavorites = new Set(favorites);
+    const isFavorited = updatedFavorites.has(shoe_seq);
+
+    if (isFavorited) {
+      axios
+        .delete(`http://localhost:8081/api/favorites/remove`, {
+          params: {
+            // 이 예제에서는 favorite_seq가 실제로 shoe_seq 역할을 하고 있습니다. 적절히 수정해주세요.
+            mem_id: loginMemberid, // loginMemberid는 현재 로그인한 사용자 ID를 나타냅니다. 적절한 변수로 대체해주세요.
+            shoe_seq: shoe_seq, // shoe_seq 값을 파라미터로 추가합니다.
+          },
+        })
+        .then(() => {
+          updatedFavorites.delete(shoe_seq);
+          setFavorites(updatedFavorites);
+        })
+        .catch((error) => console.error("Error removing favorite:", error));
+    } else {
+      axios
+        .post(`http://localhost:8081/api/favorites/add`, {
+          mem_id: loginMemberid,
+          shoe_seq,
+        })
+        .then(() => {
+          updatedFavorites.add(shoe_seq);
+          setFavorites(updatedFavorites);
+        })
+        .catch((error) => console.error("Error adding favorite:", error));
+    }
+
+    console.log(loginMemberid);
+    console.log(shoe_seq);
+  };
 
   return (
     <div>
@@ -69,40 +126,49 @@ function Category() {
                 idx: shoes[cnt].reviewCount,
                 id: shoes[cnt].shoe_seq,
                 title: (
-                  // <Link to={`/rboard/${shoes[cnt].shoe_seq}`}>
-                  <Link to={`/rboard`}>{shoes[cnt].shoe}</Link>
+                  <Link to={`/rboard/${shoes[cnt].shoe_seq}`}>
+                    {shoes[cnt].shoe}
+                    
+                  </Link>
                 ),
-                // time: boards[cnt].board_at,
                 sentiment: { positivePercentage: 60, negativePercentage: 40 },
                 rating: shoes[cnt].averageRating,
                 cate: shoes[cnt].category
                   ? shoes[cnt].category
                   : shoes[cnt].parent_category_seq,
+                isFavorited: favorites.has(shoe.shoe_seq),
+                toggleFavorite: () => toggleFavorite(shoe.shoe_seq),
+                don: shoes[cnt].shoe_price + "원",
               }))}
               columns={[
-                // {
-                //   Header: "관심상품",
-                //   accessor: "board_seq",
-                //   Cell: ({ value }) => {
-                //     const isFavorited = boards.find(
-                //       (board) => board.board_seq === value
-                //     )?.isFavorited;
-                //     return (
-                //       <img
-                //         src={isFavorited ? "/img/ha.png" : "/img/noha.png"} // 이미지 경로는 실제 경로로 변경해야 합니다.
-                //         alt="favorite"
-                //         style={{
-                //           cursor: "pointer",
-                //           width: "24px",
-                //           height: "24px",
-                //         }}
-                //         onClick={() => toggleFavorite(value)}
-                //       />
-                //     );
-                //   },
-                // },
+                // Other columns
                 {
-                  Header: "상품이미지",
+                  Header: "관심상품",
+                  id: "favorite",
+                  accessor: "isFavorited",
+                  Cell: ({ row }) => (
+                    <img
+                      src={
+                        row.original.isFavorited
+                          ? "/img/ha.png"
+                          : "/img/noha.png"
+                      }
+                      alt="favorite"
+                      style={{
+                        cursor: "pointer",
+                        width: "24px",
+                        height: "24px",
+                      }}
+                      onClick={() => row.original.toggleFavorite()}
+                    />
+                  ),
+                },
+                {
+                  Header: "카테고리",
+                  accessor: "cate",
+                },
+                {
+                  Header: "상품이미지" ,
                   accessor: "productImage",
                   Cell: ({ value }) => (
                     <img
@@ -121,22 +187,10 @@ function Category() {
                   accessor: "idx",
                 },
                 {
-                  Header: "긍/부정",
-                  width: "20%",
-                  accessor: "sentiment",
-                  Cell: ({ value }) => (
-                    <Cagtogorytbar
-                      positivePercentage={positivePercentage}
-                      negativePercentage={negativePercentage}
-                    />
-                  ),
-                },
-                {
                   Header: "평점",
                   accessor: "rating",
                   Cell: ({ value }) => (
                     <>
-                      {/* 별 한 개를 표시하고 평점 숫자를 괄호와 함께 표시 */}
                       <span style={{ marginRight: "5px" }}>
                         <img
                           src="/img/Star.png"
@@ -148,8 +202,20 @@ function Category() {
                   ),
                 },
                 {
-                  Header: "카테고리",
-                  accessor: "cate",
+                  Header: "긍/부정",
+                  width: "20%",
+                  accessor: "sentiment",
+                  Cell: ({ value }) => (
+                    <Cagtogorytbar
+                      positivePercentage={positivePercentage}
+                      negativePercentage={negativePercentage}
+                    />
+                  ),
+                },
+
+                {
+                  Header: "가격",
+                  accessor: "don",
                 },
               ]}
             />

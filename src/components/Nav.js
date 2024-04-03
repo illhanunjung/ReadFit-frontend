@@ -2,10 +2,17 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Container, Image, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../css/Nav.css";
+import axios from "axios";
 
 function Navs() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태
+  const [memId, setMemId] = useState(null);
+
+  let storedProfileImageName = window.sessionStorage.getItem("mem_profile");
+  const [profileImageUrl, setProfileImageUrl] = useState(
+    `/img/uploads/profile/${storedProfileImageName}`
+  ); // 프로필 이미지 URL 상태
 
   // 페이지 이동 핸들러
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
@@ -56,6 +63,14 @@ function Navs() {
     navigateTo("/profile");
   };
 
+  useEffect(() => {
+    // 프로필 이미지를 세션 스토리지에서 가져옴
+    const storedProfileImage = window.sessionStorage.getItem("profileImage");
+    if (storedProfileImage) {
+      setProfileImageUrl(`/img/uploads/profile/${storedProfileImage}`);
+    }
+  }, []);
+
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container style={{ maxWidth: "80%" }}>
@@ -82,8 +97,9 @@ function Navs() {
                   마이페이지{" "}
                 </Nav.Link>
                 <Nav.Link onClick={logout}>로그아웃</Nav.Link>
-                <Image
-                  src="/img/r1.png"
+
+                <img
+                  src={profileImageUrl}
                   roundedCircle
                   className="navbar-logo mx-2 d-lg-inline d-none"
                   onClick={handleProfileClick}
