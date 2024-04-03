@@ -3,6 +3,7 @@ import { Container, Row, Col, Image, Button } from "react-bootstrap";
 import Navs from "../components/Nav";
 import "../css/Mains1.css"; // 스타일시트 경로 확인
 import { Link } from "react-router-dom";
+// import SocialKakao from "../api/kakaoApi";
 
 const Main1 = () => {
   const topRef = useRef(null); // 페이지 최상단을 가리키는 참조 생성
@@ -81,6 +82,7 @@ const Main1 = () => {
             </Button>
           </Col>
         </Row>
+        {/* <SocialKakao /> */}
       </Container>
     </div>
   );

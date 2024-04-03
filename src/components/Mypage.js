@@ -50,7 +50,6 @@ const Mypage = () => {
           // const profileImagePath = storedProfileImageName
           //   ? `http://localhost:8081/img/uploads/profile/${storedProfileImageName}`
           //   : EllipseImage;
-
           const profileImagePath = profileImage
             ? `http://localhost:8081/img/uploads/profile/${profileImage}`
             : storedProfileImageName
@@ -264,7 +263,7 @@ const Mypage = () => {
               onChange={handleFileChange}
               style={{ display: "none" }}
               accept="image/*"
-            />
+            /> 
 
             <Form>
               {/* 이름 필드 */}

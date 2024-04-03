@@ -58,28 +58,28 @@ function Dpage() {
         loginMember: loginMember,
       });
       if (response.status === 200) {
-            //alert("댓글 등록이 완료되었습니다.");
-            setCommentText(""); // 댓글 등록 후 입력 필드 비우기
-            const fetchBoardDetail = async () => {
-              try {
-                const response = await axios.get(
-                  `http://localhost:8081/api/boards/${board_seq}`
-                );
-                setBoardDetail(response.data.board);
-                console.log("게시물 정보", response.data);
-                setComments(response.data.comments);
-              } catch (error) {
-                console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
-              }
-            };
-            fetchBoardDetail(); // fetchBoardDetail 함수를 호출하여 최신 상태를 업데이트합니다.
-          } else {
-              alert("댓글 등록이 실패하였습니다.");
-              window.location.href = "Dpage";
+        //alert("댓글 등록이 완료되었습니다.");
+        setCommentText(""); // 댓글 등록 후 입력 필드 비우기
+        const fetchBoardDetail = async () => {
+          try {
+            const response = await axios.get(
+              `http://localhost:8081/api/boards/${board_seq}`
+            );
+            setBoardDetail(response.data.board);
+            console.log("게시물 정보", response.data);
+            setComments(response.data.comments);
+          } catch (error) {
+            console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
           }
-      } catch (error) {
-          console.error("댓글 작성 중 오류 발생:", error);
+        };
+        fetchBoardDetail(); // fetchBoardDetail 함수를 호출하여 최신 상태를 업데이트합니다.
+      } else {
+        alert("댓글 등록이 실패하였습니다.");
+        window.location.href = "Dpage";
       }
+    } catch (error) {
+      console.error("댓글 작성 중 오류 발생:", error);
+    }
   };
 
   // 현재 로그인한 사용자를 나타내는 상태 (실제 애플리케이션에서는 서버에서 받아옵니다.)
@@ -168,7 +168,7 @@ function Dpage() {
     setEditingComment(comment); // 수정 중인 댓글 정보 설정
   };
 
-const handleCommentUpdate = async () => {
+  const handleCommentUpdate = async () => {
     // alert("댓글 수정 완료 버튼을 눌렀습니다 : " + editingComment.comment);
     // 댓글 내용이 없는 경우 함수를 종료합니다.
     if (!editingComment || !editingComment.comment.trim()) {
@@ -177,10 +177,13 @@ const handleCommentUpdate = async () => {
     }
 
     try {
-      const response = await axios.post(`/api/boards/${board_seq}/comments/edit`, {
-        comment: editingComment.comment,
-        comment_seq: editingComment.comment_seq,
-      });
+      const response = await axios.post(
+        `/api/boards/${board_seq}/comments/edit`,
+        {
+          comment: editingComment.comment,
+          comment_seq: editingComment.comment_seq,
+        }
+      );
       if (response.status === 200) {
         // alert("댓글 등록이 수정되었습니다.");
 
@@ -235,7 +238,7 @@ const handleCommentUpdate = async () => {
           window.sessionStorage.setItem("editPost", JSON.stringify(data));
           const editPost = sessionStorage.getItem("editPost");
           // const parsedData = JSON.parse(editPost);
-          
+
           // alert("수정 버튼을 눌러서 가져온 것입니다."+parsedData.board_seq)
           // 게시물 수정 후 Writepost.js 페이지로 이동합니다.
           window.location.href = "/Writepost";
@@ -244,7 +247,7 @@ const handleCommentUpdate = async () => {
           console.error("게시물 수정 요청 실패:", error);
         });
     }
-};
+  };
 
   return (
     <div>
@@ -376,15 +379,15 @@ const handleCommentUpdate = async () => {
                         <Button
                           variant="primary"
                           size="sm"
-                          onClick={() =>
-                            handleCommentUpdate()
-                          }
+                          onClick={() => handleCommentUpdate()}
                           style={{
                             width: "100%",
                             maxWidth: "150px",
                             marginLeft: "auto",
-                            height: "80px", /* 높이를 자동으로 조정하도록 설정 */
-                            display: "inline-block" /* 인라인 박스로 표시하여 높이 속성이 적용되도록 함 */
+                            height:
+                              "80px" /* 높이를 자동으로 조정하도록 설정 */,
+                            display:
+                              "inline-block" /* 인라인 박스로 표시하여 높이 속성이 적용되도록 함 */,
                           }}
                         >
                           수정완료
@@ -406,7 +409,9 @@ const handleCommentUpdate = async () => {
                               <Button
                                 variant="outline-danger"
                                 className="action-button"
-                                onClick={() => handleDeleteComment(comment.comment_seq)}
+                                onClick={() =>
+                                  handleDeleteComment(comment.comment_seq)
+                                }
                               >
                                 <FontAwesomeIcon icon={faTrash} />
                               </Button>
@@ -415,26 +420,25 @@ const handleCommentUpdate = async () => {
                         </div>
                       ))}
                   </Col>
-
                 </Row>
               </ListGroup.Item>
             ))}
           </ListGroup>
 
           {loginMember !== null && isCurrentUser() && (
-          <Form className="my-3 d-flex" onSubmit={handleSubmit}>
-            <FormControl
-              as="textarea"
-              placeholder="댓글을 입력해주세요"
-              className="flex-grow-1 mr-2"
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              style={{ resize: "none" }}
-            />
-            <Button variant="primary" type="submit" id="submitCommentButton">
-              등록
-            </Button>
-          </Form>
+            <Form className="my-3 d-flex" onSubmit={handleSubmit}>
+              <FormControl
+                as="textarea"
+                placeholder="댓글을 입력해주세요"
+                className="flex-grow-1 mr-2"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                style={{ resize: "none" }}
+              />
+              <Button variant="primary" type="submit" id="submitCommentButton">
+                등록
+              </Button>
+            </Form>
           )}
         </Card>
       </Container>
