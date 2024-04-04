@@ -6,16 +6,49 @@ import {
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-import footIcon from "./fit1.jpg"; // 별 이미지 경로로 변경하세요.
+import footIcon from "./Star.png"; // 별 이미지 경로로 변경하세요.
 
-const Balrating = () => {
-  const progressData = [
-    { percentage: 85, color: "purple", stars: 1 },
-    { percentage: 66, color: "orange", stars: 2 },
-    { percentage: 66, color: "orange", stars: 3 },
-    { percentage: 90, color: "green", stars: 4 },
-    { percentage: 30, color: "red", stars: 5 },
-  ];
+const Balrating = ({reviews}) => {
+  // 별점 빈도수 계산
+  const starCounts = reviews.reduce((acc, review) => {
+    const rating = review.review_rating;
+    acc[rating] = (acc[rating] || 0) + 1;
+    return acc;
+  }, {});
+
+   // 총 리뷰 수 계산
+  const totalReviews = reviews.length;
+
+
+  // 각 별점 별로 진행률 데이터 생성
+  const progressData = Object.keys(starCounts).map((rating) => {
+    const count = starCounts[rating];
+    const percentage = ((count / totalReviews) * 100).toFixed(0);
+    const color = getColorByRating(rating); // 별점에 따른 색상을 결정하는 함수
+    return {
+      stars: parseInt(rating, 10),
+      percentage,
+      color,
+    };
+  });
+
+  // 별점에 따른 색상 결정
+  function getColorByRating(rating) {
+    switch (parseInt(rating, 10)) {
+      case 1:
+        return "#FF6B6B"; // 예시 색상
+      case 2:
+        return "#FFA500";
+      case 3:
+        return "#FFD700";
+      case 4:
+        return "#7FFF00";
+      case 5:
+        return "#1E90FF";
+      default:
+        return "#d6d6d6";
+    }
+  }
 
   const renderStars = (stars) => {
     return (
@@ -49,7 +82,7 @@ const Balrating = () => {
   return (
     <Card>
       <Card.Body>
-        <Card.Title>별점</Card.Title>
+        <Card.Title></Card.Title>
         <div
           style={{
             display: "flex",
