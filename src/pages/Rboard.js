@@ -7,6 +7,7 @@ import { Bar } from "react-chartjs-2";
 import Balrating from "../components/Balrating";
 import ExReview from "../components/ReviewCard";
 import InventoryList from "../components/InventoryList";
+import "../css/Rboard.css";
 
 const chartData = {
   labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월"],

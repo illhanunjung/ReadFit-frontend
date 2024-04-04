@@ -41,7 +41,7 @@ const Mcard = ({
   return (
     <Col xs={12} sm={6} md={4} lg={3} xl={2} className="mb-4 custom-col">
       <Card className="product-card">
-        <Link to="/rboard">
+        <Link to="/rboard/${shoe_seq}">
           <Card.Img
             variant="top"
             src={shoe_img}
