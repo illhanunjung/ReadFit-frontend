@@ -18,6 +18,7 @@ const McardTOP = ({
   reviewCount,
   shoe,
   reviews,
+  shoe_seq
 }) => {
   const [reviewIndex, setReviewIndex] = useState(0);
 
@@ -38,7 +39,7 @@ const McardTOP = ({
   return (
     <Card  xs={12} sm={6} md={4} lg={3} xl={2} className="mb-4 slider-card">
       <div className="slider-content">
-        <Link to="/rboard" className="pt">
+      <Link to={`/rboard/${shoe_seq}`} className="pt">
           <div className="slider-image-container">
             <img
               src={shoe_img}

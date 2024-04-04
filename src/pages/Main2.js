@@ -127,8 +127,8 @@ const Main2 = () => {
           </Row>
           <Row className="my-5">
             {shoes.map((shoe, index) => (
-              <Mcard
-
+                <Mcard
+                
                 key={index}
                 shoe_img={shoe.shoe_img}
                 positivePercentage={70} // 예시 값
@@ -136,6 +136,7 @@ const Main2 = () => {
                 reviewCount={shoe.reviewCount}
                 shoe={shoe.shoe}
                 reviews={shoe.reviews} // 이 부분은 실제 데이터 구조에 따라 조정 필요
+                shoe_seq={shoe.shoe_seq}
               />
             ))}
           </Row>
@@ -158,7 +159,7 @@ const Main2 = () => {
                 reviewCount={shoe.reviewCount}
                 shoe={shoe.shoe}
                 reviews={shoe.reviews} // 이 부분은 실제 데이터 구조에 따라 조정 필요
-               
+                shoe_seq={shoe.shoe_seq}
               />
              
             ))}
