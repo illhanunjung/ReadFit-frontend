@@ -19,7 +19,7 @@ const Balrating = ({reviews}) => {
    // 총 리뷰 수 계산
   const totalReviews = reviews.length;
 
-  console.log("fefe",reviews);
+
   // 각 별점 별로 진행률 데이터 생성
   const progressData = Object.keys(starCounts).map((rating) => {
     const count = starCounts[rating];

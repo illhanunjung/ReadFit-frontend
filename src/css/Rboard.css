@@ -10,7 +10,7 @@
 
   .ct1{
     text-align: left;
-    font-size: 35px;
+    font-size: 30px;
     font-weight: bold;
     
   }
@@ -24,6 +24,18 @@
 
   .sbt{
     font-size: 20px;
+  }
+
+  .review-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* 원하는 라인 수 */
+    -webkit-box-orient: vertical;
+  }
+  
+  .review-text.expanded {
+    -webkit-line-clamp: none;
   }
 
 /*키워드 및 카테고리 css 시작  */
