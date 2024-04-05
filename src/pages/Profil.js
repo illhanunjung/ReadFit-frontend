@@ -74,8 +74,12 @@ function Profil() {
               data={shoes.map((shoe, cnt) => ({
                 productImage: shoes[cnt].shoe_img,
                 idx: shoes[cnt].reviewCount,
-                id: shoes[cnt].shoe_seq,
-                title: <Link to={`/rboard`}>{shoes[cnt].shoe}</Link>,
+                shoe_seq: shoes[cnt].shoe_seq,
+                title: (
+                  <Link to={`/rboard/${shoes[cnt].shoe_seq}`}>
+                    {shoes[cnt].shoe}
+                  </Link>
+                ),
                 sentiment: { positivePercentage: 60, negativePercentage: 40 },
                 rating: shoes[cnt].averageRating,
                 cate: shoes[cnt].category
