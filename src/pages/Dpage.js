@@ -53,6 +53,7 @@ function Dpage() {
         const commentsData = response.data.comments;
         setBoardDetail(boardData);
         setComments(commentsData);
+
         setFavoriteCount(response.data.favoriteCount);
         setisUserInFavoriteBoardTable(response.data.isUserFavorite);
         // alert(response.data.isUserFavorite)
@@ -61,6 +62,8 @@ function Dpage() {
           // isUserInFavoriteBoardTable이 false인 경우에만 heartClicked 값을 변경합니다.
           setHeartClicked(!heartClicked);
         }
+
+
       } catch (error) {
         console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
       }
@@ -301,6 +304,14 @@ function Dpage() {
     }
   };
 
+  const wrprofile = boardDetail
+    ? `http://localhost:8081/img/uploads/profile/${boardDetail?.mem_profile}`
+    : undefined;
+
+  // const cmtprofile = comment
+  //   ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+  //   : undefined;
+
   return (
     <div>
       <Navs />
@@ -319,7 +330,7 @@ function Dpage() {
                     <h2 className="mb-2">{boardDetail.board_title}</h2>
                     <div className="user-info">
                       <Image
-                        src="/img/r1.png"
+                        src={wrprofile}
                         // roundedCircle
                         className="user-img"
                       />
@@ -424,7 +435,11 @@ function Dpage() {
                 <Row className="align-items-start">
                   <Col xs={2} md={1} className="d-flex justify-content-center">
                     <Image
-                      src="/img/r1.png"
+                      src={
+                        comment
+                          ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+                          : undefined
+                      }
                       // roundedCircle
                       className="comment-img"
                     />

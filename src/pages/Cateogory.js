@@ -15,9 +15,6 @@ function Category() {
 
   const loginMemberid = window.sessionStorage.getItem("mem_id");
 
-  const positivePercentage = 70;
-  const negativePercentage = 30;
-
   const handleCategorySelect = (categorySeq, parentCategoryName = null) => {
     // 선택된 카테고리 정보를 객체로 관리
     setSelectedCategory({ categorySeq, parentCategoryName });
@@ -45,6 +42,7 @@ function Category() {
         .get(apiUrl)
         .then((response) => {
           setShoes(response.data);
+          console.log("상품데이터", response.data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -126,7 +124,17 @@ function Category() {
                 idx: shoes[cnt].reviewCount,
                 shoe_seq: shoes[cnt].shoe_seq,
                 shoe: shoes[cnt].shoe,
-                sentiment: { positivePercentage: 60, negativePercentage: 40 },
+                sentiment: {
+                  positive_percentage: shoes[cnt].positive_percentage
+                    ? shoes[cnt].positive_percentage
+                    : 0,
+                  negative_percentage: shoes[cnt].negative_percentage
+                    ? shoes[cnt].negative_percentage
+                    : 0,
+                  neutral_percentage: shoes[cnt].neutral_percentage
+                    ? shoes[cnt].neutral_percentage
+                    : 0,
+                },
                 rating: shoes[cnt].averageRating,
                 cate: shoes[cnt].category
                   ? shoes[cnt].category
@@ -163,7 +171,7 @@ function Category() {
                   accessor: "cate",
                 },
                 {
-                  Header: "상품이미지" ,
+                  Header: "상품이미지",
                   accessor: "productImage",
                   Cell: ({ value }) => (
                     <img
@@ -174,14 +182,14 @@ function Category() {
                   ),
                 },
                 {
-                  Header: '상품명',
-                  accessor: 'shoe', // 여기서 'shoe'는 실제 데이터 필드를 참조해야 합니다.
+                  Header: "상품명",
+                  accessor: "shoe", // 여기서 'shoe'는 실제 데이터 필드를 참조해야 합니다.
                   // 커스텀 렌더링 로직을 사용하여 Link를 표시합니다.
                   Cell: ({ row }) => (
                     <Link to={`/rboard/${row.original.shoe_seq}`}>
                       {row.original.shoe}
                     </Link>
-                  )
+                  ),
                 },
                 {
                   Header: "리뷰수",
@@ -208,8 +216,9 @@ function Category() {
                   accessor: "sentiment",
                   Cell: ({ value }) => (
                     <Cagtogorytbar
-                      positivePercentage={positivePercentage}
-                      negativePercentage={negativePercentage}
+                      positive_percentage={value.positive_percentage}
+                      negative_percentage={value.negative_percentage}
+                      neutral_percentage={value.neutral_percentage}
                     />
                   ),
                 },
