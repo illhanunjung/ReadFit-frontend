@@ -124,13 +124,8 @@ function Category() {
               data={shoes.map((shoe, cnt) => ({
                 productImage: shoes[cnt].shoe_img,
                 idx: shoes[cnt].reviewCount,
-                id: shoes[cnt].shoe_seq,
-                title: (
-                  <Link to={`/rboard/${shoes[cnt].shoe_seq}`}>
-                    {shoes[cnt].shoe}
-                    
-                  </Link>
-                ),
+                shoe_seq: shoes[cnt].shoe_seq,
+                shoe: shoes[cnt].shoe,
                 sentiment: { positivePercentage: 60, negativePercentage: 40 },
                 rating: shoes[cnt].averageRating,
                 cate: shoes[cnt].category
@@ -179,8 +174,14 @@ function Category() {
                   ),
                 },
                 {
-                  Header: "상품명",
-                  accessor: "title",
+                  Header: '상품명',
+                  accessor: 'shoe', // 여기서 'shoe'는 실제 데이터 필드를 참조해야 합니다.
+                  // 커스텀 렌더링 로직을 사용하여 Link를 표시합니다.
+                  Cell: ({ row }) => (
+                    <Link to={`/rboard/${row.original.shoe_seq}`}>
+                      {row.original.shoe}
+                    </Link>
+                  )
                 },
                 {
                   Header: "리뷰수",

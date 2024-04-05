@@ -1,0 +1,109 @@
+.slider-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: auto;
+}
+
+.slider-content {
+  display: flex;
+  align-items: center;
+  
+}
+
+.slider-image-container {
+  flex-shrink: 0;
+  width: 160px; /* 이미지 컨테이너의 너비 */
+  height: 160px; /* 이미지 컨테이너의 높이 */
+  overflow: hidden;
+}
+
+.slider-image {
+  width: 100%;
+  height: auto;
+  
+}
+
+.slider-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-left: 10px;
+}
+
+.slider-text {
+  flex-grow: 1;
+}
+
+.slider-review-text {
+    display: inline-block; /* 블록 레벨 요소처럼 처리 */
+    max-width: 210px; /* 최대 너비 설정 */
+    white-space: nowrap; /* 텍스트를 한 줄로 처리 */
+    overflow: hidden; /* 내용이 넘치면 숨김 처리 */
+    text-overflow: ellipsis; /* 넘친 텍스트를 ...으로 표시 */
+    overflow-wrap: break-word; /* 단어가 너무 길면 줄바꿈 */
+  word-wrap: break-word; /* 이전 버전의 브라우저를 위해 word-wrap도 설정 */
+  word-break: break-all; /* CSS3의 word-break도 설정 */
+  }
+
+.slider-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slider-button {
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.slider-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+}
+
+/* 모바일 화면 사이즈에 따른 스타일 */
+@media (max-width: 768px) {
+
+    .pt{
+        width: 100%;
+    }
+    .slider-content {
+      flex-direction: column; /* 모바일 화면에서 세로로 스택 */
+    }
+  
+    .slider-image-container {
+      width: 100%; /* 이미지 컨테이너의 너비를 100%로 설정 */
+      height: auto; /* 높이를 자동으로 설정 */
+    }
+  
+    .slider-image {
+      width: 100%; /* 이미지의 너비를 자동으로 설정 */
+      max-width: 100%; /* 이미지의 최대 너비를 컨테이너 너비로 제한 */
+      height: auto; /* 이미지의 높이를 자동으로 설정 */
+    }
+  
+    .slider-info {
+      padding: 10px 0; /* 이미지와 정보 사이에 여백을 추가 */
+      order: 2; /* 이 요소를 레이아웃 순서에서 뒤로 배치 */
+    }
+  
+    .slider-controls {
+      order: 3; /* 컨트롤 버튼을 레이아웃 순서에서 가장 뒤로 배치 */
+    }
+  
+    .slider-footer {
+      order: 4; /* footer를 레이아웃 순서에서 가장 뒤로 배치 */
+      width: 100%; /* footer의 너비를 100%로 설정 */
+    }
+  }
+  
+
+
+
+
+ 

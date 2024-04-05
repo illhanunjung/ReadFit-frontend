@@ -10,50 +10,13 @@ import Navs from "../components/Nav";
 import ExReview from "../components/ReviewCard";
 
 import "../css/Rboard.css";
+import KeywordPol from "../components/KeywordPol";
 
-const chartData = {
-  labels: ["1월", "2월", "3월", "4월", "5월", "6월", "7월"],
-  datasets: [
-    {
-      label: "월별 판매량",
-      data: [12, 19, 3, 5, 2, 3, 9],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-        "rgba(199, 199, 199, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-        "rgba(159, 159, 159, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
-const options = {
-  scales: {
-    yAxes: {
-      ticks: {
-        beginAtZero: true,
-      },
-    },
-  },
-  maintainAspectRatio: false,
-};
-
-const Rboard = () => {
+const Rboard = ({ selectedKeyword, title }) => {
   const { shoe_seq } = useParams();
   const [shoes, setShoes] = useState([]);
+  const [keywords, setKeywords] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null); // null이나 적절한 기본값으로 초기화
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,14 +25,77 @@ const Rboard = () => {
           `http://localhost:8081/api/rboard/${shoe_seq}`
         );
         setShoes(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching shoe data:", error);
       }
     };
 
+    const fetchKeyword = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8081/api/rboard/keyword/${shoe_seq}`
+        );
+        setKeywords(response.data);
+      } catch (error) {
+        console.error("Error fetching Keywords data:", error);
+      }
+    };
+
     fetchData();
+    fetchKeyword();
   }, [shoe_seq]);
+
+  // 긍정, 부정, 중립 개수를 저장할 객체
+  const count = { 긍정: 0, 부정: 0, 중립: 0 };
+
+  // selectedKeyword에 해당하는 데이터만 필터링
+  // const filteredData = keywords.filter(item => item.keyword_name === selectedKeyword);
+
+  // 필터링된 데이터를 이용해 긍정, 부정, 중립 개수 계산
+  keywords.forEach((item) => {
+    switch (item.keyword_polarity) {
+      case 2:
+        count["긍정"] += 1;
+        break;
+      case 1:
+        count["부정"] += 1;
+        break;
+      case 0:
+        count["중립"] += 1;
+        break;
+      default:
+        break;
+    }
+  });
+
+  const chartData = {
+    labels: ["긍정", "부정", "중립"],
+    datasets: [
+      {
+        data: [count["긍정"], count["부정"], count["중립"]],
+        backgroundColor: [
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+        ],
+        borderColor: [
+          "rgba(75, 192, 192, 1)",
+          "rgba(255, 99, 132, 1)",
+          "rgba(255, 206, 86, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+    },
+  };
 
   return (
     <div>
@@ -88,7 +114,8 @@ const Rboard = () => {
                     <Col md={8}>
                       <Card.Body className="sbt">
                         <Card.Text>
-                          <p>가격 :{shoe.shoe_price}원</p>
+                          <p>카테고리 : {shoe.parent_category_seq}</p>
+                          <p>가격 : {shoe.shoe_price}원</p>
                           <p>
                             <img
                               src="/img/Star.png"
@@ -102,15 +129,18 @@ const Rboard = () => {
                     </Col>
                   </Row>
                 </Card>
-                <p className="ct1">월별 리뷰 현황</p>
-                <Card className="mb-4">
-                  <Card.Body>
-                    <div style={{ height: "300px" }}>
-                      <Bar data={chartData} options={options} />
-                      {/* 차트 표시 */}
-                    </div>
-                  </Card.Body>
-                </Card>
+                <p className="ct1">전체 키워드 긍/부정</p>
+
+                <div style={{ height: "300px" }}>
+                  {/* <Bar data={chartData} options={options} />차트 표시 */}
+                  <KeywordPol data={keywords} />
+                </div>
+
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
+                <br></br>
 
                 <p className="ct1">별점 비율</p>
                 <Balrating reviews={shoe.reviews} />

@@ -70,13 +70,14 @@ const PieChart = ({ data }) => {
       <Row className="justify-content-center">
         <Col lg={12} xl={12}>
           <Card>
-            <Card.Title>키워드 랭킹</Card.Title>
+           
             <Card.Body>
+              
               <Pie
                 data={chartData}
                 options={options}
                 width={570}
-                height={570}
+                height={630}
               />
             </Card.Body>
           </Card>
