@@ -44,24 +44,25 @@ function Login() {
       })
       .then((data) => {
         console.log(data);
-
-        if(data.mem_role === 0) {
+      
+        if(data.name && data.mem_role === 0) {
+          // 관리자인 경우 로그인 차단
           alert("관리자용 로그인을 해주세요.");
-          navigate("/AdminLogin"); // 관리자 로그인 페이지로 리다이렉션
         } else if (data.name) {
+          // 일반 회원 로그인 성공 시 처리
+          // 세션에 로그인 정보 저장, 메인 페이지로 리다이렉트 등
           window.sessionStorage.setItem("mem_id", data.id);
           window.sessionStorage.setItem("mem_name", data.name);
           window.sessionStorage.setItem("mem_birth", data.birth);
           window.sessionStorage.setItem("mem_profile", data.profile);
           window.sessionStorage.setItem("mem_phone", data.phone);
           window.sessionStorage.setItem("mem_role", data.role);
-          window.location.href = "../"; //메인 페이지로 이동
+          navigate("/"); // React Router를 사용하여 메인 페이지로 리다이렉트
           console.log("로그인 성공");
-        } else{
-          //로그인 실패 시 처리
-          // 예 : 에러 메세지 표시, 로그인 페이지로 다시 이동 등
-          console.log("로그인 실패")
-          window.location.href = "Login"; //로그인 페이지로 이동
+        } else {
+          // 로그인 실패 시 처리
+          console.log("로그인 실패");
+          navigate("/Login"); // React Router를 사용하여 로그인 페이지로 리다이렉트
         }
       })
       .catch((error) => {
@@ -73,12 +74,6 @@ function Login() {
   };
 
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
-  const handleAdminLoginRedirect = () => {
-    navigate("/AdminLogin");
-  };
-
-
-
   return (
     <div>
       <Navs />
@@ -103,7 +98,7 @@ function Login() {
                   </InputGroup.Text>
                   <Form.Control
                     type="text"
-                    placeholder="아이디"
+                    placeholder="관리자 아이디"
                     className="input-field"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -130,36 +125,14 @@ function Login() {
                 >
                   Let's Fit!
                 </Button>
-              </Form>
-              <div className="text-center mt-4">
-                <Nav className="me-auto justify-content-center">
-                  <Nav.Link
-                    onClick={() => navigateTo("/FindIDPW")}
-                    className="nlink"
-                  >
-                    아이디/비밀번호 찾기
-                  </Nav.Link>
-
-                  <Nav.Link
-                    onClick={() => navigateTo("/Register")}
-                    className="nlink"
-                  >
-                    회원가입
-                  </Nav.Link>
-                </Nav>
                 <br></br><br></br><br></br><br></br>
                 <Button
                   variant="outline-dark" 
                   className="another-login-button"
                   onClick={() => navigate("/AdminLogin")}>
-                  관리자용
+                   회원용
                 </Button>
-              </div>
-              {/*
-              <Button variant="warning" className="kakao-login-button mb-3">
-                <FontAwesomeIcon icon={faCommentDots} className="me-2" />{" "}
-                카카오 로그인
-              </Button> */}
+              </Form>
             </Col>
           </Row>
         </Container>
