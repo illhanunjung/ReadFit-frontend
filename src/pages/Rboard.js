@@ -12,11 +12,10 @@ import ExReview from "../components/ReviewCard";
 import "../css/Rboard.css";
 import KeywordPol from "../components/KeywordPol";
 
-const Rboard = ({ selectedKeyword, title }) => {
+const Rboard = () => {
   const { shoe_seq } = useParams();
   const [shoes, setShoes] = useState([]);
   const [keywords, setKeywords] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null); // null이나 적절한 기본값으로 초기화
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,58 +43,6 @@ const Rboard = ({ selectedKeyword, title }) => {
     fetchData();
     fetchKeyword();
   }, [shoe_seq]);
-
-  // 긍정, 부정, 중립 개수를 저장할 객체
-  const count = { 긍정: 0, 부정: 0, 중립: 0 };
-
-  // selectedKeyword에 해당하는 데이터만 필터링
-  // const filteredData = keywords.filter(item => item.keyword_name === selectedKeyword);
-
-  // 필터링된 데이터를 이용해 긍정, 부정, 중립 개수 계산
-  keywords.forEach((item) => {
-    switch (item.keyword_polarity) {
-      case 2:
-        count["긍정"] += 1;
-        break;
-      case 1:
-        count["부정"] += 1;
-        break;
-      case 0:
-        count["중립"] += 1;
-        break;
-      default:
-        break;
-    }
-  });
-
-  const chartData = {
-    labels: ["긍정", "부정", "중립"],
-    datasets: [
-      {
-        data: [count["긍정"], count["부정"], count["중립"]],
-        backgroundColor: [
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-        ],
-        borderColor: [
-          "rgba(75, 192, 192, 1)",
-          "rgba(255, 99, 132, 1)",
-          "rgba(255, 206, 86, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
-      },
-    },
-  };
 
   return (
     <div>

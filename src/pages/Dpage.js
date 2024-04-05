@@ -21,6 +21,7 @@ import {
 import { useParams } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Dpage.css";
+import { format, parseISO } from "date-fns";
 
 function Dpage() {
   const { board_seq } = useParams();
@@ -249,6 +250,11 @@ function Dpage() {
     }
   };
 
+  let BoardDate = null;
+  if (boardDetail && boardDetail.board_at) {
+    BoardDate = format(parseISO(boardDetail.board_at), "yyyy-MM-dd HH:mm");
+  }
+
   return (
     <div>
       <Navs />
@@ -273,9 +279,7 @@ function Dpage() {
                       />
                       <div className="user-text">
                         <strong>{boardDetail.mem_id}</strong>
-                        <span className="text-muted">
-                          {boardDetail.board_at}
-                        </span>
+                        <span className="text-muted">{BoardDate}</span>
                       </div>
                     </div>
                   </Col>
@@ -322,7 +326,6 @@ function Dpage() {
                   </div>
                 )}
                 <p>{boardDetail.board_content}</p>
-                <p className="font-weight-bold">지역: {boardDetail.board_at}</p>
               </Card.Body>
             </>
           ) : (
@@ -373,47 +376,50 @@ function Dpage() {
                     )}
                   </Col>
                   <Col xs={2} md={1} className="d-flex justify-content-end">
-                  {loginMember === comment.mem_id && !isEditingComment && (
-                    // 수정 버튼 표시
-                    <Button
-                      variant="outline-secondary"
-                      className="me-2 action-button"
-                      onClick={() => handleCommentEdit(comment)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Button>
-                  )}
-                  {isEditingComment === comment.comment_seq ? (
-                    // '수정완료' 버튼 표시
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleCommentUpdate()}
-                      style={{
-                        width: "100%",
-                        maxWidth: "150px",
-                        marginLeft: "auto",
-                        height: "80px",
-                        display: "inline-block",
-                      }}
-                    >
-                      수정완료
-                    </Button>
-                  ) : (
-                    (loginMember === comment.mem_id || window.sessionStorage.getItem("mem_role") === "0") && (
-                      // 삭제 버튼 표시
+                    {loginMember === comment.mem_id && !isEditingComment && (
+                      // 수정 버튼 표시
                       <Button
-                        variant="outline-danger"
-                        className="action-button"
-                        onClick={() => handleDeleteComment(comment.comment_seq)}
+                        variant="outline-secondary"
+                        className="me-2 action-button"
+                        onClick={() => handleCommentEdit(comment)}
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faEdit} />
                       </Button>
-                    )
-                  )}
-                </Col>
-              </Row>
-            </ListGroup.Item>
+                    )}
+                    {isEditingComment === comment.comment_seq ? (
+                      // '수정완료' 버튼 표시
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleCommentUpdate()}
+                        style={{
+                          width: "100%",
+                          maxWidth: "150px",
+                          marginLeft: "auto",
+                          height: "80px",
+                          display: "inline-block",
+                        }}
+                      >
+                        수정완료
+                      </Button>
+                    ) : (
+                      (loginMember === comment.mem_id ||
+                        window.sessionStorage.getItem("mem_role") === "0") && (
+                        // 삭제 버튼 표시
+                        <Button
+                          variant="outline-danger"
+                          className="action-button"
+                          onClick={() =>
+                            handleDeleteComment(comment.comment_seq)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                      )
+                    )}
+                  </Col>
+                </Row>
+              </ListGroup.Item>
             ))}
           </ListGroup>
 
