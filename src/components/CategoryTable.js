@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
 import {
   useGlobalFilter,
@@ -11,6 +11,8 @@ import "../css/board.css";
 import SearchCategory from "./SearchCategory";
 
 function CategoryTable({ columns, data }) {
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 추가
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -26,7 +28,7 @@ function CategoryTable({ columns, data }) {
     gotoPage,
     pageCount,
   } = useTable(
-    { columns, data, initialState: { pageIndex: 0, pageSize: 5 } },
+    { columns, data, initialState: { pageIndex: currentPage, pageSize: 5 } },
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -37,7 +39,13 @@ function CategoryTable({ columns, data }) {
     console.log("검색어:", query); // 검색어 출력으로 확인
     setGlobalFilter(query); // 글로벌 필터 설정
   };
-  
+
+  // 페이지 이동 함수를 재정의하여 현재 페이지를 저장하고 페이지 이동
+  const handleGotoPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    gotoPage(pageNumber);
+  };
+
   // 페이지 번호를 계산하여 반환하는 함수
   const getPageNumbers = () => {
     const pages = [];
@@ -91,7 +99,7 @@ function CategoryTable({ columns, data }) {
         <ButtonGroup>
           {/* Pagination buttons */}
           <Button
-            onClick={() => gotoPage(0)}
+            onClick={() => handleGotoPage(0)}
             disabled={!canPreviousPage}
             variant="primary"
             size="sm"
@@ -99,7 +107,10 @@ function CategoryTable({ columns, data }) {
             {"<<"}
           </Button>
           <Button
-            onClick={() => previousPage()}
+            onClick={() => {
+              previousPage();
+              handleGotoPage(pageIndex - 1);
+            }}
             disabled={!canPreviousPage}
             variant="primary"
             size="sm"
@@ -109,7 +120,7 @@ function CategoryTable({ columns, data }) {
           {getPageNumbers().map((number) => (
             <Button
               key={number}
-              onClick={() => gotoPage(number)}
+              onClick={() => handleGotoPage(number)}
               variant={pageIndex === number ? "primary" : "light"}
               size="sm"
             >
@@ -117,7 +128,10 @@ function CategoryTable({ columns, data }) {
             </Button>
           ))}
           <Button
-            onClick={() => nextPage()}
+            onClick={() => {
+              nextPage();
+              handleGotoPage(pageIndex + 1);
+            }}
             disabled={!canNextPage}
             variant="primary"
             size="sm"
@@ -125,7 +139,7 @@ function CategoryTable({ columns, data }) {
             다음
           </Button>
           <Button
-            onClick={() => gotoPage(pageCount - 1)}
+            onClick={() => handleGotoPage(pageCount - 1)}
             disabled={!canNextPage}
             variant="primary"
             size="sm"
@@ -135,9 +149,7 @@ function CategoryTable({ columns, data }) {
         </ButtonGroup>
       </div>
 
-
       <SearchCategory onSubmit={handleSearch} />
-
     </>
   );
 }

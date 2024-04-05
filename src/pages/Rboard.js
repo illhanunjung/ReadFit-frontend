@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Card, Col, Container, Image, Row } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
 import { useParams } from "react-router-dom";
 import Balrating from "../components/Balrating";
 import InventoryList from "../components/InventoryList";
@@ -10,8 +9,8 @@ import "../css/Rboard.css";
 import Navs from "../components/Nav";
 import ExReview from "../components/ReviewCard";
 
-import "../css/Rboard.css";
 import KeywordPol from "../components/KeywordPol";
+import "../css/Rboard.css";
 
 
 
@@ -138,7 +137,7 @@ const Rboard = ({selectedKeyword,title}) => {
             
             <Col lg={6}>
               
-              <ExReview reviews={shoe.reviews}/>
+              <ExReview reviews={shoe.reviews} shoe_seq={shoe_seq}/>
             </Col>
           </Row>
               ))}

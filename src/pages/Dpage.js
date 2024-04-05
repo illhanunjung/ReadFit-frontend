@@ -1,3 +1,4 @@
+import { faHeart as faEmptyHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faCommentDots,
   faEdit,
@@ -27,7 +28,12 @@ function Dpage() {
   const [boardDetail, setBoardDetail] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
+  const [favoriteCount, setFavoriteCount] = useState(null);
+  const [isUserInFavoriteBoardTable, setisUserInFavoriteBoardTable] = useState(
+    false
+  );
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태
+
   const loginMember = window.sessionStorage.getItem("mem_id");
   // alert("로그인한 멤버 : " + loginMember)
 
@@ -35,19 +41,35 @@ function Dpage() {
     const fetchBoardDetail = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8081/api/boards/${board_seq}`
+          `http://localhost:8081/api/boards/${board_seq}`,
+          {
+            headers: {
+              loginMember: loginMember, // 로그인 멤버의 값을 헤더에 추가
+            },
+          }
         );
         console.log("게시물 정보", response.data);
         const boardData = response.data.board;
         const commentsData = response.data.comments;
         setBoardDetail(boardData);
         setComments(commentsData);
+
+        setFavoriteCount(response.data.favoriteCount);
+        setisUserInFavoriteBoardTable(response.data.isUserFavorite);
+        // alert(response.data.isUserFavorite)
+        // alert(isUserInFavoriteBoardTable)
+        if (isUserInFavoriteBoardTable) {
+          // isUserInFavoriteBoardTable이 false인 경우에만 heartClicked 값을 변경합니다.
+          setHeartClicked(!heartClicked);
+        }
+
+
       } catch (error) {
         console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
       }
     };
     fetchBoardDetail();
-  }, [board_seq]);
+  }, [board_seq, isUserInFavoriteBoardTable]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -215,6 +237,39 @@ function Dpage() {
     }
   };
 
+  const [heartClicked, setHeartClicked] = useState(false);
+
+  const toggleHeartColor = () => {
+    setHeartClicked(!heartClicked);
+    // 하트 아이콘을 클릭할 때 selectFavoriteboard 함수 호출
+    selectFavoriteboard();
+  };
+
+  const selectFavoriteboard = async () => {
+    try {
+        const response = await axios.get(
+            `http://localhost:8081/api/boards/clickedHeart/${board_seq}`,
+            {
+                headers: {
+                    loginMember: loginMember, // 로그인 멤버의 값을 헤더에 추가
+                },
+            }
+        );
+        console.log("좋아요 버튼 누르기 설정 성공", response.data);
+
+        // 서버로부터 받은 새로운 favoriteCount와 사용자 좋아요 상태(isUserFavorite)를 사용하여 상태 업데이트
+        setFavoriteCount(response.data.favoriteCount);
+        setisUserInFavoriteBoardTable(response.data.isUserFavorite);
+
+        // 좋아요 버튼 클릭 상태 업데이트
+        // UI에서 실시간으로 반영하기 위해 사용자의 좋아요 상태에 따라 heartClicked 상태를 설정합니다.
+        // 이 예시에서는 isUserFavorite 값에 따라 heartClicked 상태를 반전시킵니다.
+        setHeartClicked(response.data.isUserFavorite);
+    } catch (error) {
+        console.error("좋아요 버튼 누르기 설정 중 오류 발생:", error);
+    }
+};
+
   const handleEditPost = () => {
     // Writepost.js 페이지로 이동
     if (window.confirm("게시물을 수정하시겠습니까?")) {
@@ -249,6 +304,14 @@ function Dpage() {
     }
   };
 
+  const wrprofile = boardDetail
+    ? `http://localhost:8081/img/uploads/profile/${boardDetail?.mem_profile}`
+    : undefined;
+
+  // const cmtprofile = comment
+  //   ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+  //   : undefined;
+
   return (
     <div>
       <Navs />
@@ -267,7 +330,7 @@ function Dpage() {
                     <h2 className="mb-2">{boardDetail.board_title}</h2>
                     <div className="user-info">
                       <Image
-                        src="/img/r1.png"
+                        src={wrprofile}
                         // roundedCircle
                         className="user-img"
                       />
@@ -329,8 +392,34 @@ function Dpage() {
             <p>Loading...</p>
           )}
 
+          {/* <Card.Footer className="d-flex justify-content-start align-items-center">
+            <FontAwesomeIcon
+              icon={heartClicked ? faHeart : faEmptyHeart}
+              className="mr-2"
+              style={{ color: heartClicked ? "red" : "black" }}
+              onClick={toggleHeartColor}
+            />
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <span className="ml-2 mr-2">{favoriteCount}</span>
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            {comments.length}
+          </Card.Footer> */}
+
           <Card.Footer className="d-flex justify-content-start align-items-center">
-            <FontAwesomeIcon icon={faHeart} className="mr-2" />
+            <FontAwesomeIcon
+              icon={isUserInFavoriteBoardTable ? faHeart : faEmptyHeart}
+              className="mr-2"
+              style={{ color: isUserInFavoriteBoardTable && heartClicked ? "red" : "black"}}
+              onClick={toggleHeartColor}
+            />
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <span className="ml-2 mr-2">{favoriteCount}</span>
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
+            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
             <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
             <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
             <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
@@ -346,7 +435,11 @@ function Dpage() {
                 <Row className="align-items-start">
                   <Col xs={2} md={1} className="d-flex justify-content-center">
                     <Image
-                      src="/img/r1.png"
+                      src={
+                        comment
+                          ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+                          : undefined
+                      }
                       // roundedCircle
                       className="comment-img"
                     />
@@ -373,47 +466,50 @@ function Dpage() {
                     )}
                   </Col>
                   <Col xs={2} md={1} className="d-flex justify-content-end">
-                  {loginMember === comment.mem_id && !isEditingComment && (
-                    // 수정 버튼 표시
-                    <Button
-                      variant="outline-secondary"
-                      className="me-2 action-button"
-                      onClick={() => handleCommentEdit(comment)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Button>
-                  )}
-                  {isEditingComment === comment.comment_seq ? (
-                    // '수정완료' 버튼 표시
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleCommentUpdate()}
-                      style={{
-                        width: "100%",
-                        maxWidth: "150px",
-                        marginLeft: "auto",
-                        height: "80px",
-                        display: "inline-block",
-                      }}
-                    >
-                      수정완료
-                    </Button>
-                  ) : (
-                    (loginMember === comment.mem_id || window.sessionStorage.getItem("mem_role") === "0") && (
-                      // 삭제 버튼 표시
+                    {loginMember === comment.mem_id && !isEditingComment && (
+                      // 수정 버튼 표시
                       <Button
-                        variant="outline-danger"
-                        className="action-button"
-                        onClick={() => handleDeleteComment(comment.comment_seq)}
+                        variant="outline-secondary"
+                        className="me-2 action-button"
+                        onClick={() => handleCommentEdit(comment)}
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faEdit} />
                       </Button>
-                    )
-                  )}
-                </Col>
-              </Row>
-            </ListGroup.Item>
+                    )}
+                    {isEditingComment === comment.comment_seq ? (
+                      // '수정완료' 버튼 표시
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleCommentUpdate()}
+                        style={{
+                          width: "100%",
+                          maxWidth: "150px",
+                          marginLeft: "auto",
+                          height: "80px",
+                          display: "inline-block",
+                        }}
+                      >
+                        수정완료
+                      </Button>
+                    ) : (
+                      (loginMember === comment.mem_id ||
+                        window.sessionStorage.getItem("mem_role") === "0") && (
+                        // 삭제 버튼 표시
+                        <Button
+                          variant="outline-danger"
+                          className="action-button"
+                          onClick={() =>
+                            handleDeleteComment(comment.comment_seq)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                      )
+                    )}
+                  </Col>
+                </Row>
+              </ListGroup.Item>
             ))}
           </ListGroup>
 
