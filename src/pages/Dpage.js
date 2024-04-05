@@ -42,6 +42,7 @@ function Dpage() {
         const commentsData = response.data.comments;
         setBoardDetail(boardData);
         setComments(commentsData);
+        console.log("잘지고와지니", boardData);
       } catch (error) {
         console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
       }
@@ -249,6 +250,14 @@ function Dpage() {
     }
   };
 
+  const wrprofile = boardDetail
+    ? `http://localhost:8081/img/uploads/profile/${boardDetail?.mem_profile}`
+    : undefined;
+
+  // const cmtprofile = comment
+  //   ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+  //   : undefined;
+
   return (
     <div>
       <Navs />
@@ -267,7 +276,7 @@ function Dpage() {
                     <h2 className="mb-2">{boardDetail.board_title}</h2>
                     <div className="user-info">
                       <Image
-                        src="/img/r1.png"
+                        src={wrprofile}
                         // roundedCircle
                         className="user-img"
                       />
@@ -346,7 +355,11 @@ function Dpage() {
                 <Row className="align-items-start">
                   <Col xs={2} md={1} className="d-flex justify-content-center">
                     <Image
-                      src="/img/r1.png"
+                      src={
+                        comment
+                          ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
+                          : undefined
+                      }
                       // roundedCircle
                       className="comment-img"
                     />
@@ -373,47 +386,50 @@ function Dpage() {
                     )}
                   </Col>
                   <Col xs={2} md={1} className="d-flex justify-content-end">
-                  {loginMember === comment.mem_id && !isEditingComment && (
-                    // 수정 버튼 표시
-                    <Button
-                      variant="outline-secondary"
-                      className="me-2 action-button"
-                      onClick={() => handleCommentEdit(comment)}
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Button>
-                  )}
-                  {isEditingComment === comment.comment_seq ? (
-                    // '수정완료' 버튼 표시
-                    <Button
-                      variant="primary"
-                      size="sm"
-                      onClick={() => handleCommentUpdate()}
-                      style={{
-                        width: "100%",
-                        maxWidth: "150px",
-                        marginLeft: "auto",
-                        height: "80px",
-                        display: "inline-block",
-                      }}
-                    >
-                      수정완료
-                    </Button>
-                  ) : (
-                    (loginMember === comment.mem_id || window.sessionStorage.getItem("mem_role") === "0") && (
-                      // 삭제 버튼 표시
+                    {loginMember === comment.mem_id && !isEditingComment && (
+                      // 수정 버튼 표시
                       <Button
-                        variant="outline-danger"
-                        className="action-button"
-                        onClick={() => handleDeleteComment(comment.comment_seq)}
+                        variant="outline-secondary"
+                        className="me-2 action-button"
+                        onClick={() => handleCommentEdit(comment)}
                       >
-                        <FontAwesomeIcon icon={faTrash} />
+                        <FontAwesomeIcon icon={faEdit} />
                       </Button>
-                    )
-                  )}
-                </Col>
-              </Row>
-            </ListGroup.Item>
+                    )}
+                    {isEditingComment === comment.comment_seq ? (
+                      // '수정완료' 버튼 표시
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => handleCommentUpdate()}
+                        style={{
+                          width: "100%",
+                          maxWidth: "150px",
+                          marginLeft: "auto",
+                          height: "80px",
+                          display: "inline-block",
+                        }}
+                      >
+                        수정완료
+                      </Button>
+                    ) : (
+                      (loginMember === comment.mem_id ||
+                        window.sessionStorage.getItem("mem_role") === "0") && (
+                        // 삭제 버튼 표시
+                        <Button
+                          variant="outline-danger"
+                          className="action-button"
+                          onClick={() =>
+                            handleDeleteComment(comment.comment_seq)
+                          }
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                        </Button>
+                      )
+                    )}
+                  </Col>
+                </Row>
+              </ListGroup.Item>
             ))}
           </ListGroup>
 
