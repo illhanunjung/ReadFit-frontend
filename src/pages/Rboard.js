@@ -58,13 +58,13 @@ const Rboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/rboard/${shoe_seq}`);
+        const response = await axios.get(
+          `http://localhost:8081/api/rboard/${shoe_seq}`
+        );
         setShoes(response.data);
         console.log(response.data);
-
-        
       } catch (error) {
-        console.error('Error fetching shoe data:', error);
+        console.error("Error fetching shoe data:", error);
       }
     };
 
@@ -76,53 +76,58 @@ const Rboard = () => {
       <Navs />
       <div id="content">
         <Container fluid className="my-5">
-        {shoes.map((shoe, index) => (
-          <Row className="mb-4">
-            <Col lg={6}>
-              <p className="ct2">
-                {shoe.shoe}
-              </p>
-              <Card className="mb-4">
-                <Row noGutters>
-                  <Col md={4} className="text-center">
-                    <Image src={shoe.shoe_img} fluid rounded />
-                  </Col>
-                  <Col md={8}>
-                    <Card.Body className="sbt">
-                      <Card.Text>
-                        <p>가격 :{shoe.shoe_price}원</p>
-                        <p><img src="/img/Star.png" style={{ width: "15px", height: "auto" }}/>({shoe.averageRating.toFixed(1)})</p>
-                        <p>리뷰수 : ({shoe.reviewCount})</p>
-                      </Card.Text>
-                    </Card.Body>  
-                  </Col>
+          {shoes.map((shoe, index) => (
+            <Row className="mb-4">
+              <Col lg={6}>
+                <p className="ct2">{shoe.shoe}</p>
+                <Card className="mb-4">
+                  <Row noGutters>
+                    <Col md={4} className="text-center">
+                      <Image src={shoe.shoe_img} fluid rounded />
+                    </Col>
+                    <Col md={8}>
+                      <Card.Body className="sbt">
+                        <Card.Text>
+                          <p>가격 :{shoe.shoe_price}원</p>
+                          <p>
+                            <img
+                              src="/img/Star.png"
+                              style={{ width: "15px", height: "auto" }}
+                            />
+                            ({shoe.averageRating.toFixed(1)})
+                          </p>
+                          <p>리뷰수 : ({shoe.reviewCount})</p>
+                        </Card.Text>
+                      </Card.Body>
+                    </Col>
+                  </Row>
+                </Card>
+                <p className="ct1">월별 리뷰 현황</p>
+                <Card className="mb-4">
+                  <Card.Body>
+                    <div style={{ height: "300px" }}>
+                      <Bar data={chartData} options={options} />
+                      {/* 차트 표시 */}
+                    </div>
+                  </Card.Body>
+                </Card>
+
+                <p className="ct1">별점 비율</p>
+                <Balrating reviews={shoe.reviews} />
+                {/* 별점 비율 표시 */}
+                <br></br>
+                <Row className="mb-4">
+                  <p className="ct1">함께보면 좋은 상품</p>
+                  <InventoryList />
+                  {/* 함께 보면 좋은 상품 리스트 표시 */}
                 </Row>
-              </Card>
-              <p className="ct1">월별 리뷰 현황</p>
-              <Card className="mb-4">
-                <Card.Body>
-                  <div style={{ height: "300px" }}>
-                    <Bar data={chartData} options={options} />{/* 차트 표시 */}
-                  </div>
-                </Card.Body>
-              </Card>
-              
-              
-              <p className="ct1">별점 비율</p>
-              <Balrating reviews={shoe.reviews}/>{/* 별점 비율 표시 */}
-              <br></br>
-              <Row className="mb-4">
-                <p className="ct1">함께보면 좋은 상품</p>
-                <InventoryList />{/* 함께 보면 좋은 상품 리스트 표시 */}
-              </Row>
-            </Col>
-            
-            <Col lg={6}>
-              
-              <ExReview reviews={shoe.reviews}/>
-            </Col>
-          </Row>
-              ))}
+              </Col>
+
+              <Col lg={6}>
+                <ExReview reviews={shoe.reviews} />
+              </Col>
+            </Row>
+          ))}
         </Container>
       </div>
     </div>
