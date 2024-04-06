@@ -51,4 +51,75 @@
   .start-conversation-button:hover {
     background-color: black; /* 버튼 호버 색상 */
   }
+
+
+  .conversation-list {
+    overflow-y: auto;
+  }
+  
+  .conversation-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eaeaea;
+    cursor: pointer;
+  }
+  
+  .conversation-item:hover {
+    background-color: #f8f8f8;
+  }
+  
+  .conversation-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    object-fit: cover;
+    margin-right: 15px;
+  }
+  
+  .conversation-details {
+    flex-grow: 1;
+    min-width: 0; /* 긴 텍스트를 위한 설정 */
+  }
+  
+  .conversation-title {
+    font-size: 1rem;
+    margin: 0;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 긴 제목은 생략표시 */
+  }
+  
+  .conversation-snippet {
+    font-size: 0.85rem;
+    margin: 0;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 긴 내용은 생략표시 */
+  }
+  
+  .conversation-time {
+    font-size: 0.75rem;
+    color: #999;
+    margin-left: 15px; /* 시간 표시를 위한 마진 추가 */
+  }
+  
+  /* 스크롤바 스타일 (옵션) */
+  .conversation-list::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .conversation-list::-webkit-scrollbar-thumb {
+    background-color: #cccccc;
+    border-radius: 10px;
+  }
+  
+  .conversation-list::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
+
+
+
   

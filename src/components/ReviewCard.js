@@ -1,15 +1,14 @@
 import { useWindowWidth } from "@react-hook/window-size"; // 창 크기를 감지하는 Hook
+import axios from 'axios'; // axios를 사용하여 데이터를 가져옵니다.
 import { format, parseISO } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; // axios를 사용하여 데이터를 가져옵니다.
 import {
   Button,
   Card,
   Col,
   Container,
-  Modal,
   Pagination,
-  Row,
+  Row
 } from "react-bootstrap";
 import KeywordPol from './KeywordPol';
 
@@ -30,9 +29,9 @@ const StatusCard = ({ title, isActive, onClick }) => {
 };
 
 
-const BoardMenu = ({ activeCategory, setActiveCategory }) => {
+const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
   // const [activeCategory, setActiveCategory] = useState('default');
-
+  // alert(shoe_seq)
   const titleList = [
     "디자인",
     "사이즈",
@@ -68,12 +67,14 @@ const BoardMenu = ({ activeCategory, setActiveCategory }) => {
 
 
     try {
-      const response = await fetch('http://localhost:8081/api/rboard'); // 서버의 URL로 요청을 보냅니다.
+      const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`); // 서버의 URL로 요청을 보냅니다.
       const data = await response.json();
      
       // 가져온 데이터를 상태로 설정합니다.
      
       setKeywordReviewSummary(data.reviewSummary);
+      console.log('넘어온 값입니다.');
+      console.log(KeywordReviewSummary);
      
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -104,10 +105,8 @@ const BoardMenu = ({ activeCategory, setActiveCategory }) => {
           <Col>
           <p className="ct1">리뷰 요약</p>
             <Card className="mb-3">
-             
               <Card.Body>
                 {/* 여기에 선택된 카테고리에 대한 컴포넌트를 표시하세요 */}
-                
                 <p>{KeywordReviewSummary[activeCategory] ? KeywordReviewSummary[activeCategory] : "키워드를 클릭하시면 요약정보를 확인하실 수 있습니다"}</p>
               </Card.Body>
             </Card>
@@ -297,7 +296,7 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
 };
 
 
-const ExReview = ({ reviews }) => {
+const ExReview = ({ reviews, shoe_seq }) => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [keywords, setKeywords] = useState([]);
@@ -387,7 +386,7 @@ const ExReview = ({ reviews }) => {
   return (
     <>
       <p className="ct1">키워드</p>
-      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} shoe_seq={shoe_seq}/>
       
       
       <Container>

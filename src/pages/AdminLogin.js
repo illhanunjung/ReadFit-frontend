@@ -3,7 +3,7 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   Button,
   Col,
@@ -17,10 +17,40 @@ import { useNavigate } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Login.css"; // CSS 파일의 실제 경로로 확인하세요.
 
+
+
+
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+
+  function checkLoginStatus() {
+
+    fetch('/api/checkLoginStatus')
+      .then(res => res.json())
+      .then(data => {
+        if (data.isLoggedIn) {
+          if (data.isAdmin) {
+            console.log('User is an admin.');
+            // 관리자 페이지로 리다이렉션 할 수 있습니다.
+            
+          } else {
+            console.log('User is logged in but not an admin.');
+            // 일반 사용자 대시보드 또는 메인 페이지로 리다이렉션 할 수 있습니다.
+          }
+        } else {
+          console.log('User is not logged in.');
+          
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  useEffect(() => {
+    checkLoginStatus();
+  }, [navigate]); // 의존성 배열이 비어 있으므로 컴포넌트 마운트 시에만 호출됩니다.
+  
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -45,9 +75,9 @@ function Login() {
       .then((data) => {
         console.log(data);
 
-        if(data.mem_role === 0) {
-          alert("관리자용 로그인을 해주세요.");
-          navigate("/AdminLogin"); // 관리자 로그인 페이지로 리다이렉션
+        if(data.mem_role === 1) {
+          alert("회원용 로그인을 해주세요.");
+          navigate("/Login"); // 관리자 로그인 페이지로 리다이렉션
         } else if (data.name) {
           window.sessionStorage.setItem("mem_id", data.id);
           window.sessionStorage.setItem("mem_name", data.name);
@@ -72,13 +102,8 @@ function Login() {
     }
   };
 
+
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
-  const handleAdminLoginRedirect = () => {
-    navigate("/AdminLogin");
-  };
-
-
-
   return (
     <div>
       <Navs />
@@ -103,7 +128,7 @@ function Login() {
                   </InputGroup.Text>
                   <Form.Control
                     type="text"
-                    placeholder="아이디"
+                    placeholder="관리자 아이디"
                     className="input-field"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -130,36 +155,14 @@ function Login() {
                 >
                   Let's Fit!
                 </Button>
-              </Form>
-              <div className="text-center mt-4">
-                <Nav className="me-auto justify-content-center">
-                  <Nav.Link
-                    onClick={() => navigateTo("/FindIDPW")}
-                    className="nlink"
-                  >
-                    아이디/비밀번호 찾기
-                  </Nav.Link>
-
-                  <Nav.Link
-                    onClick={() => navigateTo("/Register")}
-                    className="nlink"
-                  >
-                    회원가입
-                  </Nav.Link>
-                </Nav>
                 <br></br><br></br><br></br><br></br>
                 <Button
                   variant="outline-dark" 
                   className="another-login-button"
-                  onClick={() => navigate("/AdminLogin")}>
-                  관리자용
+                  onClick={() => navigate("/Login")}>
+                   회원용
                 </Button>
-              </div>
-              {/*
-              <Button variant="warning" className="kakao-login-button mb-3">
-                <FontAwesomeIcon icon={faCommentDots} className="me-2" />{" "}
-                카카오 로그인
-              </Button> */}
+              </Form>
             </Col>
           </Row>
         </Container>

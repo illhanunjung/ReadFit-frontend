@@ -20,18 +20,18 @@ const PieChart = ({ data }) => {
       {
         data: dataValues,
         backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#4CAF50",
-          "#9C27B0",
-          "#FF9800",
-          "#00BCD4",
-          "#FF00FF",
-          "#CDDC39",
-          "#FF4081",
-          "#2196F3",
-          "#FF5722",
+          "#ff9999",
+          "#FF9933",
+          "#8fd9b6",
+          "#CC66CC",
+          "#99CC00",
+          "#3399FF",
+          "#80DEEA",
+          "#FF77A9",
+          "#D4E157",
+          "#FF80AB",
+          "#6EC6FF",
+          "#FF8A65",
         ],
       },
     ],
@@ -70,13 +70,12 @@ const PieChart = ({ data }) => {
       <Row className="justify-content-center">
         <Col lg={12} xl={12}>
           <Card>
-            <Card.Title>키워드 랭킹</Card.Title>
             <Card.Body>
               <Pie
                 data={chartData}
                 options={options}
                 width={570}
-                height={570}
+                height={630}
               />
             </Card.Body>
           </Card>

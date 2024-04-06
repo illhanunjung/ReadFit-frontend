@@ -9,6 +9,9 @@ import Main2 from "./pages/Main2";
 import Profil from "./pages/Profil";
 import Register from './pages/Register';
 import Exp from "./pages/Exp";
+import AdminLogin from "./pages/AdminLogin";
+import Admin from "./pages/Admin";
+
 
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -41,6 +44,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Main1 />} />
         <Route path="Login" element={<Login />} />
+        <Route path="AdminLogin" element={<AdminLogin />} />
+        <Route path="Admin" element={<Admin />} />
         <Route path="Board" element={<Board />} />
         <Route path="Category" element={<Category />} />
         <Route path="Rboard" element={<Rboard />} />
@@ -52,8 +57,6 @@ function App() {
         <Route path="/chat" element={<Chatbot />} />
         <Route path="/Exp" element={<Exp />} />
         <Route path="/rboard/:shoe_seq" element={<Rboard />} />
-
-
         <Route path="/boards/:board_seq" element={<Dpage />} />
       </Routes>
     </div>

@@ -49,8 +49,8 @@ const Main1 = () => {
           <Col lg={6} md={6} className="th-col">
             <div className="number-circle">02</div>
             <div className="th-content">
-              <h2>카테고리 TOP5</h2>
-              <p>리뷰 많은 TOP5 상품 제시</p>
+              <h2>카테고리 TOP10</h2>
+              <p>리뷰 많은 TOP10 상품 제시</p>
             </div>
           </Col>
         </Row>

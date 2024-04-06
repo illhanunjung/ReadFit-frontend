@@ -11,7 +11,7 @@
 
 .t2{
     text-align: left;
-    font-size: 35px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -22,6 +22,10 @@
     max-width: 115px;
     background-color: black;
     border-radius: 45px;
+}
+
+.mcard-top-spacing {
+  margin-bottom: 20px; /* 아래쪽 간격 */
 }
 
 

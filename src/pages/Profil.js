@@ -59,8 +59,6 @@ function Profil() {
     // 컴포넌트 렌더링 및 관심 상품 토글 로직에 따른 UI 업데이트 부분
     // ...
   };
-  const positivePercentage = 70;
-  const negativePercentage = 30;
 
   return (
     <div>
@@ -74,9 +72,29 @@ function Profil() {
               data={shoes.map((shoe, cnt) => ({
                 productImage: shoes[cnt].shoe_img,
                 idx: shoes[cnt].reviewCount,
+
+                shoe_seq: shoes[cnt].shoe_seq,
+                title: (
+                  <Link to={`/rboard/${shoes[cnt].shoe_seq}`}>
+                    {shoes[cnt].shoe}
+                  </Link>
+                ),
+                sentiment: { positivePercentage: 60, negativePercentage: 40 },
+
                 id: shoes[cnt].shoe_seq,
                 title: <Link to={`/rboard`}>{shoes[cnt].shoe}</Link>,
-                sentiment: { positivePercentage: 60, negativePercentage: 40 },
+                sentiment: {
+                  positive_percentage: shoes[cnt].positive_percentage
+                    ? shoes[cnt].positive_percentage
+                    : 0,
+                  negative_percentage: shoes[cnt].negative_percentage
+                    ? shoes[cnt].negative_percentage
+                    : 0,
+                  neutral_percentage: shoes[cnt].neutral_percentage
+                    ? shoes[cnt].neutral_percentage
+                    : 0,
+                },
+
                 rating: shoes[cnt].averageRating,
                 cate: shoes[cnt].category
                   ? shoes[cnt].category
@@ -148,8 +166,9 @@ function Profil() {
                   accessor: "sentiment",
                   Cell: ({ value }) => (
                     <Cagtogorytbar
-                      positivePercentage={positivePercentage}
-                      negativePercentage={negativePercentage}
+                      positive_percentage={value.positive_percentage}
+                      negative_percentage={value.negative_percentage}
+                      neutral_percentage={value.neutral_percentage}
                     />
                   ),
                 },
