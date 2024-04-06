@@ -62,8 +62,6 @@ function Dpage() {
           // isUserInFavoriteBoardTable이 false인 경우에만 heartClicked 값을 변경합니다.
           setHeartClicked(!heartClicked);
         }
-
-
       } catch (error) {
         console.error("게시글 상세 정보를 가져오는 도중 오류 발생:", error);
       }
@@ -247,28 +245,28 @@ function Dpage() {
 
   const selectFavoriteboard = async () => {
     try {
-        const response = await axios.get(
-            `http://localhost:8081/api/boards/clickedHeart/${board_seq}`,
-            {
-                headers: {
-                    loginMember: loginMember, // 로그인 멤버의 값을 헤더에 추가
-                },
-            }
-        );
-        console.log("좋아요 버튼 누르기 설정 성공", response.data);
+      const response = await axios.get(
+        `http://localhost:8081/api/boards/clickedHeart/${board_seq}`,
+        {
+          headers: {
+            loginMember: loginMember, // 로그인 멤버의 값을 헤더에 추가
+          },
+        }
+      );
+      console.log("좋아요 버튼 누르기 설정 성공", response.data);
 
-        // 서버로부터 받은 새로운 favoriteCount와 사용자 좋아요 상태(isUserFavorite)를 사용하여 상태 업데이트
-        setFavoriteCount(response.data.favoriteCount);
-        setisUserInFavoriteBoardTable(response.data.isUserFavorite);
+      // 서버로부터 받은 새로운 favoriteCount와 사용자 좋아요 상태(isUserFavorite)를 사용하여 상태 업데이트
+      setFavoriteCount(response.data.favoriteCount);
+      setisUserInFavoriteBoardTable(response.data.isUserFavorite);
 
-        // 좋아요 버튼 클릭 상태 업데이트
-        // UI에서 실시간으로 반영하기 위해 사용자의 좋아요 상태에 따라 heartClicked 상태를 설정합니다.
-        // 이 예시에서는 isUserFavorite 값에 따라 heartClicked 상태를 반전시킵니다.
-        setHeartClicked(response.data.isUserFavorite);
+      // 좋아요 버튼 클릭 상태 업데이트
+      // UI에서 실시간으로 반영하기 위해 사용자의 좋아요 상태에 따라 heartClicked 상태를 설정합니다.
+      // 이 예시에서는 isUserFavorite 값에 따라 heartClicked 상태를 반전시킵니다.
+      setHeartClicked(response.data.isUserFavorite);
     } catch (error) {
-        console.error("좋아요 버튼 누르기 설정 중 오류 발생:", error);
+      console.error("좋아요 버튼 누르기 설정 중 오류 발생:", error);
     }
-};
+  };
 
   const handleEditPost = () => {
     // Writepost.js 페이지로 이동
@@ -413,7 +411,10 @@ function Dpage() {
             <FontAwesomeIcon
               icon={isUserInFavoriteBoardTable ? faHeart : faEmptyHeart}
               className="mr-2"
-              style={{ color: isUserInFavoriteBoardTable && heartClicked ? "red" : "black"}}
+              style={{
+                color:
+                  isUserInFavoriteBoardTable && heartClicked ? "red" : "black",
+              }}
               onClick={toggleHeartColor}
             />
             <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
