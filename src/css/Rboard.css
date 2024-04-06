@@ -8,6 +8,19 @@
     padding-bottom: 80px;
   }
 
+  .col-100{
+    height: auto;
+    width: 100px;
+  }
+
+  .custom-link {
+    color: black; /* 링크의 색상을 검정색으로 변경 */
+    text-decoration: none; /* 링크 밑줄 제거 */
+  }
+  
+  .custom-link:hover {
+    text-decoration: underline; /* 링크에 마우스를 올렸을 때 밑줄 표시 */
+  }
   .ct1{
     text-align: left;
     font-size: 30px;
@@ -25,6 +38,30 @@
   .sbt{
     font-size: 20px;
   }
+
+  mark {
+    background-color: #E8FD8D; 
+  }
+  
+  /* 모바일 뷰 */
+.content-section {
+  margin-bottom: 5px; /* 기본 간격 */
+}
+
+/* 태블릿 이상의 너비에서 적용 */
+@media (min-width: 768px) {
+  .content-section {
+    margin-bottom: 25px; /* 화면이 넓을 때 더 큰 간격 */
+  }
+}
+
+/* 데스크탑 이상의 너비에서 적용 */
+@media (min-width: 1024px) {
+  .content-section {
+    margin-bottom: 45px; /* 더 넓은 화면에서 더 큰 간격 */
+  }
+}
+
 
   .review-text {
     overflow: hidden;
@@ -86,7 +123,7 @@
   }
   
   .inventory-image {
-    height: 200px; /* Set a fixed height for images */
+    height: 150px; /* Set a fixed height for images */
     object-fit: cover;
     border-bottom: 1px solid #ddd; /* Optional: add a border below the image */
   }

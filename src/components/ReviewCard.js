@@ -47,14 +47,11 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
     "굽",
   ];
 
-  const handleCardClick = (title) => {
 
-    if (activeCategory === title) {
-      setActiveCategory('default'); // 이미 활성화된 카테고리를 클릭하면 비활성화합니다.
-    } else {
-      setActiveCategory(title); // 다른 카테고리를 클릭하면 활성화합니다.
-    }
-  };
+const handleCardClick = (title) => {
+  // 만약 이미 선택된 카테고리를 다시 클릭한 경우, 전체 리뷰를 보여줄 수 있도록 activeCategory를 null로 설정
+  setActiveCategory(prevCategory => prevCategory === title ? null : title);
+};
   
   const [KeywordReviewSummary, setKeywordReviewSummary] = useState([]);
   useEffect(() => {
@@ -65,16 +62,14 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
 
   const fetchData = async () => {
 
-
     try {
       const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`); // 서버의 URL로 요청을 보냅니다.
       const data = await response.json();
-     
+      
       // 가져온 데이터를 상태로 설정합니다.
      
       setKeywordReviewSummary(data.reviewSummary);
-      console.log('넘어온 값입니다.');
-      console.log(KeywordReviewSummary);
+      
      
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -119,12 +114,17 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges, expanded, onToggleExpand }) => {
-
-
-  // ISO 문자열을 Date 객체로 파싱한 후, 원하는 형식으로 포맷팅
+const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword, expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
 
+  // 하이라이트 범위 생성 함수
+  const createHighlightRanges = (activeKeyword) => {
+    return keywords
+      .filter(kw => kw.keyword_name === activeKeyword && kw.review_seq === review.review_seq)
+      .map(kw => [kw.start_idx, kw.end_idx]);
+  };
+
+  // 하이라이트 처리 로직
   const highlightText = (text, ranges) => {
     if (!ranges || ranges.length === 0) return text;
   
@@ -151,8 +151,9 @@ const ReviewCard = ({ review, highlightRanges, expanded, onToggleExpand }) => {
     onToggleExpand(); // 상위 컴포넌트에서 전달받은 함수 호출
 };
 
-  // 하이라이트 처리된 리뷰 텍스트
-  const highlightedReview = highlightText(review.review, highlightRanges);
+  // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
+  const fullReviewText = highlightText(review.review, createHighlightRanges(activeKeyword));
+  const shortReviewText = review.review.length > 100 && !expanded ? `${review.review.substring(0, 100)}...` : fullReviewText;
 
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
@@ -188,7 +189,10 @@ const ReviewCard = ({ review, highlightRanges, expanded, onToggleExpand }) => {
               <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
             </Card.Subtitle>
             <Card.Text>
-              {expanded ? highlightedReview : `${review.review.substring(0, 100)}...`}
+              {/* 하이라이트 처리된 부분과 처음 100자만 보여주기 (리뷰가 100자 이상일 경우) */}
+              {!expanded && review.review.length > 100
+                ? <>{highlightText(review.review.substring(0, 100), highlightRanges)}...</>
+                : highlightText(review.review, highlightRanges)}
               {review.review.length > 100 && (
                 <Button variant="link" onClick={onToggleExpand}>
                   {expanded ? "숨기기" : "더보기"}
@@ -293,10 +297,9 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
 
 const ExReview = ({ reviews, shoe_seq }) => {
   const [activeCategory, setActiveCategory] = useState(null);
-  const [filteredReviews, setFilteredReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
   const fetchKeywordData = async (shoeSeq) => {
     setIsLoading(true);
     try {
@@ -318,7 +321,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
           const end = range[0];
           result.push(text.slice(start, end));
           result.push(
-            <mark key={index} style={{ backgroundColor: 'lightgreen' }}>
+            <mark key={index} style={{ backgroundColor: '#E8FD8D'}}>
               {text.slice(range[0], range[1] + 1)}
             </mark>
           );
@@ -342,7 +345,6 @@ const ExReview = ({ reviews, shoe_seq }) => {
     });
   
     const updatedReviews = reviews.filter((review) => {
-      // activeCategory가 null이거나 초기값일 때 모든 리뷰를 포함
       if (!activeCategory) return true;
   
       const reviewKeywords = reviewKeywordMap[review.review_seq] || [];
@@ -366,18 +368,19 @@ const ExReview = ({ reviews, shoe_seq }) => {
   
     setFilteredReviews(updatedReviews);
   }, [activeCategory, keywords, reviews]);
-  // 리뷰가 로드될 때 한 번만 키워드 데이터를 가져오는 useEffect
   useEffect(() => {
+    // 리뷰가 로드될 때 한 번만 키워드 데이터를 가져옵니다.
     if (reviews.length > 0) {
       const shoeSeq = reviews[0].shoe_seq;
       fetchKeywordData(shoeSeq);
     }
   }, [reviews]);
 
+  
+
   const resetExpandedStates = () => {
     // 여기서 expandedStates 상태를 초기화하는 작업을 수행합니다.
   };
-  console.log("xzcvzxcvzxcvzxcvvxz",filteredReviews);
   return (
     <>
       <p className="ct1">키워드</p>
@@ -392,16 +395,21 @@ const ExReview = ({ reviews, shoe_seq }) => {
       </Row>
       </Container>
       
-      {activeCategory && <KeywordPol selectedKeyword={activeCategory} data={keywords}/>} 
-      <p className="ct1">리뷰</p>
-      <Container>
-        <Row>
-          <Col md={12}>
-          <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
-          </Col>
-        </Row>
-      </Container>
-    </>
+      {activeCategory ? (
+    <KeywordPol selectedKeyword={activeCategory} data={keywords}/>
+  ) : (
+    <h6>키워드를 클릭하시면 요약 정보를 확인하실 수 있습니다.</h6>
+  )}
+
+  <p className="ct1">리뷰</p>
+  <Container>
+    <Row>
+      <Col md={12}>
+        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
+      </Col>
+    </Row>
+  </Container>
+</>
   );
 };
 
