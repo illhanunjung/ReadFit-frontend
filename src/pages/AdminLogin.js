@@ -3,7 +3,7 @@ import {
   faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import {
   Button,
   Col,
@@ -17,10 +17,40 @@ import { useNavigate } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Login.css"; // CSS 파일의 실제 경로로 확인하세요.
 
+
+
+
 function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+
+  function checkLoginStatus() {
+
+    fetch('/api/checkLoginStatus')
+      .then(res => res.json())
+      .then(data => {
+        if (data.isLoggedIn) {
+          if (data.isAdmin) {
+            console.log('User is an admin.');
+            // 관리자 페이지로 리다이렉션 할 수 있습니다.
+            
+          } else {
+            console.log('User is logged in but not an admin.');
+            // 일반 사용자 대시보드 또는 메인 페이지로 리다이렉션 할 수 있습니다.
+          }
+        } else {
+          console.log('User is not logged in.');
+          
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+  useEffect(() => {
+    checkLoginStatus();
+  }, [navigate]); // 의존성 배열이 비어 있으므로 컴포넌트 마운트 시에만 호출됩니다.
+  
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -44,25 +74,24 @@ function Login() {
       })
       .then((data) => {
         console.log(data);
-      
-        if(data.name && data.mem_role === 0) {
-          // 관리자인 경우 로그인 차단
-          alert("관리자용 로그인을 해주세요.");
+
+        if(data.mem_role === 1) {
+          alert("회원용 로그인을 해주세요.");
+          navigate("/Login"); // 관리자 로그인 페이지로 리다이렉션
         } else if (data.name) {
-          // 일반 회원 로그인 성공 시 처리
-          // 세션에 로그인 정보 저장, 메인 페이지로 리다이렉트 등
           window.sessionStorage.setItem("mem_id", data.id);
           window.sessionStorage.setItem("mem_name", data.name);
           window.sessionStorage.setItem("mem_birth", data.birth);
           window.sessionStorage.setItem("mem_profile", data.profile);
           window.sessionStorage.setItem("mem_phone", data.phone);
           window.sessionStorage.setItem("mem_role", data.role);
-          navigate("/"); // React Router를 사용하여 메인 페이지로 리다이렉트
+          window.location.href = "../"; //메인 페이지로 이동
           console.log("로그인 성공");
-        } else {
-          // 로그인 실패 시 처리
-          console.log("로그인 실패");
-          navigate("/Login"); // React Router를 사용하여 로그인 페이지로 리다이렉트
+        } else{
+          //로그인 실패 시 처리
+          // 예 : 에러 메세지 표시, 로그인 페이지로 다시 이동 등
+          console.log("로그인 실패")
+          window.location.href = "Login"; //로그인 페이지로 이동
         }
       })
       .catch((error) => {
@@ -72,6 +101,7 @@ function Login() {
       console.error("Error:", error);
     }
   };
+
 
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
   return (
@@ -129,7 +159,7 @@ function Login() {
                 <Button
                   variant="outline-dark" 
                   className="another-login-button"
-                  onClick={() => navigate("/AdminLogin")}>
+                  onClick={() => navigate("/Login")}>
                    회원용
                 </Button>
               </Form>
