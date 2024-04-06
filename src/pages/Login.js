@@ -43,7 +43,7 @@ function Login() {
         return res.json();
       })
       .then((data) => {
-        console.log(data);
+        console.log("fefefe",data);
 
         if(data.mem_role === 0) {
           alert("관리자용 로그인을 해주세요.");
@@ -55,12 +55,14 @@ function Login() {
           window.sessionStorage.setItem("mem_profile", data.profile);
           window.sessionStorage.setItem("mem_phone", data.phone);
           window.sessionStorage.setItem("mem_role", data.role);
+          
           window.location.href = "../"; //메인 페이지로 이동
           console.log("로그인 성공");
         } else{
           //로그인 실패 시 처리
           // 예 : 에러 메세지 표시, 로그인 페이지로 다시 이동 등
           console.log("로그인 실패")
+          
           window.location.href = "Login"; //로그인 페이지로 이동
         }
       })

@@ -47,14 +47,11 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
     "굽",
   ];
 
-  const handleCardClick = (title) => {
 
-    if (activeCategory === title) {
-      setActiveCategory('default'); // 이미 활성화된 카테고리를 클릭하면 비활성화합니다.
-    } else {
-      setActiveCategory(title); // 다른 카테고리를 클릭하면 활성화합니다.
-    }
-  };
+const handleCardClick = (title) => {
+  // 만약 이미 선택된 카테고리를 다시 클릭한 경우, 전체 리뷰를 보여줄 수 있도록 activeCategory를 null로 설정
+  setActiveCategory(prevCategory => prevCategory === title ? null : title);
+};
   
   const [KeywordReviewSummary, setKeywordReviewSummary] = useState([]);
   useEffect(() => {
@@ -140,7 +137,7 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
         highlightedText.push(<span key={index + 'text'}>{text.substring(lastIndex, start)}</span>);
       }
       // 하이라이트 텍스트 추가
-      highlightedText.push(<mark key={index + 'highlight'} style={{ backgroundColor: 'lightgreen' }}>{text.substring(start, end + 1)}</mark>);
+      highlightedText.push(<mark key={index + 'highlight'} style={{ backgroundColor: '#E8FD8D' }}>{text.substring(start, end + 1)}</mark>);
       lastIndex = end + 1;
     });
 
@@ -298,7 +295,7 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
 
 const ExReview = ({ reviews, shoe_seq }) => {
   const [activeCategory, setActiveCategory] = useState(null);
-  const [filteredReviews, setFilteredReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const fetchKeywordData = async (shoeSeq) => {
@@ -322,7 +319,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
           const end = range[0];
           result.push(text.slice(start, end));
           result.push(
-            <mark key={index} style={{ backgroundColor: 'lightgreen' }}>
+            <mark key={index} style={{ backgroundColor: '#E8FD8D'}}>
               {text.slice(range[0], range[1] + 1)}
             </mark>
           );
@@ -346,7 +343,6 @@ const ExReview = ({ reviews, shoe_seq }) => {
     });
   
     const updatedReviews = reviews.filter((review) => {
-      // activeCategory가 null이거나 초기값일 때 모든 리뷰를 포함
       if (!activeCategory) return true;
   
       const reviewKeywords = reviewKeywordMap[review.review_seq] || [];
@@ -370,13 +366,15 @@ const ExReview = ({ reviews, shoe_seq }) => {
   
     setFilteredReviews(updatedReviews);
   }, [activeCategory, keywords, reviews]);
-  // 리뷰가 로드될 때 한 번만 키워드 데이터를 가져오는 useEffect
   useEffect(() => {
+    // 리뷰가 로드될 때 한 번만 키워드 데이터를 가져옵니다.
     if (reviews.length > 0) {
       const shoeSeq = reviews[0].shoe_seq;
       fetchKeywordData(shoeSeq);
     }
   }, [reviews]);
+
+  
 
   const resetExpandedStates = () => {
     // 여기서 expandedStates 상태를 초기화하는 작업을 수행합니다.
@@ -395,16 +393,21 @@ const ExReview = ({ reviews, shoe_seq }) => {
       </Row>
       </Container>
       
-      {activeCategory && <KeywordPol selectedKeyword={activeCategory} data={keywords}/>} 
-      <p className="ct1">리뷰</p>
-      <Container>
-        <Row>
-          <Col md={12}>
-          <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
-          </Col>
-        </Row>
-      </Container>
-    </>
+      {activeCategory ? (
+    <KeywordPol selectedKeyword={activeCategory} data={keywords}/>
+  ) : (
+    <h6>키워드를 클릭하시면 요약 정보를 확인하실 수 있습니다.</h6>
+  )}
+
+  <p className="ct1">리뷰</p>
+  <Container>
+    <Row>
+      <Col md={12}>
+        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
+      </Col>
+    </Row>
+  </Container>
+</>
   );
 };
 
