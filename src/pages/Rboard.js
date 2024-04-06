@@ -18,33 +18,41 @@ const Rboard = ({selectedKeyword,title}) => {
   const { shoe_seq } = useParams();
   const [shoes, setShoes] = useState([]);
   const [keywords, setKeywords] = useState([]);
+  const [relShoes, setRelShoes] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null ); // null이나 적절한 기본값으로 초기화
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8081/api/rboard/${shoe_seq}`);
-        setShoes(response.data);
+        const shoeResponse = await axios.get(`http://localhost:8081/api/rboard/${shoe_seq}`);
+        setShoes(shoeResponse.data);
         
-
-        
+        const { parent_category_seq_name, shoe_price } = shoeResponse.data[0] || {};
+        if (parent_category_seq_name && shoe_price) {
+          try {
+            const relShoesResponse = await axios.get(
+              `http://localhost:8081/api/rboard/best/${parent_category_seq_name}/${shoe_price}`
+            );
+            setRelShoes(relShoesResponse.data);
+          } catch (error) {
+            console.error('Error fetching related shoes data:', error);
+          }
+        }
       } catch (error) {
         console.error('Error fetching shoe data:', error);
       }
     };
-
+  
     const fetchKeyword = async () => {
       try {
         const response = await axios.get(`http://localhost:8081/api/rboard/keyword/${shoe_seq}`);
         setKeywords(response.data);
-
-
         
       } catch (error) {
         console.error('Error fetching Keywords data:', error);
       }
     };
-
+  
     fetchData();
     fetchKeyword();
   }, [shoe_seq]);
@@ -54,6 +62,8 @@ const Rboard = ({selectedKeyword,title}) => {
    const count = { 긍정: 0, 부정: 0, 중립: 0 };
    
    
+
+
  
    // selectedKeyword에 해당하는 데이터만 필터링
    // const filteredData = keywords.filter(item => item.keyword_name === selectedKeyword);
@@ -105,7 +115,7 @@ const Rboard = ({selectedKeyword,title}) => {
                     <Image src={shoe.shoe_img} fluid rounded />
                   </Col>
                   <Col md={8}>
-                    <Card.Body className="sbt">
+                    <Card.Body className="sbt mb-1">
                       <Card.Text>
                         <p>카테고리 : {shoe.parent_category_seq}</p>
                         <p>가격 : {shoe.shoe_price}원</p>
@@ -116,23 +126,26 @@ const Rboard = ({selectedKeyword,title}) => {
                   </Col>
                 </Row>
               </Card>
-              <p className="ct1">전체 키워드 긍/부정</p>
               
-                  <div style={{ height: "300px" }}>
+              <p className="ct1">전체 키워드 긍/부정</p>
+              <div className="content-section">                  
                     {/* <Bar data={chartData} options={options} />차트 표시 */}
                     <KeywordPol data={keywords}/>
-                  </div>
-                
+ 
+              </div>
               
-              <br></br><br></br><br></br><br></br><br></br>
               
+               <div className="content-section">
               <p className="ct1">별점 비율</p>
               <Balrating reviews={shoe.reviews}/>{/* 별점 비율 표시 */}
-              <br></br>
+              </div>
+              <div className="content-section">
               <Row className="mb-4">
                 <p className="ct1">함께보면 좋은 상품</p>
-                <InventoryList />{/* 함께 보면 좋은 상품 리스트 표시 */}
+                <InventoryList relShoes={relShoes} />{/* 함께 보면 좋은 상품 리스트 표시 */}
               </Row>
+              
+              </div>
             </Col>
             
             <Col lg={6}>

@@ -46,9 +46,9 @@ const KeywordPol = ({ data, selectedKeyword }) => {
 
   return (
     <Container fluid>
-      <Row className="mb-4">
+      <Row className="mb-2">
         <Col lg={12}>
-          <Card className="mb-4">
+          <Card className="mb-2">
           <Card.Body>
             <Card.Title>
                 {

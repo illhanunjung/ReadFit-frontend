@@ -120,85 +120,90 @@ const BoardMenu = ({ activeCategory, setActiveCategory }) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges, expanded, onToggleExpand }) => {
-
-
-  // ISO 문자열을 Date 객체로 파싱한 후, 원하는 형식으로 포맷팅
+const ReviewCard = ({ review, highlightRanges=[], keywords=[] , activeKeyword, expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
 
-  const highlightText = (text, ranges) => {
-    if (!ranges || ranges.length === 0) return text;
-  
-    return (
-      <>
-        {ranges.reduce((result, range, index) => {
-          const start = index === 0 ? 0 : ranges[index - 1][1] + 1;
-          const end = range[0];
-          result.push(text.slice(start, end));
-          result.push(
-            <mark key={index} style={{ backgroundColor: 'lightgreen' }}>
-              {text.slice(range[0], range[1] + 1)}
-            </mark>
-          );
-          if (index === ranges.length - 1 && range[1] < text.length - 1) {
-            result.push(text.slice(range[1] + 1));
-          }
-          return result;
-        }, [])}
-      </>
-    );
+  const createHighlightRanges = (activeKeyword) => {
+    // keywords가 정의되지 않았을 경우를 대비하여 기본값으로 빈 배열([])을 사용
+    return (keywords || [])
+      .filter(kw => kw.keyword_name === activeKeyword && kw.review_seq === review.review_seq)
+      .map(kw => [kw.start_idx, kw.end_idx]);
   };
-  const handleToggleExpand = () => {
-    onToggleExpand(); // 상위 컴포넌트에서 전달받은 함수 호출
-};
 
-  // 하이라이트 처리된 리뷰 텍스트
-  const highlightedReview = highlightText(review.review, highlightRanges);
+  // 하이라이트 처리 로직을 함수로 정의
+  const highlightText = (text, ranges, cutOff = false) => {
+    let result = [];
+    let lastIdx = 0;
 
+    ranges.forEach(range => {
+      // 하이라이트되지 않은 일반 텍스트 추가
+      if (range[0] > lastIdx) {
+        const normalText = text.substring(lastIdx, range[0]);
+        result.push(<span key={`normal-${lastIdx}`}>{normalText}</span>);
+      }
+      // 하이라이트 텍스트 추가
+      const highlightedText = text.substring(range[0], range[1] + 1);
+      result.push(<mark key={`highlight-${range[0]}`}>{highlightedText}</mark>);
+      lastIdx = range[1] + 1;
+    });
+
+    // 마지막 하이라이트 이후의 일반 텍스트 추가
+    if (lastIdx < text.length) {
+      const remainingText = text.substring(lastIdx, cutOff ? 100 : text.length);
+      result.push(<span key={`normal-${lastIdx}`}>{remainingText}</span>);
+    }
+
+    return result;
+  };
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
   switch (reviewPolarity) {
-    case 1:
-      polarityText = "부정";
-      polarityColor = "red";
-      break;
-    case 2:
-      polarityText = "긍정";
-      polarityColor = "blue";
-      break;
-    case 0:
-      polarityText = "중립";
-      polarityColor = "black";
-      break;
-    default:
-      polarityText = "미정";
-      polarityColor = "gray";
+      case 1:
+          polarityText = "부정";
+          polarityColor = "red";
+          break;
+      case 2:
+          polarityText = "긍정";
+          polarityColor = "blue";
+          break;
+      case 0:
+          polarityText = "중립";
+          polarityColor = "black";
+          break;
+      default:
+          polarityText = "미정";
+          polarityColor = "gray";
   }
+  // 하이라이트 범위가 정의된 경우와 아닌 경우를 분리하여 처리
+  const initialHighlight = highlightRanges.filter(range => range[1] < 100);
+  const initialText = highlightText(review.review, initialHighlight, true);
+  const fullText = highlightText(review.review, highlightRanges);
 
   return (
     <Card className="mb-3">
-      <Card.Body>
-        <div className="d-flex justify-content-between align-items-start">
-          <div className="me-3">
-            <div className="d-flex align-items-center">
-              <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
-              <span>{formattedDate}</span>
-              <span style={{ color: polarityColor }}>{polarityText}</span>
-            </div>
-            <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
-              <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
-            </Card.Subtitle>
-            <Card.Text>
-              {expanded ? highlightedReview : `${review.review.substring(0, 100)}...`}
-              {review.review.length > 100 && (
-                <Button variant="link" onClick={onToggleExpand}>
-                  {expanded ? "숨기기" : "더보기"}
-                </Button>
-              )}
-            </Card.Text>
+       <Card.Body>
+              <div className="d-flex justify-content-between align-items-start">
+                  <div className="me-3">
+                      <div className="d-flex align-items-center">
+                          <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
+                          <span>{formattedDate}</span>
+                          <span style={{ color: polarityColor }}>{polarityText}</span>
+                      </div>
+                      <Card.Subtitle className="mb-1 text-muted">
+                          <h5 className="my-2" style={{ fontWeight: "bold" }}>{review.review.substring(0, 34)}</h5>
+                      </Card.Subtitle>
+          {/* 더보기가 확장되지 않았을 때는 처음 100자만 표시 */}
+          {!expanded && review.review.length > 100 ? initialText : fullText}
+          {/* 리뷰가 100자를 초과하는 경우에만 더보기 버튼을 표시 */}
+          {review.review.length > 100 && (
+            <Button variant="link" onClick={onToggleExpand}>
+              {expanded ? "숨기기" : "더보기"}
+            </Button>
+          )}
           </div>
         </div>
       </Card.Body>
+      
     </Card>
   );
 };
@@ -378,7 +383,7 @@ const ExReview = ({ reviews }) => {
   const resetExpandedStates = () => {
     // 여기서 expandedStates 상태를 초기화하는 작업을 수행합니다.
   };
-  console.log("xzcvzxcvzxcvzxcvvxz",filteredReviews);
+
   return (
     <>
       <p className="ct1">키워드</p>

@@ -1,31 +1,33 @@
 import React from "react";
 import { Card, Row, Col, Image } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-const InventoryItem = ({ image, name }) => {
+const InventoryItem = ({ image, name, shoe_seq, shoe_price }) => {
   return (
-    <Col md={4} className="mb-4">
-      <Card className="inventory-card h-100">
-        <Image src={image} fluid className="inventory-image" />
-        <Card.Body className="inventory-card-body text-center">
-          <Card.Title className="inventory-title">{name}</Card.Title>
+    <Link to={`/rboard/${shoe_seq}`} className="custom-link">
+    <div className="card-container">
+      <Card className="d-flex flex-row align-items-center my-1">
+        <Card.Img className="col-100" src={image} alt="Card image" />
+        <Card.Body className="d-flex flex-column">
+          <Card.Title>{name}</Card.Title>
+          <Card.Subtitle>{shoe_price}₩</Card.Subtitle>
         </Card.Body>
       </Card>
-    </Col>
+    </div>
+    </Link>
   );
 };
 
-const InventoryList = () => {
-  const inventoryItems = [
-    { image: "/img/sh1.jpg", name: "나이키 신발 흰빨 검정색 모양" },
-    { image: "/img/sh2.jpg", name: "아디다스 NNN...검정색 흰색줄 스니커즈" },
-    { image: "/img/sh1.jpg", name: "나이키 신발 흰빨 검정색나이키 모양" },
-    // ... additional images and names ...
-  ];
 
+
+const InventoryList = ({ relShoes }) => {
+  if (!relShoes) {
+    return null; // 또는 로딩 상태를 보여줄 수도 있습니다.
+  }
   return (
     <Row>
-      {inventoryItems.map((item, index) => (
-        <InventoryItem key={index} image={item.image} name={item.name} />
+      {relShoes.map((item, index) => (
+        <InventoryItem key={index} image={item.shoe_img} name={item.shoe} shoe_seq={item.shoe_seq} shoe_price={item.shoe_price} />
       ))}
     </Row>
   );
