@@ -8,6 +8,7 @@ const ITEMS_PER_PAGE = 6; // 한 페이지에 표시할 아이템 수 변경 (�
 
 const Admin = () => {
   const navigate = useNavigate();
+  
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
   const [currentMemberPage, setCurrentMemberPage] = useState(1);
@@ -17,6 +18,16 @@ const Admin = () => {
   const navigateToBoard = (boardSeq) => {
     navigate(`/boards/${boardSeq}`); // 실제 앱의 라우트 경로에 맞게 조정 필요
   };
+
+  useEffect(() => {
+    const memRole = window.sessionStorage.getItem("mem_role");
+
+        // 관리자(mem_role이 0)가 아니면 홈페이지로 리디렉트
+        if (memRole !== "0") {
+          navigate("../"); // 홈페이지 또는 로그인 페이지 경로로 변경 가능
+
+        }
+      }, [navigate]);
 
 // 각 게시글의 댓글 상태
 const [comments, setComments] = useState({});

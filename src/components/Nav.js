@@ -8,11 +8,30 @@ function Navs() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태를 저장하는 상태
   const [memId, setMemId] = useState(null);
+  const [memRole, setMemRole] = useState(null);
 
   let storedProfileImageName = window.sessionStorage.getItem("mem_profile");
   const [profileImageUrl, setProfileImageUrl] = useState(
     `/img/uploads/profile/${storedProfileImageName}`
   ); // 프로필 이미지 URL 상태
+
+  useEffect(() => {
+    fetch("/api/checkLoginStatus")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.isLoggedIn) {
+          setIsLoggedIn(true);
+          // 세션 스토리지에서 mem_role 가져오기
+          const storedMemRole = window.sessionStorage.getItem("mem_role");
+          setMemRole(storedMemRole); // mem_role 상태 설정
+        } else {
+          setIsLoggedIn(false);
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   // 페이지 이동 핸들러
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
@@ -86,9 +105,11 @@ function Navs() {
           <Nav className="me-auto justify-content-center">
             <Nav.Link onClick={() => navigateTo("/Main2")}>홈</Nav.Link>
             <Nav.Link onClick={() => navigateTo("/Board")}>커뮤니티</Nav.Link>
-            <Nav.Link onClick={() => navigateTo("/Category")}>
-              카테고리
-            </Nav.Link>
+            <Nav.Link onClick={() => navigateTo("/Category")}>카테고리</Nav.Link>
+            {/* mem_role이 0일 때만 관리자페이지 링크를 표시 */}
+            {memRole === "0" && (
+              <Nav.Link onClick={() => navigateTo("/Admin")}>관리자페이지</Nav.Link>
+            )}
           </Nav>
           <Nav className="align-items-center">
             {isLoggedIn ? (

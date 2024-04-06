@@ -38,47 +38,45 @@ function Login() {
       });
 
       response
-      .then((res) => {
-        // 서버로투버 JSON 데이터를 받아옴
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
+        .then((res) => {
+          // 서버로부터 JSON 데이터를 받아옴
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
 
-        if(data.mem_role === 0) {
-          alert("관리자용 로그인을 해주세요.");
-          navigate("/AdminLogin"); // 관리자 로그인 페이지로 리다이렉션
-        } else if (data.name) {
-          window.sessionStorage.setItem("mem_id", data.id);
-          window.sessionStorage.setItem("mem_name", data.name);
-          window.sessionStorage.setItem("mem_birth", data.birth);
-          window.sessionStorage.setItem("mem_profile", data.profile);
-          window.sessionStorage.setItem("mem_phone", data.phone);
-          window.sessionStorage.setItem("mem_role", data.role);
-          window.location.href = "../"; //메인 페이지로 이동
-          console.log("로그인 성공");
-        } else{
-          //로그인 실패 시 처리
-          // 예 : 에러 메세지 표시, 로그인 페이지로 다시 이동 등
-          console.log("로그인 실패")
-          window.location.href = "Login"; //로그인 페이지로 이동
-        }
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+          if (data.name) {
+            // 로그인 성공 시 처리
+            // 예 : 세션에 로그인 정보 저장, 리다이렉트 등
+            window.sessionStorage.setItem("mem_id", data.id);
+            window.sessionStorage.setItem("mem_name", data.name);
+            window.sessionStorage.setItem("mem_birth", data.birth);
+            window.sessionStorage.setItem("mem_profile", data.profile);
+            window.sessionStorage.setItem("mem_phone", data.phone);
+            window.sessionStorage.setItem("mem_role", data.role);
+            window.location.href = "../"; //메인 페이지로 이동
+            console.log("로그인 성공");
+            alert(data.name + "님 반갑습니다!")
+          } else if (data === 2) {
+            alert("정지된 회원입니다.");
+          } else if (data === 0) {
+            alert("관리자는 관리자 로그인 페이지로 로그인하시기 바랍니다.");
+          } else {
+            // 로그인 실패를 나타내는 알림 표시
+            alert("로그인 실패");
+            // window.location.href = "Login"; // 로그인 페이지로 이동
+          }
+        })
+        .catch((error) => {
+          console.error("Error", error);
+        });
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
+
   const navigateTo = useCallback((path) => navigate(path), [navigate]);
-  const handleAdminLoginRedirect = () => {
-    navigate("/AdminLogin");
-  };
-
-
-
   return (
     <div>
       <Navs />
@@ -147,13 +145,16 @@ function Login() {
                     회원가입
                   </Nav.Link>
                 </Nav>
-                <br></br><br></br><br></br><br></br>
-                <Button
-                  variant="outline-dark" 
-                  className="another-login-button"
-                  onClick={() => navigate("/AdminLogin")}>
-                  관리자용
+
+                <br />
+                <br />
+                <br />
+                <br />
+                <Button variant="outline-dark" className="another-login-button" onClick={() => navigate("/AdminLogin")}>
+                    관리자 로그인으로 가기
                 </Button>
+
+                <br />
               </div>
               {/*
               <Button variant="warning" className="kakao-login-button mb-3">

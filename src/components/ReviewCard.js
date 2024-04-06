@@ -135,7 +135,7 @@ const ReviewCard = ({ review, highlightRanges, expanded, onToggleExpand }) => {
           const end = range[0];
           result.push(text.slice(start, end));
           result.push(
-            <mark key={index} style={{ backgroundColor: 'lightgreen' }}>
+            <mark key={index} style={{ backgroundColor: '#E8FD8D' }}>
               {text.slice(range[0], range[1] + 1)}
             </mark>
           );
