@@ -22,6 +22,7 @@ import {
 import { useParams } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Dpage.css";
+import { format, parseISO } from "date-fns";
 
 function Dpage() {
   const { board_seq } = useParams();
@@ -302,6 +303,11 @@ function Dpage() {
     }
   };
 
+  let BoardDate = null;
+  if (boardDetail && boardDetail.board_at) {
+    BoardDate = format(parseISO(boardDetail.board_at), "yyyy-MM-dd HH:mm");
+  }
+
   const wrprofile = boardDetail
     ? `http://localhost:8081/img/uploads/profile/${boardDetail?.mem_profile}`
     : undefined;
@@ -334,9 +340,7 @@ function Dpage() {
                       />
                       <div className="user-text">
                         <strong>{boardDetail.mem_id}</strong>
-                        <span className="text-muted">
-                          {boardDetail.board_at}
-                        </span>
+                        <span className="text-muted">{BoardDate}</span>
                       </div>
                     </div>
                   </Col>
@@ -383,7 +387,6 @@ function Dpage() {
                   </div>
                 )}
                 <p>{boardDetail.board_content}</p>
-                <p className="font-weight-bold">지역: {boardDetail.board_at}</p>
               </Card.Body>
             </>
           ) : (
