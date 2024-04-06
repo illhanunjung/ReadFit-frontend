@@ -138,18 +138,19 @@ const Rboard = ({selectedKeyword,title}) => {
                <div className="content-section">
               <p className="ct1">별점 비율</p>
               <Balrating reviews={shoe.reviews}/>{/* 별점 비율 표시 */}
+              </div>
               <div className="content-section">
               <Row className="mb-4">
                 <p className="ct1">함께보면 좋은 상품</p>
                 <InventoryList relShoes={relShoes} />{/* 함께 보면 좋은 상품 리스트 표시 */}
               </Row>
-              </div>
+             
               </div>
             </Col>
             
             <Col lg={6}>
               
-              <ExReview reviews={shoe.reviews}/>
+              <ExReview reviews={shoe.reviews} shoe_seq={shoe.shoe_seq}/>
             </Col>
           </Row>
               ))}

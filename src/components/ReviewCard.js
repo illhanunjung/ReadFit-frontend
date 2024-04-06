@@ -65,16 +65,14 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
 
   const fetchData = async () => {
 
-
     try {
       const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`); // 서버의 URL로 요청을 보냅니다.
       const data = await response.json();
-     
+      
       // 가져온 데이터를 상태로 설정합니다.
      
       setKeywordReviewSummary(data.reviewSummary);
-      console.log('넘어온 값입니다.');
-      console.log(KeywordReviewSummary);
+      
      
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -119,90 +117,92 @@ const BoardMenu = ({ activeCategory, setActiveCategory, shoe_seq }) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges=[], keywords=[] , activeKeyword, expanded, onToggleExpand }) => {
+const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword, expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
 
+  // 하이라이트 범위 생성 함수
   const createHighlightRanges = (activeKeyword) => {
-    // keywords가 정의되지 않았을 경우를 대비하여 기본값으로 빈 배열([])을 사용
-    return (keywords || [])
+    return keywords
       .filter(kw => kw.keyword_name === activeKeyword && kw.review_seq === review.review_seq)
       .map(kw => [kw.start_idx, kw.end_idx]);
   };
 
-  // 하이라이트 처리 로직을 함수로 정의
-  const highlightText = (text, ranges, cutOff = false) => {
-    let result = [];
-    let lastIdx = 0;
+  // 하이라이트 처리 로직
+  const highlightText = (text, ranges) => {
+    if (!ranges.length) return <span>{text}</span>;
 
-    ranges.forEach(range => {
-      // 하이라이트되지 않은 일반 텍스트 추가
-      if (range[0] > lastIdx) {
-        const normalText = text.substring(lastIdx, range[0]);
-        result.push(<span key={`normal-${lastIdx}`}>{normalText}</span>);
+    const highlightedText = [];
+    let lastIndex = 0;
+    
+    ranges.forEach(([start, end], index) => {
+      // 하이라이트 이전 텍스트 추가
+      if (start > lastIndex) {
+        highlightedText.push(<span key={index + 'text'}>{text.substring(lastIndex, start)}</span>);
       }
       // 하이라이트 텍스트 추가
-      const highlightedText = text.substring(range[0], range[1] + 1);
-      result.push(<mark key={`highlight-${range[0]}`}>{highlightedText}</mark>);
-      lastIdx = range[1] + 1;
+      highlightedText.push(<mark key={index + 'highlight'} style={{ backgroundColor: 'lightgreen' }}>{text.substring(start, end + 1)}</mark>);
+      lastIndex = end + 1;
     });
 
-    // 마지막 하이라이트 이후의 일반 텍스트 추가
-    if (lastIdx < text.length) {
-      const remainingText = text.substring(lastIdx, cutOff ? 100 : text.length);
-      result.push(<span key={`normal-${lastIdx}`}>{remainingText}</span>);
+    // 마지막 하이라이트 이후 텍스트 추가
+    if (lastIndex < text.length) {
+      highlightedText.push(<span key="lastText">{text.substring(lastIndex)}</span>);
     }
 
-    return result;
+    return highlightedText;
   };
+
+  // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
+  const fullReviewText = highlightText(review.review, createHighlightRanges(activeKeyword));
+  const shortReviewText = review.review.length > 100 && !expanded ? `${review.review.substring(0, 100)}...` : fullReviewText;
+
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
   switch (reviewPolarity) {
-      case 1:
-          polarityText = "부정";
-          polarityColor = "red";
-          break;
-      case 2:
-          polarityText = "긍정";
-          polarityColor = "blue";
-          break;
-      case 0:
-          polarityText = "중립";
-          polarityColor = "black";
-          break;
-      default:
-          polarityText = "미정";
-          polarityColor = "gray";
+    case 1:
+      polarityText = "부정";
+      polarityColor = "red";
+      break;
+    case 2:
+      polarityText = "긍정";
+      polarityColor = "blue";
+      break;
+    case 0:
+      polarityText = "중립";
+      polarityColor = "black";
+      break;
+    default:
+      polarityText = "미정";
+      polarityColor = "gray";
   }
-  // 하이라이트 범위가 정의된 경우와 아닌 경우를 분리하여 처리
-  const initialHighlight = highlightRanges.filter(range => range[1] < 100);
-  const initialText = highlightText(review.review, initialHighlight, true);
-  const fullText = highlightText(review.review, highlightRanges);
 
   return (
     <Card className="mb-3">
-       <Card.Body>
-              <div className="d-flex justify-content-between align-items-start">
-                  <div className="me-3">
-                      <div className="d-flex align-items-center">
-                          <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
-                          <span>{formattedDate}</span>
-                          <span style={{ color: polarityColor }}>{polarityText}</span>
-                      </div>
-                      <Card.Subtitle className="mb-1 text-muted">
-                          <h5 className="my-2" style={{ fontWeight: "bold" }}>{review.review.substring(0, 34)}</h5>
-                      </Card.Subtitle>
-          {/* 더보기가 확장되지 않았을 때는 처음 100자만 표시 */}
-          {!expanded && review.review.length > 100 ? initialText : fullText}
-          {/* 리뷰가 100자를 초과하는 경우에만 더보기 버튼을 표시 */}
-          {review.review.length > 100 && (
-            <Button variant="link" onClick={onToggleExpand}>
-              {expanded ? "숨기기" : "더보기"}
-            </Button>
-          )}
+      <Card.Body>
+        <div className="d-flex justify-content-between align-items-start">
+          <div className="me-3">
+            <div className="d-flex align-items-center">
+              <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
+              <span>{formattedDate}</span>
+              <span style={{ color: polarityColor }}>{polarityText}</span>
+            </div>
+            <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
+              <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
+            </Card.Subtitle>
+            <Card.Text>
+              {/* 하이라이트 처리된 부분과 처음 100자만 보여주기 (리뷰가 100자 이상일 경우) */}
+              {!expanded && review.review.length > 100
+                ? <>{highlightText(review.review.substring(0, 100), highlightRanges)}...</>
+                : highlightText(review.review, highlightRanges)}
+              {review.review.length > 100 && (
+                <Button variant="link" onClick={onToggleExpand}>
+                  {expanded ? "숨기기" : "더보기"}
+                </Button>
+              )}
+            </Card.Text>
           </div>
         </div>
       </Card.Body>
-      
     </Card>
   );
 };
@@ -301,7 +301,6 @@ const ExReview = ({ reviews, shoe_seq }) => {
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  
   const fetchKeywordData = async (shoeSeq) => {
     setIsLoading(true);
     try {
@@ -382,7 +381,6 @@ const ExReview = ({ reviews, shoe_seq }) => {
   const resetExpandedStates = () => {
     // 여기서 expandedStates 상태를 초기화하는 작업을 수행합니다.
   };
-
   return (
     <>
       <p className="ct1">키워드</p>
