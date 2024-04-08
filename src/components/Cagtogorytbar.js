@@ -15,10 +15,10 @@ const Cagtogorytbar = ({
         <Col lg={12}>
           {/* 옵션 */}
           긍정
-           <div style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
+           <div style={{ position: 'relative', width: '100%', marginBottom: '15px' }}>
             <ProgressBar
               now={positive_percentage}
-              className="mb-2"
+              
             />
             <span
               style={{
@@ -35,11 +35,11 @@ const Cagtogorytbar = ({
             </span>
           </div>
                     부정{" "}
-              <div style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
+              <div style={{ position: 'relative', width: '100%', marginBottom: '15px' }}>
             <ProgressBar
               variant="danger"
               now={negative_percentage}
-              className="mb-2"
+              
             />
             <span
               style={{
@@ -57,11 +57,11 @@ const Cagtogorytbar = ({
           </div>
 
           중립{" "}
-          <div style={{ position: 'relative', width: '100%', marginBottom: '20px' }}>
+          <div style={{ position: 'relative', width: '100%', marginBottom: '15px' }}>
             <ProgressBar
               variant="success"
               now={neutral_percentage}
-              className="mb-2"
+              
             />
             <span
               style={{
