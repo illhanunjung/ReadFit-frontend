@@ -182,8 +182,9 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
           <div className="me-3">
             <div className="d-flex align-items-center">
               <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
-              <span>{formattedDate}</span>
-              <span style={{ color: polarityColor }}>{polarityText}</span>
+              <span className="me-2">{formattedDate}</span>
+              
+              <span className="me-2" style={{ color: polarityColor }}>{polarityText}</span>
             </div>
             <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
               <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>

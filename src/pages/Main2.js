@@ -28,7 +28,7 @@ const Main2 = () => {
       parentCategoryName: selectedCategory.parentCategorySeqName,
       categoryName: selectedCategory.categorySeq, // 클릭된 카테고리의 이름으로 업데이트
     });
-    console.log(selectedCategory);
+    
   };
 
 
@@ -47,7 +47,7 @@ const Main2 = () => {
         .get(apiUrl)
         .then((response) => {
           setShoes(response.data);
-          console.log(response.data);
+          
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -65,7 +65,7 @@ const Main2 = () => {
         .get(apiUrl)
         .then((response) => {
           setTopThreeShoes(response.data); // 키워드 데이터 상태 업데이트
-          console.log(response.data);
+          
         })
         .catch((error) => {
           console.error("Error fetching keywords data:", error);
@@ -83,14 +83,15 @@ const Main2 = () => {
         .get(apiUrl)
         .then((response) => {
           setKeywords(response.data); // 키워드 데이터 상태 업데이트
-          console.log(response.data);
+          
+          
         })
         .catch((error) => {
           console.error("Error fetching keywords data:", error);
         });
     };
 
-
+    
     
     fetchTopthrees();
     fetchShoes();

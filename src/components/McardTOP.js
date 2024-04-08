@@ -7,6 +7,8 @@ import {
   faThumbsDown,
   faChevronLeft,
   faChevronRight,
+  faCommentDots
+  
 } from "@fortawesome/free-solid-svg-icons";
 import "../css/McardTOP.css"; // 스타일 시트 경로를 확인하세요.
 import { Link } from "react-router-dom";
@@ -36,6 +38,14 @@ const McardTOP = ({
   // 현재 리뷰
   const currentReview = reviews?.[reviewIndex]?.review;
 
+
+  // 리뷰 텍스트를 최대 100자로 제한
+  const displayedReview = currentReview && currentReview.length > 100 
+                          ? `${currentReview.substring(0, 50)}...` 
+                          : currentReview;
+
+
+
   return (
     <Card  xs={12} sm={6} md={4} lg={3} xl={2} className="mb-4 slider-card">
       <div className="slider-content">
@@ -50,8 +60,8 @@ const McardTOP = ({
         </Link>
         <div className="slider-info">
           <div className="slider-text">
-            <h5>{shoe}</h5>
-            {currentReview && <p className="slider-review-text">{currentReview}</p>}
+            <h5 className="shoe-title">{shoe}</h5>
+            {currentReview && <p className="slider-review-text">{displayedReview}</p>}
           </div>
           <div className="slider-controls">
             <Button
@@ -61,7 +71,7 @@ const McardTOP = ({
             >
               <FontAwesomeIcon icon={faChevronLeft} />
             </Button>
-            <Button
+            <Button 
               variant="link"
               onClick={handleNextReview}
               className="slider-button"
@@ -73,7 +83,7 @@ const McardTOP = ({
       </div>
       <div className="slider-footer">
         <span>
-          <FontAwesomeIcon icon={faEye} /> {reviewCount} Views
+          <FontAwesomeIcon icon={faCommentDots} /> {reviewCount} Reviews
         </span>
         <span>
           <FontAwesomeIcon icon={faThumbsUp} /> {positivePercentage}%

@@ -36,15 +36,15 @@ const Balrating = ({reviews}) => {
   function getColorByRating(rating) {
     switch (parseInt(rating, 10)) {
       case 1:
-        return "#FF6B6B"; // 예시 색상
+        return "#FFD700"; // 예시 색상
       case 2:
-        return "#FFA500";
+        return "#FFD700";
       case 3:
         return "#FFD700";
       case 4:
-        return "#7FFF00";
+        return "#FFD700";
       case 5:
-        return "#1E90FF";
+        return "#FFD700";
       default:
         return "#d6d6d6";
     }
