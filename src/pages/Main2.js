@@ -162,12 +162,10 @@ const Main2 = () => {
                 reviews={shoe.reviews} // 이 부분은 실제 데이터 구조에 따라 조정 필요
                 shoe_seq={shoe.shoe_seq}
               />
-             
             ))}
         
         </Row>
             </Col>
-       
             <Col lg={6}>
             <Col lg={12} md={12} sm={12} className="t2 my-5">
               {selectedCategory.categoryName + " 키워드 랭킹"}{" "}
