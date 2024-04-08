@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUser,
-  faLock,
-  faCommentDots,
   faCheckCircle,
+  faCommentDots,
+  faEnvelope,
+  faLock,
   faTimesCircle,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import "../css/Login.css";
-import Navs from "../components/Nav";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { registerUser  } from "../api/kakaoApi";
+import Navs from "../components/Nav";
+import "../css/Login.css";
 
 
 
@@ -26,6 +26,7 @@ function Register() {
     mem_birth: "",
     mem_profile: "",
     mem_phone: "",
+    email: "", // 이메일 필드 추가
   });
 
   const [isVerified, setIsVerified] = useState(false);
@@ -151,6 +152,7 @@ function isPasswordMatching(password, confirmPassword) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!isVerified) {
       alert("본인인증을 해주세요.");
       return;
@@ -164,14 +166,20 @@ function isPasswordMatching(password, confirmPassword) {
       return;
     }
 
+    if (!formData.email.trim()) { // 이메일 필드가 비어 있는지 확인
+      alert("이메일을 입력해주세요."); // 이메일을 입력하지 않았을 때 알림 표시
+      return;
+    }
+
        // 카카오 로그인으로 받은 정보와 사용자 입력 정보를 합친 객체를 생성
-       const userData = {
+      const userData = {
         mem_id: formData.mem_id,
         mem_pw: formData.mem_pw,
         mem_name: formData.mem_name,
         mem_birth: formData.mem_birth,
         mem_profile: formData.mem_profile,
         mem_phone: formData.mem_phone,
+        mem_email: formData.mem_email,
       };
 
 
@@ -263,6 +271,22 @@ function isPasswordMatching(password, confirmPassword) {
                 {isPasswordMatching(formData.mem_pw, formData.confirm_pw) ? '비밀번호가 일치합니다.' : '비밀번호가 불일치합니다.'}
               </Form.Text>
             </InputGroup> 
+
+
+            {/* 이메일 입력 필드 */}
+            <InputGroup className="mb-3">
+                  <InputGroup.Text>
+                    <FontAwesomeIcon icon={faEnvelope} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="email"
+                    placeholder="이메일"
+                    name="mem_email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+
 
                 <Button
                   variant="success"

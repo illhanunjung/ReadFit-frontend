@@ -1,16 +1,14 @@
+import React, { useState } from "react";
 import {
-  Container,
-  Row,
-  Col,
-  Form,
   Button,
-  FormControl,
+  Col,
+  Container,
+  Form,
+  Row
 } from "react-bootstrap";
-import "../css/FindIDPW.css";
-import Navs from "../components/Nav";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import React, { useState, useCallback } from "react";
+import Navs from "../components/Nav";
+import "../css/FindIDPW.css";
 const FindIDPW = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -23,8 +21,19 @@ const FindIDPW = () => {
 
   const handleFindId = async (e) => {
     e.preventDefault();
+
+    if (!username.trim() ) {
+      alert("이름을 입력해주세요.");
+      return;
+    }
+
+    if (!userphoneForId.trim()) {
+      alert("휴대전화를 입력해주세요.");
+      return;
+    }
+
     try {
-      alert("아이디 찾기 버튼이 클릭되었습니다.");
+      // alert("아이디 찾기 버튼이 클릭되었습니다.");
       const response = await fetch("/api/findId", {
         method: "POST",
         headers: {
@@ -34,12 +43,12 @@ const FindIDPW = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        alert("아이디 찾기 성공");
+        // alert("아이디 찾기 성공");
         setFindIdResult(`아이디 찾기 성공: ${data.mem_id}`); // 예제에서는 mb_id가 반환된다고 가정
         // window.location.href = "FindIDPW";
       } else {
         window.location.href = "FindIDPW";
-        setFindIdResult("아이디 찾기 실패했습니다.");
+        setFindIdResult("이름 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
         // alert("아이디 찾기 실패했습니다.");
       }
     } catch (error) {
@@ -48,8 +57,19 @@ const FindIDPW = () => {
   };
   const handleFindPw = async (e) => {
     e.preventDefault();
+
+    if (!userid.trim()) {
+      alert("아이디를 입력해주세요.");
+      return;
+    }
+
+    if (!userphoneForPw.trim()) {
+      alert("휴대전화를 입력해주세요.");
+      return;
+    }
+
     try {
-      alert("비밀번호 찾기 버튼이 클릭되었습니다.");
+      // alert("비밀번호 찾기 버튼이 클릭되었습니다.");
       const response = await fetch("/api/findPw", {
         method: "POST",
         headers: {
@@ -59,13 +79,13 @@ const FindIDPW = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        alert("비밀번호 찾기 성공");
-        setFindPwResult(`비밀번호 찾기 성공: ${data.mem_pw}`); // 예제에서는 mb_pw가 반환된다고 가정
+        // alert("비밀번호 찾기 성공");
+        setFindPwResult(`새로운 비밀번호가 ${data.mem_email}로 발급되었습니다.`); // 예제에서는 mb_pw가 반환된다고 가정
         // window.location.href = "./";
       } else {
         // window.location.href = "./";
-        alert("비밀번호 찾기 실패했습니다.");
-        setFindPwResult("비밀번호 찾기 실패했습니다.");
+        // alert("비밀번호 찾기 실패했습니다.");
+        setFindPwResult("아이디 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -116,7 +136,7 @@ const FindIDPW = () => {
               onSubmit={handleFindPw}
               className="p-4 bg-white rounded shadow"
             >
-              <h2 className="mb-3">비밀번호 찾기</h2>
+              <h2 className="mb-3">비밀번호 발급</h2>
               <Form.Control
                 type="text"
                 placeholder="아이디"
