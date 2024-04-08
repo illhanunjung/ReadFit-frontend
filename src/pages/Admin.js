@@ -219,13 +219,13 @@ const toggleComments = (boardSeq) => {
             </thead>
             <tbody style={{ verticalAlign: 'middle' }}>
               {boards.slice((currentBoardPage - 1) * ITEMS_PER_PAGE, currentBoardPage * ITEMS_PER_PAGE).map((board) => (
-                <tr key={board.board_seq}>
+                <tr key={board.board_seq} >
                   <td style={{ verticalAlign: 'middle' }}>{board.board_seq}</td>
                   <td style={{ cursor: 'pointer', verticalAlign: 'middle' }} onClick={() => navigateToBoard(board.board_seq)}>
                     <a href="#" style={{ color: 'blue', textDecoration: 'underline', verticalAlign: 'middle' }}>{board.board_title}</a>
                   </td>
                   <td style={{ verticalAlign: 'middle', textAlign: 'center', height: '100%' }} >
-                    <Button size="sm" onClick={() => deleteBoard(board.board_seq)} variant="danger">삭제</Button>
+                    <Button style={{ marginBottom: '0' }} size="sm" onClick={() => deleteBoard(board.board_seq)} variant="danger">삭제</Button>
                   </td>
                 </tr>
               ))}
