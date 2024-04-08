@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Container, Row, Col, Alert, Button, Table, Pagination } from "react-bootstrap";
 import axios from "axios";
-import Navs from "../components/Nav";
+import React, { useCallback, useEffect, useState } from "react";
+import { Alert, Button, Col, Container, Pagination, Row, Table } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import Navs from "../components/Nav";
 
 const ITEMS_PER_PAGE = 6; // 한 페이지에 표시할 아이템 수 변경 (총 6개, 각 열에 3개씩)
 
@@ -214,21 +214,21 @@ const toggleComments = (boardSeq) => {
                 <tr>
                 <th style={{ width: '5%' }}>번호</th>
                 <th>제목</th>
-                <th style={{ width: '0%' }}>관리</th>
+                <th style={{ width: '5%' }}>관리</th>
                 </tr>
             </thead>
-            <tbody>
-                {boards.slice((currentBoardPage - 1) * ITEMS_PER_PAGE, currentBoardPage * ITEMS_PER_PAGE).map((board) => (
+            <tbody style={{ verticalAlign: 'middle' }}>
+              {boards.slice((currentBoardPage - 1) * ITEMS_PER_PAGE, currentBoardPage * ITEMS_PER_PAGE).map((board) => (
                 <tr key={board.board_seq}>
-                    <td>{board.board_seq}</td>
-                    <td style={{ cursor: 'pointer' }} onClick={() => navigateToBoard(board.board_seq)}>
-                {board.board_title}
-                </td>
-                    <td>
+                  <td style={{ verticalAlign: 'middle' }}>{board.board_seq}</td>
+                  <td style={{ cursor: 'pointer', verticalAlign: 'middle' }} onClick={() => navigateToBoard(board.board_seq)}>
+                    <a href="#" style={{ color: 'blue', textDecoration: 'underline', verticalAlign: 'middle' }}>{board.board_title}</a>
+                  </td>
+                  <td style={{ verticalAlign: 'middle', textAlign: 'center', height: '100%' }} >
                     <Button size="sm" onClick={() => deleteBoard(board.board_seq)} variant="danger">삭제</Button>
-                    </td>
+                  </td>
                 </tr>
-                ))}
+              ))}
             </tbody>
             </Table>
             <br></br>
