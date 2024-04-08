@@ -98,7 +98,7 @@ const toggleComments = (boardSeq) => {
 
   const deleteBoard = async (boardId) => {
     try {
-      await axios.delete(`/api/boards/${boardId}`);
+      await axios.delete(`/api/deletePost/${boardId}`);
       fetchBoards(); // 상태 새로고침
     } catch (error) {
       setError("게시글 삭제 실패");
