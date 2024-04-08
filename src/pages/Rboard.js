@@ -33,7 +33,7 @@ const Rboard = ({selectedKeyword,title}) => {
         if (parent_category_seq_name && shoe_price) {
           try {
             const relShoesResponse = await axios.get(
-              `http://localhost:8081/api/rboard/best/${parent_category_seq_name}/${shoe_price}`
+              `http://localhost:8081/api/rboard/best/${parent_category_seq_name}/${shoe_seq}/${shoe_price}`
             );
             setRelShoes(relShoesResponse.data);
           } catch (error) {
