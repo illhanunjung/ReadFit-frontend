@@ -20,7 +20,9 @@ const Rboard = ({selectedKeyword,title}) => {
   const [keywords, setKeywords] = useState([]);
   const [relShoes, setRelShoes] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null ); // null이나 적절한 기본값으로 초기화
-  
+
+  const loginMemberid = window.sessionStorage.getItem("mem_id"); // 현재 로그인한 사용자 ID
+  const [favorites, setFavorites] = useState(new Set());
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,16 +54,64 @@ const Rboard = ({selectedKeyword,title}) => {
         console.error('Error fetching Keywords data:', error);
       }
     };
+    
+    const fetchFavorites = (memberId) => {
+      if (memberId) {
+        axios
+          .get(`http://localhost:8081/api/favorites?mem_id=${memberId}`)
+          .then((response) => {
+            const fetchedFavorites = new Set(
+              response.data.map((fav) => fav.shoe_seq)
+            );
+            setFavorites(fetchedFavorites);
+          })
+          .catch((error) => console.error("Error fetching favorites:", error));
+      }
+    };
   
     fetchData();
     fetchKeyword();
-  }, [shoe_seq]);
+    fetchFavorites(loginMemberid);
+  }, [shoe_seq,loginMemberid]);
 
 
    // 긍정, 부정, 중립 개수를 저장할 객체
    const count = { 긍정: 0, 부정: 0, 중립: 0 };
    
-   
+   const toggleFavorite = (shoe_seq) => {
+    const updatedFavorites = new Set(favorites);
+    const isFavorited = updatedFavorites.has(shoe_seq);
+
+    if (isFavorited) {
+      axios
+        .delete(`http://localhost:8081/api/favorites/remove`, {
+          params: {
+            // 이 예제에서는 favorite_seq가 실제로 shoe_seq 역할을 하고 있습니다. 적절히 수정해주세요.
+            mem_id: loginMemberid, // loginMemberid는 현재 로그인한 사용자 ID를 나타냅니다. 적절한 변수로 대체해주세요.
+            shoe_seq: shoe_seq, // shoe_seq 값을 파라미터로 추가합니다.
+          },
+        })
+        .then(() => {
+          updatedFavorites.delete(shoe_seq);
+          setFavorites(updatedFavorites);
+        })
+        .catch((error) => console.error("Error removing favorite:", error));
+    } else {
+      axios
+        .post(`http://localhost:8081/api/favorites/add`, {
+          mem_id: loginMemberid,
+          shoe_seq,
+        })
+        .then(() => {
+          updatedFavorites.add(shoe_seq);
+          setFavorites(updatedFavorites);
+        })
+        .catch((error) => console.error("Error adding favorite:", error));
+    }
+
+    console.log(loginMemberid);
+    console.log(shoe_seq);
+  };
 
 
  
@@ -107,19 +157,41 @@ const Rboard = ({selectedKeyword,title}) => {
           <Row className="mb-4">
             <Col lg={6}>
               <p className="ct2">
+              
+              <span className="mx-3">
+              
                 {shoe.shoe}
+                </span>
               </p>
-              <Card className="mb-4">
+              <Card className="mx-2">
                 <Row noGutters>
                   <Col md={4} className="text-center">
-                    <Image src={shoe.shoe_img} fluid rounded />
+                    
+                    <Image className="mt-3 mb-1 mx-5 my-2" src={shoe.shoe_img} fluid rounded style={{ position: 'relative', height:'170px', width:'auto'}}/>
                   </Col>
                   <Col md={8}>
-                    <Card.Body className="sbt mb-1">
+                    <Card.Body className="mt-2 mb-1 ">
                       <Card.Text>
-                        <p>카테고리 : {shoe.parent_category_seq}</p>
+
+                        <button onClick={() => toggleFavorite(shoe.shoe_seq)} 
+                          style={{ 
+                            position: 'absolute',  // 절대 포지셔닝
+                            right: '20px',         // 우측 여백
+                            top: '10px',        // 하단 여백
+                            border: 'none', 
+                            background: 'transparent', 
+                            padding: 0, 
+                            cursor: 'pointer'
+                          }}>
+                          <img
+                            src={favorites.has(shoe.shoe_seq) ? "/img/ha.png" : "/img/noha.png"}
+                            alt={favorites.has(shoe.shoe_seq) ? "관심상품 해제" : "관심상품 추가"}
+                            style={{ width: '24px', height: '24px' }}
+                          />
+                        </button>         
+                          <p>카테고리 : {shoe.parent_category_seq}</p>
                         <p>가격 : {shoe.shoe_price}원</p>
-                        <p><img src="/img/Star.png" style={{ width: "15px", height: "auto" }}/>({shoe.averageRating.toFixed(1)})</p>
+                        <p><img className="mb-2 mt-1" src="/img/Star.png" style={{ width: "15px", height: "auto" }}/><span className="mx-1">({shoe.averageRating.toFixed(1)})</span></p>
                         <p>리뷰수 : ({shoe.reviewCount})</p>
                       </Card.Text>
                     </Card.Body>  
@@ -127,7 +199,7 @@ const Rboard = ({selectedKeyword,title}) => {
                 </Row>
               </Card>
               
-              <p className="ct1">전체 키워드 긍/부정</p>
+              <p className="ct1 mt-3 mb-3">전체 키워드 긍/부정</p>
               <div className="content-section">                  
                     {/* <Bar data={chartData} options={options} />차트 표시 */}
                     <KeywordPol data={keywords}/>
@@ -136,11 +208,11 @@ const Rboard = ({selectedKeyword,title}) => {
               
               
                <div className="content-section">
-              <p className="ct1">별점 비율</p>
+              <p className="ct1 mt-2 mb-2">별점 비율</p>
               <Balrating reviews={shoe.reviews}/>{/* 별점 비율 표시 */}
               </div>
               <div className="content-section">
-              <Row className="mb-4">
+              <Row className="mb-3">
                 <p className="ct1">함께보면 좋은 상품</p>
                 <InventoryList relShoes={relShoes} />{/* 함께 보면 좋은 상품 리스트 표시 */}
               </Row>
