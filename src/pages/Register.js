@@ -26,7 +26,7 @@ function Register() {
     mem_birth: "",
     mem_profile: "",
     mem_phone: "",
-    email: "", // 이메일 필드 추가
+    mem_email: "", // 이메일 필드 추가
   });
 
   const [isVerified, setIsVerified] = useState(false);
