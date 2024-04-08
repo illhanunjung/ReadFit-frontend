@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Image, Button } from "react-bootstrap";
-import Navs from "../components/Nav";
-import "../css/Main2.css";
+import React, { useEffect, useState } from "react";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Carousels from "../components/Carousel";
-import Moption from "../components/Moption";
 import Mcard from "../components/Mcard";
 import Mnav from "../components/Mnav";
-import { Link } from "react-router-dom";
+import Navs from "../components/Nav";
+import "../css/Main2.css";
 // import SocialKakao from "../api/kakaoApi";
-import PieChart from "../components/PieChart";
 import axios from "axios";
 import McardTOP from "../components/McardTOP";
+import PieChart from "../components/PieChart";
 
 const Main2 = () => {
   const [shoes, setShoes] = useState([]);
@@ -31,6 +30,8 @@ const Main2 = () => {
     });
     
   };
+
+
   useEffect(() => {
     const fetchShoes = () => {
       // 초기 URL은 기본 카테고리인 'running'으로 설정
@@ -132,8 +133,8 @@ const Main2 = () => {
                 
                 key={index}
                 shoe_img={shoe.shoe_img}
-                positivePercentage={70} // 예시 값
-                negativePercentage={30} // 예시 값
+                positivePercentage={shoe.positive_percentage} // 예시 값
+                negativePercentage={shoe.negative_percentage} // 예시 값
                 reviewCount={shoe.reviewCount}
                 shoe={shoe.shoe}
                 reviews={shoe.reviews} // 이 부분은 실제 데이터 구조에 따라 조정 필요
@@ -155,19 +156,17 @@ const Main2 = () => {
               <McardTOP 
                 key={index}
                 shoe_img={shoe.shoe_img}
-                positivePercentage={70} // 예시 값
-                negativePercentage={30} // 예시 값
+                positivePercentage={shoe.positive_percentage} // 예시 값
+                negativePercentage={shoe.negative_percentage} // 예시 값
                 reviewCount={shoe.reviewCount}
                 shoe={shoe.shoe}
                 reviews={shoe.reviews} // 이 부분은 실제 데이터 구조에 따라 조정 필요
                 shoe_seq={shoe.shoe_seq}
               />
-             
             ))}
         
         </Row>
             </Col>
-       
             <Col lg={6}>
             <Col lg={12} md={12} sm={12} className="t2 my-5">
               {selectedCategory.categoryName + " 키워드 랭킹"}{" "}

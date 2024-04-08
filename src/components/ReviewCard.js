@@ -126,28 +126,30 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
 
   // 하이라이트 처리 로직
   const highlightText = (text, ranges) => {
-    if (!ranges.length) return <span>{text}</span>;
-
-    const highlightedText = [];
-    let lastIndex = 0;
-    
-    ranges.forEach(([start, end], index) => {
-      // 하이라이트 이전 텍스트 추가
-      if (start > lastIndex) {
-        highlightedText.push(<span key={index + 'text'}>{text.substring(lastIndex, start)}</span>);
-      }
-      // 하이라이트 텍스트 추가
-      highlightedText.push(<mark key={index + 'highlight'} style={{ backgroundColor: '#E8FD8D' }}>{text.substring(start, end + 1)}</mark>);
-      lastIndex = end + 1;
-    });
-
-    // 마지막 하이라이트 이후 텍스트 추가
-    if (lastIndex < text.length) {
-      highlightedText.push(<span key="lastText">{text.substring(lastIndex)}</span>);
-    }
-
-    return highlightedText;
+    if (!ranges || ranges.length === 0) return text;
+  
+    return (
+      <>
+        {ranges.reduce((result, range, index) => {
+          const start = index === 0 ? 0 : ranges[index - 1][1] + 1;
+          const end = range[0];
+          result.push(text.slice(start, end));
+          result.push(
+            <mark key={index} style={{ backgroundColor: '#E8FD8D' }}>
+              {text.slice(range[0], range[1] + 1)}
+            </mark>
+          );
+          if (index === ranges.length - 1 && range[1] < text.length - 1) {
+            result.push(text.slice(range[1] + 1));
+          }
+          return result;
+        }, [])}
+      </>
+    );
   };
+  const handleToggleExpand = () => {
+    onToggleExpand(); // 상위 컴포넌트에서 전달받은 함수 호출
+};
 
   // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
   const fullReviewText = highlightText(review.review, createHighlightRanges(activeKeyword));
