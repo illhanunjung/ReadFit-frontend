@@ -47,11 +47,12 @@ const FindIDPW = () => {
         setFindIdResult(`아이디 찾기 성공: ${data.mem_id}`); // 예제에서는 mb_id가 반환된다고 가정
         // window.location.href = "FindIDPW";
       } else {
-        window.location.href = "FindIDPW";
         setFindIdResult("이름 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
+        window.location.href = "FindIDPW";
         // alert("아이디 찾기 실패했습니다.");
       }
     } catch (error) {
+      setFindIdResult("이름 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
       console.error("Error:", error);
     }
   };
@@ -88,6 +89,7 @@ const FindIDPW = () => {
         setFindPwResult("아이디 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
       }
     } catch (error) {
+      setFindPwResult("아이디 / 휴대전화 정보를 다시 확인하여 입력해주세요.");
       console.error("Error:", error);
     }
   };
