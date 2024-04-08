@@ -166,8 +166,8 @@ function isPasswordMatching(password, confirmPassword) {
       return;
     }
 
-    if (!formData.email.trim()) { // 이메일 필드가 비어 있는지 확인
-      alert("이메일을 입력해주세요."); // 이메일을 입력하지 않았을 때 알림 표시
+    if (!formData.mem_email.trim()) { 
+      alert("이메일을 입력해주세요.");
       return;
     }
 
