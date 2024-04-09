@@ -305,7 +305,7 @@ function Dpage() {
 
   let BoardDate = null;
   if (boardDetail && boardDetail.board_at) {
-    BoardDate = format(parseISO(boardDetail.board_at), "yyyy-MM-dd HH:mm");
+    BoardDate = format(parseISO(boardDetail.board_at), "yyyy-MM-dd HH:mm:ss");
   }
 
   const wrprofile = boardDetail
@@ -465,7 +465,12 @@ function Dpage() {
                     ) : (
                       <>
                         <div className="comment-content">{comment.comment}</div>
-                        <div className="comment-date">{comment.comment_at}</div>
+                        <div className="comment-date">
+                          {format(
+                            parseISO(comment.comment_at),
+                            "yyyy-MM-dd HH:mm:ss"
+                          )}
+                        </div>
                       </>
                     )}
                   </Col>
