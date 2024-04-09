@@ -6,6 +6,7 @@ import CustomHeader from "./CustomHeader";
 import ConversationListPage from "./ConversationListPage"; // 대화 리스트 페이지 컴포넌트 임포트
 import "./Chatbot.css";
 import "./ConversationListPage.css";
+import { v4 as uuidv4 } from "uuid";
 
 const theme = {
   background: "#ffffff",
@@ -22,11 +23,17 @@ const theme = {
 const Chatbot = ({ isOpen, toggleChat }) => {
   const [inConversation, setInConversation] = useState(false); // 대화 중인지 여부 상태
   const [showConversationList, setShowConversationList] = useState(false); // 대화 리스트 보기 상태
+  const [session_seq, setSession_seq] = useState(null); // 세션 ID 상태 추가
+
+  const mem_id = sessionStorage.getItem("mem_id");
 
   // 대화 페이지로 이동하는 핸들러 함수
   const handleInquiry = () => {
+    const session_seq = uuidv4(); // 랜덤한 세션 ID 생성
+    setSession_seq(session_seq); // 세션 ID 상태 업데이트
     setInConversation(true); // 대화 중 상태로 변경
     setShowConversationList(false); // 대화 리스트를 숨김
+    console.log("나오니", session_seq);
   };
 
   // 홈 버튼 클릭 시 챗봇 첫 화면으로 이동하는 핸들러 함수
@@ -42,7 +49,9 @@ const Chatbot = ({ isOpen, toggleChat }) => {
   };
 
   const handleNewConversationStart = () => {
-    console.log("Starting new conversation"); // 로그 추가
+    console.log("Starting new conversation");
+    const newSessionSeq = uuidv4(); // 새로운 session_seq 생성
+    setSession_seq(newSessionSeq); // 상태 업데이트
     setInConversation(true);
     setShowConversationList(false);
   };
@@ -73,11 +82,12 @@ const Chatbot = ({ isOpen, toggleChat }) => {
       return (
         <ConversationListPage
           onNewConversationStart={handleNewConversationStart}
+          mem_id={mem_id}
         />
       );
     } else if (inConversation) {
       // 대화 페이지 컴포넌트를 렌더링합니다.
-      return <ConversationPage />;
+      return <ConversationPage mem_id={mem_id} session_seq={session_seq} />;
     } else {
       // 기본 챗봇 컴포넌트를 렌더링합니다.
       return (

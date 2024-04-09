@@ -1,56 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./ConversationListPage.css";
 import MessageIcon from "./Chat.png"; // 메시지 아이콘 파일 경로에 맞게 조정해야 합니다.
 import listIcon from "./logo1.png";
 
-const ConversationListPage = ({ onNewConversationStart }) => {
-  // 가상의 대화방 데이터
-  const conversations = [
-    {
-      id: 1,
-      title: "Alice",
-      lastMessage: "모던한 수납 더보기",
-      time: "오전 10:14",
-      avatar: listIcon,
-    },
-    {
-      id: 2,
-      title: "The Office",
-      lastMessage: "새로운 메시지",
-      time: "오전 9:00",
-      avatar: listIcon,
-    },
-    {
-      id: 3,
-      title: "The Office",
-      lastMessage: "새로운 메시지",
-      time: "오전 9:00",
-      avatar: listIcon,
-    },
-    {
-      id: 4,
-      title: "The Office",
-      lastMessage: "새로운 메시지",
-      time: "오전 9:00",
-      avatar: listIcon,
-    },
-    {
-      id: 5,
-      title: "The Office",
-      lastMessage: "새로운 메시지",
-      time: "오전 9:00",
-      avatar: listIcon,
-    },
-    {
-      id: 6,
-      title: "The Office",
-      lastMessage: "새로운 메시지",
-      time: "오전 9:00",
-      avatar: listIcon,
-    },
-    // 추가 대화방 데이터...
-  ];
+const ConversationListPage = ({ onNewConversationStart, mem_id }) => {
+  const [conversations, setConversations] = useState([]);
 
+  console.log("대화리스트페이지", mem_id);
+
+  useEffect(() => {
+    // 멤버 ID가 'tester7'인 대화 목록을 불러옵니다.
+    // 실제 사용 시에는 로그인한 사용자의 멤버 ID를 동적으로 사용해야 합니다.
+    fetchConversations(mem_id);
+  }, []);
+
+  const fetchConversations = async (mem_id) => {
+    try {
+      const response = await axios.get(`/api/chat/chatdata/${mem_id}`);
+      setConversations(response.data);
+      console.log("챗봇데이타", response.data);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+    }
+  };
   return (
     <div className="conversation-list-container">
       <div className="conversation-list-header">
@@ -59,17 +32,17 @@ const ConversationListPage = ({ onNewConversationStart }) => {
       {conversations.length > 0 ? (
         <div className="conversation-list">
           {conversations.map((conv) => (
-            <div key={conv.id} className="conversation-item">
+            <div key={conv.mem_id} className="conversation-item">
               <img
-                src={conv.avatar}
-                alt={conv.title}
+                src={listIcon}
+                alt={conv.contents}
                 className="conversation-avatar"
               />
               <div className="conversation-details">
-                <h3 className="conversation-title">{conv.title}</h3>
-                <p className="conversation-snippet">{conv.lastMessage}</p>
+                <h3 className="conversation-title">{conv.contents}</h3>
+                <p className="conversation-snippet">{conv.bot_answer}</p>
               </div>
-              <span className="conversation-time">{conv.time}</span>
+              <span className="conversation-time">{conv.creat_at}</span>
             </div>
           ))}
         </div>
