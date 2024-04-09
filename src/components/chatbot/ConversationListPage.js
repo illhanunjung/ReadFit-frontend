@@ -4,8 +4,16 @@ import "./ConversationListPage.css";
 import MessageIcon from "./Chat.png"; // 메시지 아이콘 파일 경로에 맞게 조정해야 합니다.
 import listIcon from "./logo1.png";
 
-const ConversationListPage = ({ onNewConversationStart, mem_id }) => {
+const ConversationListPage = ({
+  onNewConversationStart,
+  onConversationSelect,
+  mem_id,
+}) => {
   const [conversations, setConversations] = useState([]);
+
+  const handleConversationSelect = (session_seq) => {
+    onConversationSelect(session_seq); // 상위 컴포넌트로 선택된 채팅방의 session_seq 전달
+  };
 
   console.log("대화리스트페이지", mem_id);
 
@@ -32,7 +40,11 @@ const ConversationListPage = ({ onNewConversationStart, mem_id }) => {
       {conversations.length > 0 ? (
         <div className="conversation-list">
           {conversations.map((conv) => (
-            <div key={conv.mem_id} className="conversation-item">
+            <div
+              key={conv.mem_id}
+              className="conversation-item"
+              onClick={() => handleConversationSelect(conv.session_seq)}
+            >
               <img
                 src={listIcon}
                 alt={conv.contents}

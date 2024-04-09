@@ -6,7 +6,9 @@ import CustomHeader from "./CustomHeader";
 import ConversationListPage from "./ConversationListPage"; // 대화 리스트 페이지 컴포넌트 임포트
 import "./Chatbot.css";
 import "./ConversationListPage.css";
+import Oldchat from "./Oldchat";
 import { v4 as uuidv4 } from "uuid";
+import logo from "./logo1.png";
 
 const theme = {
   background: "#ffffff",
@@ -24,6 +26,7 @@ const Chatbot = ({ isOpen, toggleChat }) => {
   const [inConversation, setInConversation] = useState(false); // 대화 중인지 여부 상태
   const [showConversationList, setShowConversationList] = useState(false); // 대화 리스트 보기 상태
   const [session_seq, setSession_seq] = useState(null); // 세션 ID 상태 추가
+  const [showOldChat, setShowOldChat] = useState(false); // Oldchat 컴포넌트 보기 상태
 
   const mem_id = sessionStorage.getItem("mem_id");
 
@@ -33,6 +36,7 @@ const Chatbot = ({ isOpen, toggleChat }) => {
     setSession_seq(session_seq); // 세션 ID 상태 업데이트
     setInConversation(true); // 대화 중 상태로 변경
     setShowConversationList(false); // 대화 리스트를 숨김
+
     console.log("나오니", session_seq);
   };
 
@@ -40,12 +44,14 @@ const Chatbot = ({ isOpen, toggleChat }) => {
   const handleGoToHomePage = () => {
     setInConversation(false); // 대화 중인지 여부 상태를 false로 설정하여 챗봇 첫 화면으로 이동
     setShowConversationList(false); // 대화 리스트를 숨김
+    setShowOldChat(false); // Oldchat 컴포넌트로 이동
   };
 
   // 대화 리스트 페이지로 이동하는 핸들러 함수
   const handleShowConversationList = () => {
     setShowConversationList(true); // 대화 리스트 페이지를 보여줌
     setInConversation(false); // 대화 중 상태를 비활성화
+    setShowOldChat(false); // Oldchat 컴포넌트로 이동
   };
 
   const handleNewConversationStart = () => {
@@ -54,6 +60,13 @@ const Chatbot = ({ isOpen, toggleChat }) => {
     setSession_seq(newSessionSeq); // 상태 업데이트
     setInConversation(true);
     setShowConversationList(false);
+  };
+
+  const handleConversationSelect = (session_seq) => {
+    setSession_seq(session_seq); // 선택된 채팅방의 session_seq를 상태에 설정
+    setInConversation(true); // 대화 페이지로 이동
+    setShowConversationList(false); // 대화 리스트를 숨김
+    setShowOldChat(true); // Oldchat 컴포넌트로 이동
   };
 
   // 챗봇의 스텝 정의
@@ -77,11 +90,14 @@ const Chatbot = ({ isOpen, toggleChat }) => {
   ];
 
   const renderChatBody = () => {
-    if (showConversationList) {
+    if (showOldChat) {
+      return <Oldchat session_seq={session_seq} />; // Oldchat 컴포넌트 렌더링
+    } else if (showConversationList) {
       // 대화 리스트 페이지에 새 대화 시작 이벤트를 처리할 핸들러를 전달합니다.
       return (
         <ConversationListPage
           onNewConversationStart={handleNewConversationStart}
+          onConversationSelect={handleConversationSelect}
           mem_id={mem_id}
         />
       );
@@ -92,7 +108,7 @@ const Chatbot = ({ isOpen, toggleChat }) => {
       // 기본 챗봇 컴포넌트를 렌더링합니다.
       return (
         <ThemeProvider theme={theme}>
-          <ChatBot steps={steps} />
+          <ChatBot steps={steps} botAvatar={logo} />
         </ThemeProvider>
       );
     }
@@ -109,7 +125,7 @@ const Chatbot = ({ isOpen, toggleChat }) => {
           {/* 네비게이션 버튼들 */}
           <button onClick={handleGoToHomePage}>홈</button>
           <button onClick={handleShowConversationList}>대화</button>
-          <button onClick={() => {}}>설정</button>{" "}
+          {/* <button onClick={() => {}}>설정</button>{" "} */}
           {/* 설정 페이지로의 이동을 구현하려면 이 부분을 수정하세요. */}
         </div>
       </div>

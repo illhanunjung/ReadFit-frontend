@@ -1,0 +1,102 @@
+/* 메시지 컨테이너 스타일 */
+.message-wrapper {
+    display: flex;
+    justify-content: flex-end; /* 모든 메시지를 우측 정렬 기본값 */
+    width: 100%;
+}
+
+.user-message, .bot-message {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.user-message {
+    justify-content: flex-end; /* 사용자 메시지를 오른쪽에 정렬 */
+    flex-direction: row-reverse; /* 이미지를 오른쪽에 배치 */
+}
+
+.user-message .message-time {
+    font-size: 12px;
+}
+
+
+
+.bot-message {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.bot-message .message-time {
+    position: absolute;
+    bottom: 0;
+    right: -12px;
+    font-size: 12px;
+}
+
+.bot-message span, .bot-message .message-time {
+    margin-right: 8px; /* 요소들 사이의 간격 */
+}
+
+
+.message-time {
+    font-size: 10px;
+    color: black;
+    margin-left: 8px; /* 시간과 텍스트 사이의 간격 */
+    white-space: nowrap; /* 줄바꿈 없이 한 줄로 표시 */
+}
+
+.user-message .profile-image, .bot-message .profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-message .profile-image {
+    margin-left: 10px; /* 사용자 이미지와 텍스트 사이의 간격 */
+}
+
+.bot-message .profile-image {
+    margin-right: 10px; /* 봇 이미지와 텍스트 사이의 간격 */
+}
+
+/* 메시지 텍스트 스타일 */
+.user-message span, .bot-message span {
+    max-width: 60%;
+    padding: 8px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.user-message .content-item {
+    background-color: #007bff; /* 사용자 메시지 배경색 */
+    color: white; /* 사용자 메시지 글자색 */
+}
+
+.bot-message .bot-item{
+    background-color: #f1f0f0; /* 봇 메시지 배경색 */
+    color: #333; /* 봇 메시지 글자색 */
+}
+
+
+
+
+/* 스크롤 가능한 대화 내용 영역 */
+.conversation-content {
+    overflow-y: auto;
+    max-height: 500px;
+    padding: 15px;
+    background-color: white;
+}
+
+.saved-date {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.8em;
+    color: #666;
+    background-color: transparent;
+}

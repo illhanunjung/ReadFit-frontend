@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ChatBot from "react-simple-chatbot";
 import "./ConversationPage.css";
+import logo from "./logo1.png";
 
 const SaveUserInput = ({ steps, session_seq }) => {
   const mem_id = sessionStorage.getItem("mem_id");
@@ -63,18 +64,21 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
 
   const fetchConversationDetails = async () => {
     try {
-      // 로그인한 사용자의 mem_id를 사용하여 대화 목록 요청
-      const response = await axios.get(`/api/chat/chatdata/${mem_id}`);
-      setConversationDetails(response.data);
-      console.log("cvxzvzcxv", response.data);
+      // session_seq를 사용하여 특정 세션의 대화 목록 요청
+      const response = await axios.get(`/api/chat/${mem_id}/${session_seq}`);
+      setConversationDetails(response.data); // 불러온 대화 내용을 상태에 저장
+      console.log("Fetched conversation details:", response.data);
     } catch (error) {
       console.error("Error fetching conversation details:", error);
     }
   };
 
   useEffect(() => {
-    fetchConversationDetails();
-  }, [mem_id]);
+    if (session_seq) {
+      // session_seq가 있을 때만 대화 내용을 불러옵니다.
+      fetchConversationDetails();
+    }
+  }, [session_seq]);
   console.log("대화페이지", session_seq);
 
   const steps = [
@@ -164,7 +168,7 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
 
   return (
     <div className="ConversationPage">
-      <ChatBot steps={steps} />
+      <ChatBot steps={steps} botAvatar={logo} />
       {conversationDetails.map((detail, index) => (
         <div key={index}>{detail.message}</div> // 대화 내용을 UI에 표시
       ))}
