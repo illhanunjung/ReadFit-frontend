@@ -10,6 +10,7 @@
   display: flex;
   align-items: center;
   
+  
 }
 
 .slider-image-container {
@@ -30,19 +31,23 @@
   flex-direction: column;
   flex-grow: 1;
   padding-left: 10px;
+  
 }
 
 .slider-text {
   flex-grow: 1;
+  
 }
 
 .slider-review-text {
-    display: inline-block; /* 블록 레벨 요소처럼 처리 */
-    max-width: 210px; /* 최대 너비 설정 */
-    white-space: nowrap; /* 텍스트를 한 줄로 처리 */
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 보여줄 줄의 수 */
+  -webkit-box-orient: vertical;
+    max-width: 500px; /* 최대 너비 설정 */
+    color: '#4A4F5A';
     overflow: hidden; /* 내용이 넘치면 숨김 처리 */
     text-overflow: ellipsis; /* 넘친 텍스트를 ...으로 표시 */
-    overflow-wrap: break-word; /* 단어가 너무 길면 줄바꿈 */
+    
   word-wrap: break-word; /* 이전 버전의 브라우저를 위해 word-wrap도 설정 */
   word-break: break-all; /* CSS3의 word-break도 설정 */
   }
@@ -52,6 +57,18 @@
   justify-content: space-between;
 }
 
+.slider-button:first-child { 
+  margin-right: -80px; 
+}
+
+.slider-button:last-child { 
+  margin-left: -80px;
+}
+
+.shoe-title{
+  font-size: 20px;
+  font-weight: bold;
+}
 .slider-button {
   background: none;
   border: none;

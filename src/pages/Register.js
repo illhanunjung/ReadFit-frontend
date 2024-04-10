@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Form, Button, InputGroup } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faUser,
-  faLock,
-  faCommentDots,
   faCheckCircle,
+  faCommentDots,
+  faEnvelope,
+  faLock,
   faTimesCircle,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import "../css/Login.css";
-import Navs from "../components/Nav";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { registerUser  } from "../api/kakaoApi";
-
+import Navs from "../components/Nav";
+import "../css/Login.css";
 
 
 function Register() {
@@ -26,9 +25,11 @@ function Register() {
     mem_birth: "",
     mem_profile: "",
     mem_phone: "",
+    mem_email: "", // 이메일 필드 추가
   });
 
   const [isVerified, setIsVerified] = useState(false);
+  const [kakaoAccessToken, setKakaoAccessToken] = useState("");
   const [isIdValid, setIsIdValid] = useState(false);
   const [errorMessage, setErrorMessage] = useState(""); 
 
@@ -85,11 +86,26 @@ function Register() {
   };
   
   const handleKakaoLogin = () => {
-    window.Kakao.Auth.login({
+
+      // 기존 로그아웃 로직을 유지합니다.
+      // kakaoLogout();
+      // unlinkApp();
+  
+      // getKakaoLoginLink();
+
+      // window.Kakao.Auth.authorize({
+      //   // redirectUri: '${REDIRECT_URI}',
+      //   // redirectUri: 'http://localhost:3000/auth',
+      //   redirectUri: 'http://localhost:3000/Register',
+      //   //redirectUri: 'http://localhost:8081/members/register',
+      //   prompt: 'login',
+      // });
+
+    window.Kakao.Auth.loginForm ({
       scope: 'name, birthday, birthyear, profile_image, phone_number',
       success: (authObj) => {
         window.Kakao.API.request({
-          url: "/v2/user/me",
+          url: "/v2/user/me", 
           success: (res) => {
             const birthyear = res.kakao_account.birthyear;
             const birthday = res.kakao_account.birthday.padStart(4, '0'); // MMDD 형식을 확보합니다.
@@ -98,7 +114,6 @@ function Register() {
             const phone = formatPhoneNumber(res.kakao_account.phone_number);
             const name = res.kakao_account.name;
             
-
             // 로그 출력은 상태 설정 외부에서 수행합니다.
             console.log("이름", name, "생년월일", birth, "프로필 이미지", profile, "전화번호", phone);
   
@@ -111,6 +126,8 @@ function Register() {
               mem_phone: phone
             }));
             setIsVerified(true);
+            // console.log(authObj.access_token);
+            setKakaoAccessToken(authObj.access_token);
           },
           fail: (error) => {
             console.error(error);
@@ -126,6 +143,46 @@ function Register() {
 function validateId(id) {
   const re = /^[A-Za-z0-9]{8,}$/;
   return re.test(id);
+}
+
+const deleteCookie= () => {
+  document.cookie = 'authorize-access-token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+const clearLocalStorage = () => {
+  // 특정 키가 있다면, 그 키를 사용해서 로컬 스토리지의 아이템을 제거
+  localStorage.removeItem(kakaoAccessToken);
+  // 또는 전체 로컬 스토리지를 클리어할 수도 있지만, 다른 데이터도 함께 삭제될 수 있으니 주의
+  // localStorage.clear();
+};
+
+const clearSessionStorage = () => {
+  sessionStorage.removeItem(kakaoAccessToken);
+  // 또는 전체 세션 스토리지를 클리어할 수도 있습니다.
+  // sessionStorage.clear();
+};
+
+const kakaoLogout = () => {
+  window.Kakao.Auth.logout(() => {
+    console.log('로그아웃 되었습니다.');
+    // 쿠키, 로컬 스토리지, 세션 스토리지에서 관련 데이터를 모두 삭제
+    deleteCookie();
+    clearLocalStorage();
+    clearSessionStorage();
+  });
+};
+
+const unlinkApp= () =>  {
+  window.Kakao.API.request({
+    url: '/v1/user/unlink',
+  })
+    .then(function(res) {
+      alert('success: ' + JSON.stringify(res));
+      deleteCookie();
+    })
+    .catch(function(err) {
+      alert('fail: ' + JSON.stringify(err));
+    });
 }
 
 function isPasswordMatching(password, confirmPassword) {
@@ -151,6 +208,9 @@ function isPasswordMatching(password, confirmPassword) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    
+
     if (!isVerified) {
       alert("본인인증을 해주세요.");
       return;
@@ -164,15 +224,22 @@ function isPasswordMatching(password, confirmPassword) {
       return;
     }
 
+    if (!formData.mem_email.trim()) { 
+      alert("이메일을 입력해주세요.");
+      return;
+    }
+
        // 카카오 로그인으로 받은 정보와 사용자 입력 정보를 합친 객체를 생성
-       const userData = {
+      const userData = {
         mem_id: formData.mem_id,
         mem_pw: formData.mem_pw,
         mem_name: formData.mem_name,
         mem_birth: formData.mem_birth,
         mem_profile: formData.mem_profile,
         mem_phone: formData.mem_phone,
+        mem_email: formData.mem_email,
       };
+
 
 
         // 회원가입 요청
@@ -264,6 +331,22 @@ function isPasswordMatching(password, confirmPassword) {
               </Form.Text>
             </InputGroup> 
 
+
+            {/* 이메일 입력 필드 */}
+            <InputGroup className="mb-3">
+                  <InputGroup.Text>
+                    <FontAwesomeIcon icon={faEnvelope} />
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="email"
+                    placeholder="이메일"
+                    name="mem_email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+
+
                 <Button
                   variant="success"
                   type="submit"
@@ -277,7 +360,7 @@ function isPasswordMatching(password, confirmPassword) {
                   className="kakao-login-button mb-3"
                   onClick={handleKakaoLogin}
                 >
-                  <FontAwesomeIcon icon={faCommentDots} className="me-2" />
+                <FontAwesomeIcon icon={faCommentDots} className="me-2" />
                   카카오로 본인인증
                 </Button>
               </Form>
