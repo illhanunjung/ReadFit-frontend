@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import ChatBot from "react-simple-chatbot";
 import { ThemeProvider } from "styled-components";
+import { v4 as uuidv4 } from "uuid";
+import "./Chatbot.css";
+import ConversationListPage from "./ConversationListPage"; // 대화 리스트 페이지 컴포넌트 임포트
+import "./ConversationListPage.css";
 import ConversationPage from "./ConversationPage"; // 대화 페이지 컴포넌트 임포트
 import CustomHeader from "./CustomHeader";
-import ConversationListPage from "./ConversationListPage"; // 대화 리스트 페이지 컴포넌트 임포트
-import "./Chatbot.css";
-import "./ConversationListPage.css";
 import Oldchat from "./Oldchat";
-import { v4 as uuidv4 } from "uuid";
 import logo from "./logo1.png";
 
 const theme = {

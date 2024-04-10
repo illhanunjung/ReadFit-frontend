@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import ChatBot from "react-simple-chatbot";
+import ChatBotCard from "./ChatBotCard"; // ChatBotCard 컴포넌트를 import 합니다.
 import "./ConversationPage.css";
 import logo from "./logo1.png";
 
@@ -58,6 +59,47 @@ const SaveUserInput = ({ steps, session_seq }) => {
   return null;
 };
 
+
+
+
+
+
+
+const DisplayResults = ({ steps, triggerNextStep }) => {
+  const [resultData, setResultData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // 요약 메시지를 사용하여 결과 데이터를 가져옵니다.
+        const summaryMessage = steps.finalStep.message;
+        const response = await axios.post('http://127.0.0.1:5000/api/data/chatBot', {
+          question: summaryMessage
+        });
+        setResultData(response.data);
+        // triggerNextStep을 사용하여 다음 단계로 이동합니다.
+        triggerNextStep();
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [steps, triggerNextStep]);
+
+  // 결과 데이터를 렌더링합니다.
+  return resultData ? <ChatBotCard resultData={resultData} /> : <div>Loading...</div>;
+};
+
+
+
+
+
+
+
+
+
+
 const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
   console.log("대화페이지", mem_id);
   const [conversationDetails, setConversationDetails] = useState([]);
@@ -74,6 +116,7 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
   };
 
   useEffect(() => {
+
     if (session_seq) {
       // session_seq가 있을 때만 대화 내용을 불러옵니다.
       fetchConversationDetails();
@@ -348,14 +391,23 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
         }
         return summaryMessage;
       },
-      trigger: "saveInput",
+      // trigger: "saveInput",
+      trigger: "fetchResults", // 다음 단계로 이동합니다.
     },
-
+    {
+      id: "fetchResults",
+      component: <DisplayResults />,
+      asMessage: true,
+      waitAction: true, // 사용자의 행동을 기다립니다 (옵셔널)
+      // trigger: "displayResults"
+      trigger: "saveInput"
+    },
     {
       id: "saveInput",
       component: <SaveUserInput session_seq={session_seq} />,
       end: true,
     },
+
     {
       id: "notFound",
       message:
@@ -363,9 +415,12 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
       trigger: "1", // 첫 번째 단계로 돌아감
     },
   ];
-
+  const userQuestion = "별점이 높은 운동화 top5 알려주세요";
+  
   return (
     <div className="ConversationPage">
+
+
       <ChatBot steps={steps} botAvatar={logo} />
       {conversationDetails.map((detail, index) => (
         <div key={index}>{detail.message}</div> // 대화 내용을 UI에 표시
