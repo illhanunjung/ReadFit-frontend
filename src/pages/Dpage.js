@@ -386,7 +386,7 @@ function Dpage() {
                     />
                   </div>
                 )}
-                <p>{boardDetail.board_content}</p>
+                <p className="user-text">{boardDetail.board_content}</p>
               </Card.Body>
             </>
           ) : (
