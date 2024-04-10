@@ -15,6 +15,15 @@ const ConversationListPage = ({
     onConversationSelect(session_seq); // 상위 컴포넌트로 선택된 채팅방의 session_seq 전달
   };
 
+  const formatDateTime = (dateTimeStr) => {
+    const date = new Date(dateTimeStr);
+    return date.toLocaleString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
   console.log("대화리스트페이지", mem_id);
 
   useEffect(() => {
@@ -26,12 +35,16 @@ const ConversationListPage = ({
   const fetchConversations = async (mem_id) => {
     try {
       const response = await axios.get(`/api/chat/chatdata/${mem_id}`);
-      setConversations(response.data);
-      console.log("챗봇데이타", response.data);
+      const formattedConversations = response.data.map((conv) => ({
+        ...conv,
+        formattedCreatAt: formatDateTime(conv.creat_at), // 여기서 날짜 포맷을 적용
+      }));
+      setConversations(formattedConversations);
     } catch (error) {
       console.error("Error fetching conversations:", error);
     }
   };
+
   return (
     <div className="conversation-list-container">
       <div className="conversation-list-header">
@@ -54,7 +67,7 @@ const ConversationListPage = ({
                 <h3 className="conversation-title">{conv.contents}</h3>
                 <p className="conversation-snippet">{conv.bot_answer}</p>
               </div>
-              <span className="conversation-time">{conv.creat_at}</span>
+              <span className="conversation-time">{conv.formattedCreatAt}</span>
             </div>
           ))}
         </div>

@@ -81,7 +81,7 @@ const Chatbot = ({ isOpen, toggleChat }) => {
       id: "inquiry-button",
       component: (
         <button className="inquiry-button" onClick={handleInquiry}>
-          문의하기
+          신발 찾기
         </button>
       ),
       end: true,
