@@ -4,6 +4,7 @@ import ChatBot from "react-simple-chatbot";
 import ChatBotCard from "./ChatBotCard"; // ChatBotCard 컴포넌트를 import 합니다.
 import "./ConversationPage.css";
 import logo from "./logo1.png";
+import CustomHeader from "./CustomHeader";
 
 const SaveUserInput = ({ steps, session_seq }) => {
   const mem_id = sessionStorage.getItem("mem_id");
@@ -415,7 +416,11 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
 
   return (
     <div className="ConversationPage">
-      <ChatBot steps={steps} botAvatar={logo} />
+      <ChatBot
+        steps={steps}
+        botAvatar={logo}
+        headerComponent={<CustomHeader />}
+      />
       {conversationDetails.map((detail, index) => (
         <div key={index}>{detail.message}</div> // 대화 내용을 UI에 표시
       ))}
