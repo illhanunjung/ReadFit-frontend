@@ -114,9 +114,9 @@ const handleCardClick = (title) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword, expanded, onToggleExpand }) => {
+const ReviewCard = ({ review, highlightRanges = [], keywords, activeKeyword, expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
-
+  console.log(keywords);
   // 하이라이트 범위 생성 함수
   const createHighlightRanges = (activeKeyword) => {
     return keywords
@@ -206,7 +206,7 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
     </Card>
   );
 };
-const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
+const ReviewsList = ({ reviews, activeCategory,resetExpandedStates ,keywords }) => {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= 768;
   const [currentPage, setCurrentPage] = useState(1);
@@ -219,7 +219,7 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
-
+  
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(reviews.length / reviewsPerPage); i++) {
     pageNumbers.push(i);
@@ -267,7 +267,8 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
           key={index}
           review={review}
           highlightRanges={review.highlightRanges}
-          activeCategory={activeCategory}
+          keywords={keywords.filter(kw => kw.keyword_name === activeCategory && kw.review_seq === review.review_seq)}
+          activeKeyword={activeCategory}
           expanded={expandedStates[review.review_seq]}
           // "더보기" 버튼의 상태를 관리하기 위한 함수를 prop으로 전달
           onToggleExpand={() => setExpandedStates(prev => ({
@@ -301,6 +302,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  
   const fetchKeywordData = async (shoeSeq) => {
     setIsLoading(true);
     try {
@@ -385,7 +387,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   return (
     <>
       <p className="ct1">키워드</p>
-      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} shoe_seq={shoe_seq}/>
+      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} shoe_seq={shoe_seq} keywords={keywords}/>
       
       
       <Container>
@@ -406,7 +408,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   <Container>
     <Row>
       <Col md={12}>
-        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
+        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates} keywords={keywords}/>
       </Col>
     </Row>
   </Container>
