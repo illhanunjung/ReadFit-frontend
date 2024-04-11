@@ -7,11 +7,10 @@ import FindIDPW from "./pages/FindIDPW";
 import Main1 from "./pages/Main1";
 import Main2 from "./pages/Main2";
 import Profil from "./pages/Profil";
-import Register from './pages/Register';
+import Register from "./pages/Register";
 import Exp from "./pages/Exp";
 import AdminLogin from "./pages/AdminLogin";
 import Admin from "./pages/Admin";
-
 
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -38,7 +37,7 @@ function App() {
             alt="Chat Icon"
           />
         </div>
-        <Chatbot isOpen={chatOpen} toggleChat={toggleChat} />
+        {/* <Chatbot isOpen={chatOpen} toggleChat={toggleChat} /> */}
       </div>
       <Chatbot isOpen={chatOpen} toggleChat={toggleChat} />
       <Routes>
