@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
+import { format, parseISO } from "date-fns";
 import React, { useEffect, useState } from "react";
 import {
   Button,
@@ -22,7 +23,6 @@ import {
 import { useParams } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Dpage.css";
-import { format, parseISO } from "date-fns";
 
 function Dpage() {
   const { board_seq } = useParams();
@@ -189,6 +189,17 @@ function Dpage() {
     setEditingComment(comment); // 수정 중인 댓글 정보 설정
   };
 
+
+  const renderContentWithLineBreaks = (content) => {
+    // 개행 문자(\n)를 <br> 태그로 변환하여 반환
+    return content.split('\n').map((line, index) => (
+      <React.Fragment key={index}>
+        {line}
+        <br />
+      </React.Fragment>
+    ));
+  };
+  
   const handleCommentUpdate = async () => {
     // alert("댓글 수정 완료 버튼을 눌렀습니다 : " + editingComment.comment);
     // 댓글 내용이 없는 경우 함수를 종료합니다.
@@ -312,10 +323,6 @@ function Dpage() {
     ? `http://localhost:8081/img/uploads/profile/${boardDetail?.mem_profile}`
     : undefined;
 
-  // const cmtprofile = comment
-  //   ? `http://localhost:8081/img/uploads/profile/${comment.mem_profile}`
-  //   : undefined;
-
   return (
     <div>
       <Navs />
@@ -386,29 +393,12 @@ function Dpage() {
                     />
                   </div>
                 )}
-                <p className="user-text">{boardDetail.board_content}</p>
+                <p>{renderContentWithLineBreaks(boardDetail.board_content)}</p>
               </Card.Body>
             </>
           ) : (
             <p>Loading...</p>
           )}
-
-          {/* <Card.Footer className="d-flex justify-content-start align-items-center">
-            <FontAwesomeIcon
-              icon={heartClicked ? faHeart : faEmptyHeart}
-              className="mr-2"
-              style={{ color: heartClicked ? "red" : "black" }}
-              onClick={toggleHeartColor}
-            />
-            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
-            <span className="ml-2 mr-2">{favoriteCount}</span>
-            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
-            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
-            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
-            <FontAwesomeIcon icon={faCommentDots} className="mr-2" />
-            <span className="ml-2 mr-2">&nbsp;&nbsp;</span>
-            {comments.length}
-          </Card.Footer> */}
 
           <Card.Footer className="d-flex justify-content-start align-items-center">
             <FontAwesomeIcon

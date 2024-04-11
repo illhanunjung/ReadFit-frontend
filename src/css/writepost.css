@@ -91,13 +91,24 @@
   .buttonsContainer {
     display: flex;
     justify-content: center; /* 버튼을 가운데 정렬합니다. */
-    gap: 20px; /* 버튼 사이의 간격을 조정합니다. */
+    /* 버튼 사이의 간격을 조정합니다. */
+    gap: 20px; 
     margin-top: 20px;
   }
   
-  .buttonsContainer > a, .buttonsContainer > button {
+  .buttonsContainer > a {
     width: 200px; /* 버튼 너비를 200px로 설정합니다. */
     height: 50px; /* 버튼 높이 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+  }
+
+  .buttonsContainer > button {
+    width: 200px; /* 버튼 너비를 200px로 설정합니다. */
+    height: 37px; /* 버튼 높이 설정 */
     display: flex;
     justify-content: center;
     align-items: center;
