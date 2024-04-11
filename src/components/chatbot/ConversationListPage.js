@@ -3,6 +3,7 @@ import axios from "axios";
 import "./ConversationListPage.css";
 import MessageIcon from "./Chat.png"; // 메시지 아이콘 파일 경로에 맞게 조정해야 합니다.
 import listIcon from "./logo1.png";
+import CustomHeader from "./CustomHeader";
 
 const ConversationListPage = ({
   onNewConversationStart,
@@ -47,6 +48,7 @@ const ConversationListPage = ({
 
   return (
     <div className="conversation-list-container">
+      <CustomHeader />
       <div className="conversation-list-header">
         <h2>대화</h2>
       </div>

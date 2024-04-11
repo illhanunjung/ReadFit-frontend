@@ -140,7 +140,8 @@ function Board() {
                 >
                   <Link
                     to="#"
-                    style={{ color: "blue", textDecoration: "underline" }}
+                    className="custom-link"
+                    
                   >
                     {row.values.board_title}
                   </Link>

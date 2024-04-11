@@ -2,10 +2,10 @@
 
   
   /* 입력 창 보이기 */
-  .ConversationPage .rsc-footer {
+  /* .ConversationPage .rsc-footer {
     display: inline-block;
     width: 100%;
-}
+} */
 
 
 .ConversationPage .rsc-cs{
@@ -13,7 +13,7 @@
 }
 
 .ConversationPage  .rsc-content{
-  height: 460px;
+  height: 535px;
 }
 
 
@@ -33,6 +33,10 @@
 .ConversationPage .rsc-submit-button svg{
   fill: white;
 
+}
+
+.ConversationPage .rsc-ts-bot{
+  width: 480px;
 }
 
 

@@ -4,6 +4,7 @@ import "./ConversationPage.css";
 import "./Oldchat.css";
 import listIcon from "./logo1.png";
 import manicon from "./man.png";
+import CustomHeader from "./CustomHeader";
 
 // "년도-월-일" 형식으로 날짜를 포맷팅하는 함수
 const formatDate = (dateTimeStr) => {
@@ -86,6 +87,7 @@ const Oldchat = ({ session_seq }) => {
 
   return (
     <div className="old-chat-page">
+      <CustomHeader />
       <div className="conversation-content">{renderConversation()}</div>
     </div>
   );

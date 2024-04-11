@@ -186,7 +186,7 @@ function Category() {
                   accessor: "shoe", // 여기서 'shoe'는 실제 데이터 필드를 참조해야 합니다.
                   // 커스텀 렌더링 로직을 사용하여 Link를 표시합니다.
                   Cell: ({ row }) => (
-                    <Link to={`/rboard/${row.original.shoe_seq}`}>
+                    <Link to={`/rboard/${row.original.shoe_seq}`} className="custom-link">
                       {row.original.shoe}
                     </Link>
                   ),

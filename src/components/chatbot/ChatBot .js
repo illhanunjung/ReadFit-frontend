@@ -12,7 +12,7 @@ import logo from "./logo1.png";
 
 const theme = {
   background: "#ffffff",
-  fontFamily: "Helvetica Neue",
+  // fontFamily: "Helvetica Neue",
   headerBgColor: "#000000", // 검정색 배경
   headerFontColor: "#ffffff", // 흰색 글자
   headerFontSize: "15px",
@@ -108,7 +108,11 @@ const Chatbot = ({ isOpen, toggleChat }) => {
       // 기본 챗봇 컴포넌트를 렌더링합니다.
       return (
         <ThemeProvider theme={theme}>
-          <ChatBot steps={steps} botAvatar={logo} />
+          <ChatBot
+            steps={steps}
+            botAvatar={logo}
+            headerComponent={<CustomHeader />}
+          />
         </ThemeProvider>
       );
     }
@@ -119,7 +123,6 @@ const Chatbot = ({ isOpen, toggleChat }) => {
     if (!isOpen) return null; // 챗봇이 닫혀있으면 null 반환
     return (
       <div className="chatbot-container">
-        <CustomHeader />
         {renderChatBody()} {/* 동적으로 챗봇 바디 렌더링 */}
         <div className="chatbot-navigation">
           {/* 네비게이션 버튼들 */}
