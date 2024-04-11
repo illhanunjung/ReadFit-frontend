@@ -4,4 +4,38 @@
   /* 입력 창 보이기 */
   .ConversationPage .rsc-footer {
     display: inline-block;
+    width: 100%;
 }
+
+
+.ConversationPage .rsc-cs{
+  display: none;
+}
+
+.ConversationPage  .rsc-content{
+  height: 460px;
+}
+
+
+.ConversationPage .rsc-submit-button{
+  background-color: black;
+  height: 58px;
+  background-image: "./logo1.png";
+  
+}
+
+.ConversationPage .rsc-submit-button{
+  background-color: black;
+  height: 58px;
+
+}
+
+.ConversationPage .rsc-submit-button svg{
+  fill: white;
+
+}
+
+
+
+
+

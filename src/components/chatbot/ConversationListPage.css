@@ -104,6 +104,7 @@
     font-size: 0.75rem;
     color: #999;
     margin-left: 15px; /* 시간 표시를 위한 마진 추가 */
+    width: 187px;
   }
   
   /* 스크롤바 스타일 (옵션) */
