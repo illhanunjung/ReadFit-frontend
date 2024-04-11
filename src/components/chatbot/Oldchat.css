@@ -1,8 +1,31 @@
 /* 메시지 컨테이너 스타일 */
 .message-wrapper {
     display: flex;
-    justify-content: flex-end; /* 모든 메시지를 우측 정렬 기본값 */
+    justify-content: flex-start; /* 모든 메시지를 좌측 정렬로 변경 */
     width: 100%;
+}
+
+/* 사용자 메시지 스타일 유지 */
+.user-message {
+    justify-content: flex-end; /* 사용자 메시지를 오른쪽에 정렬 */
+    flex-direction: row-reverse; /* 이미지를 오른쪽에 배치 */
+    margin-left: auto; /* 사용자 메시지를 오른쪽으로 밀어붙임 */
+}
+
+/* 봇 메시지 스타일 조정 */
+.bot-message {
+    justify-content: flex-start; /* 봇 메시지를 왼쪽에 정렬 */
+    flex-direction: row; /* 이미지를 왼쪽에 배치 */
+    align-items: center; /* 메시지와 시간을 가운데 정렬 */
+}
+
+/* 봇 메시지 시간 스타일 조정 */
+.bot-message .message-time {
+    font-size: 12px;
+    position: absolute; /* 시간 위치 조정 */
+    bottom: 0;
+    right: -80px; /* 메시지의 오른쪽 바깥에 위치하도록 조정 */
+    white-space: nowrap; /* 줄바꿈 없이 한 줄로 표시 */
 }
 
 .user-message, .bot-message {
@@ -11,10 +34,6 @@
     margin-bottom: 10px;
 }
 
-.user-message {
-    justify-content: flex-end; /* 사용자 메시지를 오른쪽에 정렬 */
-    flex-direction: row-reverse; /* 이미지를 오른쪽에 배치 */
-}
 
 .user-message .message-time {
     font-size: 12px;
@@ -22,19 +41,6 @@
 
 
 
-.bot-message {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    position: relative;
-}
-
-.bot-message .message-time {
-    position: absolute;
-    bottom: 0;
-    right: -12px;
-    font-size: 12px;
-}
 
 .bot-message span, .bot-message .message-time {
     margin-right: 8px; /* 요소들 사이의 간격 */
