@@ -416,10 +416,11 @@ const ConversationPage = ({ mem_id, conversationId, session_seq }) => {
 
   return (
     <div className="ConversationPage">
+      <CustomHeader />
       <ChatBot
         steps={steps}
         botAvatar={logo}
-        headerComponent={<CustomHeader />}
+        // headerComponent={<CustomHeader />}
       />
       {conversationDetails.map((detail, index) => (
         <div key={index}>{detail.message}</div> // 대화 내용을 UI에 표시

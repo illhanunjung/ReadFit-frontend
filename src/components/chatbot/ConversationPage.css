@@ -16,6 +16,10 @@
   height: 490px;
 }
 
+.ConversationPage .rsc-container{
+  height: 460px;
+}
+
 
 .ConversationPage .rsc-submit-button{
   background-color: black;
