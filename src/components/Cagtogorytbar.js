@@ -25,8 +25,9 @@ const Cagtogorytbar = ({
                 position: 'absolute',
                 bottom: -1,
                 
-                right: 47, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
+                right: 62, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
                 fontSize: '12px',
+                fontWeight:'bold',
                 color: 'black',
                 
               }}
@@ -46,8 +47,9 @@ const Cagtogorytbar = ({
                 position: 'absolute',
                 bottom: -1,
                 
-                right: 47, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
+                right: 62, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
                 fontSize: '12px',
+                fontWeight:'bold',
                 color: 'black',
                 
               }}
@@ -67,8 +69,9 @@ const Cagtogorytbar = ({
               style={{
                 position: 'absolute',
                 bottom: -1,
-                right: 52, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
+                right: 67, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
                 fontSize: '12px',
+                fontWeight:'bold',
                 color: 'black',
                 
               }}
