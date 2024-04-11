@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Container, Image, Nav, Navbar } from "react-bootstrap";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "../css/Nav.css";
-import axios from "axios";
 
 function Navs() {
   const navigate = useNavigate();
@@ -78,9 +77,9 @@ function Navs() {
   }, []);
 
   // 프로필 클릭 핸들러
-  const handleProfileClick = () => {
-    navigateTo("/profile");
-  };
+  // const handleProfileClick = () => {
+  //   navigateTo("/profile");
+  // };
 
   useEffect(() => {
     // 프로필 이미지를 세션 스토리지에서 가져옴
@@ -123,7 +122,7 @@ function Navs() {
                   src={profileImageUrl}
                   roundedCircle
                   className="navbar-logo mx-2 d-lg-inline d-none"
-                  onClick={handleProfileClick}
+                  // onClick={handleProfileClick}
                 />
               </>
             ) : (
