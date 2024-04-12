@@ -114,47 +114,44 @@ const handleCardClick = (title) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges = [], keywords, activeKeyword, expanded, onToggleExpand }) => {
+const ReviewCard = ({ review, highlightRanges=[], expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
-  console.log(keywords);
-  // 하이라이트 범위 생성 함수
-  const createHighlightRanges = (activeKeyword) => {
-    return keywords
-      .filter(kw => kw.keyword_name === activeKeyword && kw.review_seq === review.review_seq)
-      .map(kw => [kw.start_idx, kw.end_idx]);
-  };
+  const parsedHighlightRanges = highlightRanges.map(range => range.map(num => parseInt(num, 10)));
 
   // 하이라이트 처리 로직
   const highlightText = (text, ranges) => {
     if (!ranges || ranges.length === 0) return text;
-  
-    return (
-      <>
-        {ranges.reduce((result, range, index) => {
-          const start = index === 0 ? 0 : ranges[index - 1][1] + 1;
-          const end = range[0];
-          result.push(text.slice(start, end));
-          result.push(
-            <mark key={index} style={{ backgroundColor: '#E8FD8D' }}>
-              {text.slice(range[0], range[1] + 1)}
-            </mark>
-          );
-          if (index === ranges.length - 1 && range[1] < text.length - 1) {
-            result.push(text.slice(range[1] + 1));
-          }
-          return result;
-        }, [])}
-      </>
-    );
+
+    let lastIndex = 0;
+    const highlightedText = [];
+
+    ranges.forEach((range, index) => {
+      const [start, end] = range;
+
+      if (start > lastIndex) {
+        highlightedText.push(<span key={`text-${index}`}>{text.slice(lastIndex, start)}</span>);
+      }
+
+      highlightedText.push(
+        <mark key={`mark-${index}`} style={{ backgroundColor: '#E8FD8D' }}>
+          {text.slice(start, end + 1)}
+        </mark>
+      );
+
+      lastIndex = end + 1;
+    });
+
+    if (lastIndex < text.length) {
+      highlightedText.push(<span key="last-text">{text.slice(lastIndex)}</span>);
+    }
+
+    return <>{highlightedText}</>;
   };
-  const handleToggleExpand = () => {
-    onToggleExpand(); // 상위 컴포넌트에서 전달받은 함수 호출
-};
 
   // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
-  const fullReviewText = highlightText(review.review, createHighlightRanges(activeKeyword));
+  const fullReviewText = highlightText(review.review, parsedHighlightRanges);
   const shortReviewText = review.review.length > 100 && !expanded ? `${review.review.substring(0, 100)}...` : fullReviewText;
-
+  
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
   switch (reviewPolarity) {
@@ -183,17 +180,14 @@ const ReviewCard = ({ review, highlightRanges = [], keywords, activeKeyword, exp
             <div className="d-flex align-items-center">
               <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
               <span className="me-2">{formattedDate}</span>
-              
-              <span className="me-2" style={{ color: polarityColor }}>{polarityText}</span>
             </div>
             <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
-              <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
+              <h5 className="my-2 mb-2" style={{ fontWeight: "bold" }}>{review.review.substring(0, 34)}</h5>
             </Card.Subtitle>
             <Card.Text>
-              {/* 하이라이트 처리된 부분과 처음 100자만 보여주기 (리뷰가 100자 이상일 경우) */}
               {!expanded && review.review.length > 100
-                ? <>{highlightText(review.review.substring(0, 100), highlightRanges)}...</>
-                : highlightText(review.review, highlightRanges)}
+                ? <>{shortReviewText}...</>
+                : fullReviewText}
               {review.review.length > 100 && (
                 <Button variant="link" onClick={onToggleExpand}>
                   {expanded ? "숨기기" : "더보기"}
