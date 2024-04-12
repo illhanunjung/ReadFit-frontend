@@ -11,6 +11,7 @@ import {
   Row
 } from "react-bootstrap";
 import KeywordPol from './KeywordPol';
+import { Colors } from "chart.js";
 
 
 
@@ -150,7 +151,7 @@ const ReviewCard = ({ review, highlightRanges=[], expanded, onToggleExpand }) =>
 
   // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
   const fullReviewText = highlightText(review.review, parsedHighlightRanges);
-  const shortReviewText = review.review.length > 100 && !expanded ? `${review.review.substring(0, 100)}...` : fullReviewText;
+  const shortReviewText = highlightText(review.review.substring(0, 100), parsedHighlightRanges);
   
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
@@ -180,11 +181,13 @@ const ReviewCard = ({ review, highlightRanges=[], expanded, onToggleExpand }) =>
             <div className="d-flex align-items-center">
               <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
               <span className="me-2">{formattedDate}</span>
+              <span className="me-2" style={{color: polarityColor}}>{polarityText}</span>
             </div>
             <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
               <h5 className="my-2 mb-2" style={{ fontWeight: "bold" }}>{review.review.substring(0, 34)}</h5>
             </Card.Subtitle>
             <Card.Text>
+            
               {!expanded && review.review.length > 100
                 ? <>{shortReviewText}...</>
                 : fullReviewText}
