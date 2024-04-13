@@ -12,37 +12,32 @@ function Category() {
   const [shoes, setShoes] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
   const [favorites, setFavorites] = useState(new Set());
+  const [isMobile, setIsMobile] = useState(false);
 
   const loginMemberid = window.sessionStorage.getItem("mem_id");
 
   const handleCategorySelect = (categorySeq, parentCategoryName = null) => {
-    // 선택된 카테고리 정보를 객체로 관리
     setSelectedCategory({ categorySeq, parentCategoryName });
   };
 
   useEffect(() => {
     const fetchShoes = () => {
       let apiUrl = "http://localhost:8081/api/shoe";
-      // 1차 카테고리 선택 시
       if (
         selectedCategory.categorySeq &&
         !selectedCategory.parentCategoryName
       ) {
         apiUrl += `/${selectedCategory.categorySeq}`;
-      }
-      // 서브 카테고리 선택 시
-      else if (
+      } else if (
         selectedCategory.categorySeq &&
         selectedCategory.parentCategoryName
       ) {
         apiUrl += `/${selectedCategory.parentCategoryName}/${selectedCategory.categorySeq}`;
       }
-      // 상품 데이터 요청
       axios
         .get(apiUrl)
         .then((response) => {
           setShoes(response.data);
-          console.log("상품데이터", response.data);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -64,8 +59,21 @@ function Category() {
     };
 
     fetchShoes();
-    fetchFavorites(loginMemberid); // loginMemberid를 fetchFavorites에 전달하여 호출
-  }, [selectedCategory, loginMemberid]); // loginMemberid를 useEffect 의존성 배열에 추가
+    fetchFavorites(loginMemberid);
+  }, [selectedCategory, loginMemberid]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Assume 768px as mobile breakpoint
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const toggleFavorite = (shoe_seq) => {
     const updatedFavorites = new Set(favorites);
@@ -75,9 +83,8 @@ function Category() {
       axios
         .delete(`http://localhost:8081/api/favorites/remove`, {
           params: {
-            // 이 예제에서는 favorite_seq가 실제로 shoe_seq 역할을 하고 있습니다. 적절히 수정해주세요.
-            mem_id: loginMemberid, // loginMemberid는 현재 로그인한 사용자 ID를 나타냅니다. 적절한 변수로 대체해주세요.
-            shoe_seq: shoe_seq, // shoe_seq 값을 파라미터로 추가합니다.
+            mem_id: loginMemberid,
+            shoe_seq: shoe_seq,
           },
         })
         .then(() => {
@@ -97,9 +104,6 @@ function Category() {
         })
         .catch((error) => console.error("Error adding favorite:", error));
     }
-
-    console.log(loginMemberid);
-    console.log(shoe_seq);
   };
 
   return (
@@ -144,7 +148,6 @@ function Category() {
                 don: shoes[cnt].shoe_price + "원",
               }))}
               columns={[
-                // Other columns
                 {
                   Header: "관심상품",
                   id: "favorite",
@@ -183,10 +186,12 @@ function Category() {
                 },
                 {
                   Header: "상품명",
-                  accessor: "shoe", // 여기서 'shoe'는 실제 데이터 필드를 참조해야 합니다.
-                  // 커스텀 렌더링 로직을 사용하여 Link를 표시합니다.
+                  accessor: "shoe",
                   Cell: ({ row }) => (
-                    <Link to={`/rboard/${row.original.shoe_seq}`} className="custom-link">
+                    <Link
+                      to={`/rboard/${row.original.shoe_seq}`}
+                      className="custom-link"
+                    >
                       {row.original.shoe}
                     </Link>
                   ),
@@ -194,6 +199,7 @@ function Category() {
                 {
                   Header: "리뷰수",
                   accessor: "idx",
+                  show: !isMobile,
                 },
                 {
                   Header: "평점",
@@ -209,6 +215,7 @@ function Category() {
                       ({value.toFixed(1)})
                     </>
                   ),
+                  show: !isMobile,
                 },
                 {
                   Header: "긍/부정",
@@ -221,11 +228,12 @@ function Category() {
                       neutral_percentage={value.neutral_percentage}
                     />
                   ),
+                  show: !isMobile,
                 },
-
                 {
                   Header: "가격",
                   accessor: "don",
+                  show: !isMobile,
                 },
               ]}
             />
