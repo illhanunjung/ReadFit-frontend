@@ -179,6 +179,7 @@ const Admin = () => {
                             : "정지 회원"}
                         </td>
                         <td>
+                        {member.mem_role !== 0 && (
                           <div
                             style={{
                               display: "flex",
@@ -202,6 +203,7 @@ const Admin = () => {
                               해제
                             </Button>
                           </div>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -231,6 +233,7 @@ const Admin = () => {
                             : "정지 회원"}
                         </td>
                         <td>
+                        {member.mem_role !== 0 && (
                           <div
                             style={{
                               display: "flex",
@@ -254,6 +257,7 @@ const Admin = () => {
                               해제
                             </Button>
                           </div>
+                        )}
                         </td>
                       </tr>
                     ))}
@@ -351,3 +355,4 @@ const Admin = () => {
 };
 
 export default Admin;
+
