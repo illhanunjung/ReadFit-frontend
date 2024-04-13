@@ -8,10 +8,10 @@ import {
   Col,
   Container,
   Pagination,
-  Row
+  Row,
+  Spinner,
 } from "react-bootstrap";
 import KeywordPol from './KeywordPol';
-import { Colors } from "chart.js";
 
 
 
@@ -53,6 +53,9 @@ const handleCardClick = (title) => {
   // 만약 이미 선택된 카테고리를 다시 클릭한 경우, 전체 리뷰를 보여줄 수 있도록 activeCategory를 null로 설정
   setActiveCategory(prevCategory => prevCategory === title ? null : title);
 };
+
+const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   
   const [KeywordReviewSummary, setKeywordReviewSummary] = useState([]);
   useEffect(() => {
@@ -62,24 +65,22 @@ const handleCardClick = (title) => {
 
 
   const fetchData = async () => {
-
+    setIsLoading(true);
+    setError(false);
     try {
-      const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`); // 서버의 URL로 요청을 보냅니다.
+      const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`);
       const data = await response.json();
-      
-      // 가져온 데이터를 상태로 설정합니다.
-     
-      setKeywordReviewSummary(data.reviewSummary);
-      
-     
+      if (data.reviewSummary) {
+        setKeywordReviewSummary(data.reviewSummary);
+      } else {
+        setError(true);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError(true);
     }
-
-   
+    setIsLoading(false);
   };
-  
- 
 
   return (
     <Container>
@@ -99,11 +100,20 @@ const handleCardClick = (title) => {
       {activeCategory && (
         <Row className="justify-content-center mt-3">
           <Col>
-          <p className="ct1">리뷰 요약</p>
+            <p className="ct1">리뷰 요약</p>
             <Card className="mb-3">
               <Card.Body>
-                {/* 여기에 선택된 카테고리에 대한 컴포넌트를 표시하세요 */}
-                <p>{KeywordReviewSummary[activeCategory] ? KeywordReviewSummary[activeCategory] : "키워드를 클릭하시면 요약정보를 확인하실 수 있습니다"}</p>
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> 리뷰 요약중입니다....
+                </>
+              ) : !KeywordReviewSummary[activeCategory] ? (
+                "요약할 리뷰가 존재하지 않습니다"
+              ) : error ? (
+                "리뷰 요약에 실패했습니다"
+              ) : (
+                <p>{KeywordReviewSummary[activeCategory]}</p>
+              )}
               </Card.Body>
             </Card>
           </Col>
