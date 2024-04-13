@@ -12,6 +12,7 @@ function Profil() {
   const loginMemberid = window.sessionStorage.getItem("mem_id");
   const [favorites, setFavorites] = useState([]); // 관심상품 목록 상태
   const [shoes, setShoes] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
 
   const fetchFavoriteShoes = () => {
     if (loginMemberid) {
@@ -33,6 +34,19 @@ function Profil() {
     // 함수 호출
     fetchFavoriteShoes();
   }, [loginMemberid]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Assume 768px as mobile breakpoint
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const toggleFavorite = (shoe_seq) => {
     // 이미 관심 상품 목록에 있는지 확인
@@ -125,6 +139,7 @@ function Profil() {
                 {
                   Header: "카테고리",
                   accessor: "cate",
+                  show: !isMobile,
                 },
                 {
                   Header: "상품이미지",
@@ -144,6 +159,7 @@ function Profil() {
                 {
                   Header: "리뷰수",
                   accessor: "idx",
+                  show: !isMobile,
                 },
                 {
                   Header: "평점",
@@ -171,11 +187,13 @@ function Profil() {
                       neutral_percentage={value.neutral_percentage}
                     />
                   ),
+                  show: !isMobile,
                 },
 
                 {
                   Header: "가격",
                   accessor: "don",
+                  show: !isMobile,
                 },
               ]}
             />
