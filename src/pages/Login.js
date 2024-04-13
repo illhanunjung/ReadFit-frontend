@@ -16,6 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Login.css"; // CSS 파일의 실제 경로로 확인하세요.
+import Swal from 'sweetalert2';
 
 function Login() {
   const navigate = useNavigate();
@@ -54,16 +55,45 @@ function Login() {
             window.sessionStorage.setItem("mem_profile", data.profile);
             window.sessionStorage.setItem("mem_phone", data.phone);
             window.sessionStorage.setItem("mem_role", data.role);
-            window.location.href = "../"; //메인 페이지로 이동
-            console.log("로그인 성공");
-            alert(data.name + "님 반갑습니다!")
+            Swal.fire({
+              icon: 'success',
+              title: '로그인 성공!',
+              text: `${data.name}님 반갑습니다!`,
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "../"; // 메인 페이지로 리다이렉트
+              }
+            });
+            
           } else if (data === 2) {
-            alert("정지된 회원입니다.");
+            Swal.fire({
+              icon: 'error',
+              text: '정지된 회원입니다.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
           } else if (data === 0) {
-            alert("관리자는 관리자 로그인 페이지로 로그인하시기 바랍니다.");
+            Swal.fire({
+              icon: 'warning',
+              text: '관리자는 관리자 로그인 페이지로 로그인 해주세요.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
           } else {
             // 로그인 실패를 나타내는 알림 표시
-            alert("로그인 실패");
+            Swal.fire({
+              icon: 'error',
+              text: '아이디 또는 비밀번호를 잘못 입력했습니다.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
             // window.location.href = "Login"; // 로그인 페이지로 이동
           }
         })

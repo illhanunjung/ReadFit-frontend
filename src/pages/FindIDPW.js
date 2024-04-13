@@ -9,6 +9,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/FindIDPW.css";
+import Swal from 'sweetalert2';
+
 const FindIDPW = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
@@ -23,12 +25,26 @@ const FindIDPW = () => {
     e.preventDefault();
 
     if (!username.trim() ) {
-      alert("이름을 입력해주세요.");
+      Swal.fire({
+        icon: 'warning',
+        text: '이름을 입력해주세요.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
       return;
     }
 
     if (!userphoneForId.trim()) {
-      alert("휴대전화를 입력해주세요.");
+      Swal.fire({
+        icon: 'warning',
+        text: '휴대전화를 입력해주세요.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
       return;
     }
 
@@ -63,12 +79,26 @@ const FindIDPW = () => {
     setFindPwResult("정보를 확인중입니다. 잠시만 기다려 주세요...");
     
     if (!userid.trim()) {
-      alert("아이디를 입력해주세요.");
+      Swal.fire({
+        icon: 'warning',
+        text: '아이디를 입력해주세요.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
       return;
     }
 
     if (!userphoneForPw.trim()) {
-      alert("휴대전화를 입력해주세요.");
+      Swal.fire({
+        icon: 'warning',
+        text: '휴대전화를 입력해주세요.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
       return;
     }
 

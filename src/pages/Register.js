@@ -13,6 +13,7 @@ import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Navs from "../components/Nav";
 import "../css/Login.css";
+import Swal from 'sweetalert2';
 
 
 function Register() {
@@ -67,7 +68,14 @@ function Register() {
   
   const handleCheckDuplicate = async () => {
     if (formData.mem_id.length < 8) {
-      alert("아이디는 8글자 이상이어야 합니다.");
+      Swal.fire({
+        icon: 'warning',
+        text: '아이디는 8글자 이상이어야 합니다.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+        }
+      });
       setIsIdValid(false);
       return;
     }
@@ -76,9 +84,23 @@ function Register() {
       const response = await axios.get(`http://localhost:8081/api/checkId/${formData.mem_id}`);
       setIsIdValid(!response.data);
       if (response.data) {
-        alert("이미 사용 중인 아이디입니다.");
+        Swal.fire({
+          icon: 'warning',
+          text: '이미 사용중인 아이디입니다.',
+          confirmButtonText: '확인'
+        }).then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
       } else {
-        alert("사용 가능한 아이디입니다.");
+        Swal.fire({
+          icon: 'success',
+          text: '사용 가능한 아이디입니다.',
+          confirmButtonText: '확인'
+        }).then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
       }
     } catch (error) {
       console.error("아이디 중복 확인 실패:", error);
@@ -196,7 +218,14 @@ function isPasswordMatching(password, confirmPassword) {
     // 아이디 입력 필드에서 포커스를 잃었을 때의 로직
     if (name === "mem_id") {
       if (value.length < 8) {
-        alert('아이디는 8글자 이상이어야 합니다.');
+        Swal.fire({
+          icon: 'warning',
+          text: '아이디는 8글자 이상이어야 합니다.',
+          confirmButtonText: '확인'
+        }).then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
         setIsIdValid(false);
       } else {
         setIsIdValid(true);

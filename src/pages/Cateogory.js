@@ -172,6 +172,7 @@ function Category() {
                 {
                   Header: "카테고리",
                   accessor: "cate",
+                  show: !isMobile,
                 },
                 {
                   Header: "상품이미지",
@@ -215,7 +216,6 @@ function Category() {
                       ({value.toFixed(1)})
                     </>
                   ),
-                  show: !isMobile,
                 },
                 {
                   Header: "긍/부정",

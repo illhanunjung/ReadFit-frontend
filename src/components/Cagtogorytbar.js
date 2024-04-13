@@ -22,10 +22,10 @@ const Cagtogorytbar = ({
             />
             <span
               style={{
-                position: 'absolute',
-                bottom: -1,
+                position: 'relative',
+                bottom: 22,
                 
-                right: 62, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
+                right: 5, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
                 fontSize: '12px',
                 fontWeight:'bold',
                 color: 'black',
@@ -44,10 +44,10 @@ const Cagtogorytbar = ({
             />
             <span
               style={{
-                position: 'absolute',
-                bottom: -1,
+                position: 'relative',
+                bottom: 22,
                 
-                right: 62, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
+                right: 5, // 오른쪽 끝에 위치시킵니다. 위치 조정이 필요하다면 이 값을 변경하세요.
                 fontSize: '12px',
                 fontWeight:'bold',
                 color: 'black',
@@ -57,7 +57,7 @@ const Cagtogorytbar = ({
               {`${negative_percentage}%`}
             </span>
           </div>
-
+{/* 
           중립{" "}
           <div style={{ position: 'relative', width: '100%', marginBottom: '15px' }}>
             <ProgressBar
@@ -78,7 +78,7 @@ const Cagtogorytbar = ({
             >
               {`${neutral_percentage}%`}
             </span>
-          </div>
+          </div> */}
         </Col>
       </Row>
     </Container>
