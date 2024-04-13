@@ -8,7 +8,8 @@ import {
   Col,
   Container,
   Pagination,
-  Row
+  Row,
+  Spinner,
 } from "react-bootstrap";
 import KeywordPol from './KeywordPol';
 
@@ -52,6 +53,9 @@ const handleCardClick = (title) => {
   // 만약 이미 선택된 카테고리를 다시 클릭한 경우, 전체 리뷰를 보여줄 수 있도록 activeCategory를 null로 설정
   setActiveCategory(prevCategory => prevCategory === title ? null : title);
 };
+
+const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   
   const [KeywordReviewSummary, setKeywordReviewSummary] = useState([]);
   useEffect(() => {
@@ -61,24 +65,22 @@ const handleCardClick = (title) => {
 
 
   const fetchData = async () => {
-
+    setIsLoading(true);
+    setError(false);
     try {
-      const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`); // 서버의 URL로 요청을 보냅니다.
+      const response = await fetch(`http://localhost:8081/api/rboard/keywordReviewSummary?shoe_seq=${shoe_seq}`);
       const data = await response.json();
-      
-      // 가져온 데이터를 상태로 설정합니다.
-     
-      setKeywordReviewSummary(data.reviewSummary);
-      
-     
+      if (data.reviewSummary) {
+        setKeywordReviewSummary(data.reviewSummary);
+      } else {
+        setError(true);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError(true);
     }
-
-   
+    setIsLoading(false);
   };
-  
- 
 
   return (
     <Container>
@@ -98,11 +100,20 @@ const handleCardClick = (title) => {
       {activeCategory && (
         <Row className="justify-content-center mt-3">
           <Col>
-          <p className="ct1">리뷰 요약</p>
+            <p className="ct1">리뷰 요약</p>
             <Card className="mb-3">
               <Card.Body>
-                {/* 여기에 선택된 카테고리에 대한 컴포넌트를 표시하세요 */}
-                <p>{KeywordReviewSummary[activeCategory] ? KeywordReviewSummary[activeCategory] : "키워드를 클릭하시면 요약정보를 확인하실 수 있습니다"}</p>
+              {isLoading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> 리뷰 요약중입니다....
+                </>
+              ) : !KeywordReviewSummary[activeCategory] ? (
+                "요약할 리뷰가 존재하지 않습니다"
+              ) : error ? (
+                "리뷰 요약에 실패했습니다"
+              ) : (
+                <p>{KeywordReviewSummary[activeCategory]}</p>
+              )}
               </Card.Body>
             </Card>
           </Col>
@@ -114,47 +125,44 @@ const handleCardClick = (title) => {
 
 
 
-const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword, expanded, onToggleExpand }) => {
+const ReviewCard = ({ review, highlightRanges=[], expanded, onToggleExpand }) => {
   const formattedDate = format(parseISO(review.review_at), 'yyyy-MM-dd');
-
-  // 하이라이트 범위 생성 함수
-  const createHighlightRanges = (activeKeyword) => {
-    return keywords
-      .filter(kw => kw.keyword_name === activeKeyword && kw.review_seq === review.review_seq)
-      .map(kw => [kw.start_idx, kw.end_idx]);
-  };
+  const parsedHighlightRanges = highlightRanges.map(range => range.map(num => parseInt(num, 10)));
 
   // 하이라이트 처리 로직
   const highlightText = (text, ranges) => {
     if (!ranges || ranges.length === 0) return text;
-  
-    return (
-      <>
-        {ranges.reduce((result, range, index) => {
-          const start = index === 0 ? 0 : ranges[index - 1][1] + 1;
-          const end = range[0];
-          result.push(text.slice(start, end));
-          result.push(
-            <mark key={index} style={{ backgroundColor: '#E8FD8D' }}>
-              {text.slice(range[0], range[1] + 1)}
-            </mark>
-          );
-          if (index === ranges.length - 1 && range[1] < text.length - 1) {
-            result.push(text.slice(range[1] + 1));
-          }
-          return result;
-        }, [])}
-      </>
-    );
+
+    let lastIndex = 0;
+    const highlightedText = [];
+
+    ranges.forEach((range, index) => {
+      const [start, end] = range;
+
+      if (start > lastIndex) {
+        highlightedText.push(<span key={`text-${index}`}>{text.slice(lastIndex, start)}</span>);
+      }
+
+      highlightedText.push(
+        <mark key={`mark-${index}`} style={{ backgroundColor: '#E8FD8D' }}>
+          {text.slice(start, end + 1)}
+        </mark>
+      );
+
+      lastIndex = end + 1;
+    });
+
+    if (lastIndex < text.length) {
+      highlightedText.push(<span key="last-text">{text.slice(lastIndex)}</span>);
+    }
+
+    return <>{highlightedText}</>;
   };
-  const handleToggleExpand = () => {
-    onToggleExpand(); // 상위 컴포넌트에서 전달받은 함수 호출
-};
 
   // 전체 리뷰와 하이라이트된 리뷰를 준비합니다.
-  const fullReviewText = highlightText(review.review, createHighlightRanges(activeKeyword));
-  const shortReviewText = review.review.length > 100 && !expanded ? `${review.review.substring(0, 100)}...` : fullReviewText;
-
+  const fullReviewText = highlightText(review.review, parsedHighlightRanges);
+  const shortReviewText = highlightText(review.review.substring(0, 100), parsedHighlightRanges);
+  
   const reviewPolarity = review.review_polarity;
   let polarityText, polarityColor;
   switch (reviewPolarity) {
@@ -183,17 +191,16 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
             <div className="d-flex align-items-center">
               <span className="me-2">{"⭐".repeat(parseInt(review.review_rating, 10))}</span>
               <span className="me-2">{formattedDate}</span>
-              
-              <span className="me-2" style={{ color: polarityColor }}>{polarityText}</span>
+              <span className="me-2" style={{color: polarityColor}}>{polarityText}</span>
             </div>
             <Card.Subtitle className="mb-1 text-muted d-flex align-items-center">
-              <h5 className="my-2 mb-2" style={{fontWeight :"bold"}}>{review.review.substring(0, 34)}</h5>
+              <h5 className="my-2 mb-2" style={{ fontWeight: "bold" }}>{review.review.substring(0, 34)}</h5>
             </Card.Subtitle>
             <Card.Text>
-              {/* 하이라이트 처리된 부분과 처음 100자만 보여주기 (리뷰가 100자 이상일 경우) */}
+            
               {!expanded && review.review.length > 100
-                ? <>{highlightText(review.review.substring(0, 100), highlightRanges)}...</>
-                : highlightText(review.review, highlightRanges)}
+                ? <>{shortReviewText}...</>
+                : fullReviewText}
               {review.review.length > 100 && (
                 <Button variant="link" onClick={onToggleExpand}>
                   {expanded ? "숨기기" : "더보기"}
@@ -206,7 +213,7 @@ const ReviewCard = ({ review, highlightRanges = [], keywords = [], activeKeyword
     </Card>
   );
 };
-const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
+const ReviewsList = ({ reviews, activeCategory,resetExpandedStates ,keywords }) => {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= 768;
   const [currentPage, setCurrentPage] = useState(1);
@@ -219,7 +226,7 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
   const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
-
+  
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(reviews.length / reviewsPerPage); i++) {
     pageNumbers.push(i);
@@ -267,7 +274,8 @@ const ReviewsList = ({ reviews, activeCategory,resetExpandedStates  }) => {
           key={index}
           review={review}
           highlightRanges={review.highlightRanges}
-          activeCategory={activeCategory}
+          keywords={keywords.filter(kw => kw.keyword_name === activeCategory && kw.review_seq === review.review_seq)}
+          activeKeyword={activeCategory}
           expanded={expandedStates[review.review_seq]}
           // "더보기" 버튼의 상태를 관리하기 위한 함수를 prop으로 전달
           onToggleExpand={() => setExpandedStates(prev => ({
@@ -301,6 +309,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   const [filteredReviews, setFilteredReviews] = useState(reviews);
   const [keywords, setKeywords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  
   const fetchKeywordData = async (shoeSeq) => {
     setIsLoading(true);
     try {
@@ -385,7 +394,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   return (
     <>
       <p className="ct1">키워드</p>
-      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} shoe_seq={shoe_seq}/>
+      <BoardMenu activeCategory={activeCategory} setActiveCategory={setActiveCategory} shoe_seq={shoe_seq} keywords={keywords}/>
       
       
       <Container>
@@ -406,7 +415,7 @@ const ExReview = ({ reviews, shoe_seq }) => {
   <Container>
     <Row>
       <Col md={12}>
-        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates}/>
+        <ReviewsList reviews={filteredReviews} activeCategory={activeCategory} resetExpandedStates={resetExpandedStates} keywords={keywords}/>
       </Col>
     </Row>
   </Container>

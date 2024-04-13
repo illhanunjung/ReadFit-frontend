@@ -59,6 +59,9 @@ const FindIDPW = () => {
   const handleFindPw = async (e) => {
     e.preventDefault();
 
+    // 비밀번호 찾기 시작을 사용자에게 알림
+    setFindPwResult("정보를 확인중입니다. 잠시만 기다려 주세요...");
+    
     if (!userid.trim()) {
       alert("아이디를 입력해주세요.");
       return;

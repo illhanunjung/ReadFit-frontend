@@ -18,13 +18,13 @@ from langchain_core.documents.base import Document
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 CORS(app)
 
 
 
 # SQL 스키마 문자열
+
 docs = ['''
     -- 상품 정보 테이블
     CREATE TABLE SHOES (
@@ -75,6 +75,54 @@ docs = ['''
     category_level TINYINT null COMMENT '카테고리 레벨',
     parent_category_seq_name VARCHAR(50) COMMENT '카테고리이름'
     PRIMARY KEY (category_seq));
+=======
+docs = [
+   '''
+CREATE TABLE SHOES (
+   shoe_seq INT UNSIGNED NOT NULL COMMENT '상품 id' ,
+   category_seq INT NOT NULL AUTO_INCREMENT comment '카테고리 ID'
+   parent_category_seq VARCHAR(50) NOT NULL COMMENT '상품 카테고리' ,
+   shoe VARCHAR(50) NOT NULL COMMENT '상품명',
+   shoe_price VARCHAR(15) NOT NULL COMMENT '상품 가격',
+   shoe_img VARCHAR(1500) NOT NULL COMMENT '상품 이미지 URL',
+   parent_category_seq_name VARCHAR(50) NOT NULL COMMENT '상위 카테고리',
+   PRIMARY KEY (shoe_seq),
+   FOREIGN KEY (category_seq) REFERENCES CATEGORIES(category_seq)
+);
+
+CREATE TABLE REVIEWS (
+   review_seq INT UNSIGNED NOT NULL COMMENT '리뷰 id',
+   shoe_seq INT UNSIGNED NOT NULL COMMENT '상품 id',
+   review TEXT NOT NULL COMMENT '리뷰 내용 텍스트',
+   review_rating VARCHAR(5) NOT NULL COMMENT '리뷰 별점',
+   review_status VARCHAR(2) NOT NULL DEFAULT '0' COMMENT '리뷰 분석상태',
+   review_at DATE NOT NULL COMMENT '리뷰 작성 날짜',
+   review_polarity INT NULL COMMENT '리뷰 긍부정',
+   PRIMARY KEY (review_seq),
+   FOREIGN KEY (shoe_seq) REFERENCES SHOES(shoe_seq)
+);
+
+
+CREATE TABLE KEYWORDS (
+   keyword_seq INT UNSIGNED NOT NULL COMMENT '리뷰 속성 id',
+   review_seq INT UNSIGNED NOT NULL COMMENT '리뷰 id',
+   keyword_name VARCHAR(40) NOT NULL COMMENT '키워드 이름, 착화감, 가격, 재질',
+   review_status INT NOT NULL DEFAULT '0' COMMENT '리뷰 분석상태',
+   keyword_polarity VARCHAR(5) NOT NULL COMMENT '속성 평가. 1 : 부정, 2 : 긍정, 0 : 중립',
+   keyword_text TEXT NOT NULL COMMENT '리뷰 내에서 속성에 대해 평가한 텍스트',
+   start_idx VARCHAR(10) NOT NULL COMMENT '리뷰 내에서 속성에 대해 평가한 텍스트 시작 인덱스',
+   end_idx VARCHAR(10) NOT NULL COMMENT '리뷰 내에서 속성에 대해 평가한 텍스트 끝 인덱스',
+   PRIMARY KEY (keyword_seq),'
+   FOREIGN KEY (review_seq) REFERENCES SHOES(review_seq)
+);
+CREATE TABLE CATEGORIES (
+   category_seq int NOT NULL AUTO_INCREMENT comment '카테고리 ID',
+   parent_category_seq VARCHAR(30) null comment '1차 카테고리',
+   category VARCHAR(30) null COMMENT '2차 카테고리',
+   category_level TINYINT null COMMENT '카테고리 레벨',
+   parent_category_seq_name VARCHAR(50) COMMENT '카테고리이름'
+   PRIMARY KEY (category_seq));
+
 ''']
 
 docs = [Document(ddl) for ddl in docs]

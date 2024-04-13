@@ -74,6 +74,7 @@ const Rboard = ({ selectedKeyword, title }) => {
     fetchData();
     fetchKeyword();
     fetchFavorites(loginMemberid);
+    
   }, [shoe_seq, loginMemberid]);
 
   // 긍정, 부정, 중립 개수를 저장할 객체
@@ -110,8 +111,7 @@ const Rboard = ({ selectedKeyword, title }) => {
         .catch((error) => console.error("Error adding favorite:", error));
     }
 
-    console.log(loginMemberid);
-    console.log(shoe_seq);
+
   };
 
   // selectedKeyword에 해당하는 데이터만 필터링
@@ -258,7 +258,7 @@ const Rboard = ({ selectedKeyword, title }) => {
               </Col>
 
               <Col lg={6}>
-                <ExReview reviews={shoe.reviews} shoe_seq={shoe.shoe_seq} />
+                <ExReview reviews={shoe.reviews} shoe_seq={shoe.shoe_seq} keywords={keywords}/>
               </Col>
             </Row>
           ))}
