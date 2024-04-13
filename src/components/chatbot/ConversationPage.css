@@ -2,10 +2,13 @@
 
   
   /* 입력 창 보이기 */
-  /* .ConversationPage .rsc-footer {
+  .ConversationPage .rsc-footer {
     display: inline-block;
     width: 100%;
-} */
+   
+}
+
+
 
 
 .ConversationPage .rsc-cs{
@@ -13,12 +16,12 @@
 }
 
 .ConversationPage  .rsc-content{
-  height: 490px;
+  height: 410px;
+  overflow-y: scroll; /* 스크롤 가능하게 하면서 스크롤바는 숨김 */
+  overflow-x: hidden; /* 가로 스크롤바 숨김 */
 }
 
-.ConversationPage .rsc-container{
-  height: 460px;
-}
+
 
 
 .ConversationPage .rsc-submit-button{
