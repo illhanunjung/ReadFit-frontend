@@ -1,3 +1,5 @@
+// CategoryTable.js
+
 import React, { useState } from "react";
 import { Button, ButtonGroup } from "react-bootstrap";
 import {
@@ -11,7 +13,7 @@ import "../css/board.css";
 import SearchCategory from "./SearchCategory";
 
 function CategoryTable({ columns, data }) {
-  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지 상태 추가
+  const [currentPage, setCurrentPage] = useState(0);
 
   const {
     getTableProps,
@@ -34,25 +36,21 @@ function CategoryTable({ columns, data }) {
     usePagination
   );
 
-  // 검색어를 받아 글로벌 필터로 설정하는 함수
   const handleSearch = (query) => {
-    console.log("검색어:", query); // 검색어 출력으로 확인
-    setGlobalFilter(query); // 글로벌 필터 설정
+    console.log("검색어:", query);
+    setGlobalFilter(query);
   };
 
-  // 페이지 이동 함수를 재정의하여 현재 페이지를 저장하고 페이지 이동
   const handleGotoPage = (pageNumber) => {
     setCurrentPage(pageNumber);
     gotoPage(pageNumber);
   };
 
-  // 페이지 번호를 계산하여 반환하는 함수
   const getPageNumbers = () => {
     const pages = [];
     let startPage = Math.max(pageIndex - 4, 0);
     let endPage = Math.min(startPage + 9, pageCount - 1);
 
-    // 시작 페이지를 조정하여 항상 10개의 페이지 번호를 유지 (가능한 경우)
     if (endPage - startPage < 9) {
       startPage = Math.max(endPage - 9, 0);
     }
@@ -67,16 +65,16 @@ function CategoryTable({ columns, data }) {
   return (
     <>
       <div className="all">
-        {/* Table rendering */}
         <table {...getTableProps()} className="custom-table">
           <thead className="header1">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                    {column.render("Header")}
-                  </th>
-                ))}
+                {headerGroup.headers.map(
+                  (col) =>
+                    col.show !== false && (
+                      <th {...col.getHeaderProps()}>{col.render("Header")}</th>
+                    )
+                )}
               </tr>
             ))}
           </thead>
@@ -85,9 +83,12 @@ function CategoryTable({ columns, data }) {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  ))}
+                  {row.cells.map((cell) => {
+                    const col = cell.column;
+                    return col.show !== false ? (
+                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                    ) : null;
+                  })}
                 </tr>
               );
             })}
@@ -97,7 +98,6 @@ function CategoryTable({ columns, data }) {
 
       <div className="pagination-container d-flex justify-content-center align-items-center mt-3">
         <ButtonGroup>
-          {/* Pagination buttons */}
           <Button
             onClick={() => handleGotoPage(0)}
             disabled={!canPreviousPage}

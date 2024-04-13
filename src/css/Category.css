@@ -37,6 +37,7 @@
       right: 10px; /* 화면이 작을 때 오른쪽 여백을 조정합니다. */
     }
   }
+  
 
   .sentiment-indicator {
     display: flex;

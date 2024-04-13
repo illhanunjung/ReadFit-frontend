@@ -12,6 +12,8 @@ import Navs from "../components/Nav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import "../css/Login.css";
+import Swal from 'sweetalert2';
+
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -50,17 +52,43 @@ function AdminLogin() {
             window.sessionStorage.setItem("mem_profile", data.profile);
             window.sessionStorage.setItem("mem_phone", data.phone);
             window.sessionStorage.setItem("mem_role", data.role);
-            window.location.href = "/Admin"; //메인 페이지로 이동
-            console.log("로그인 성공");
-            alert("관리자" + data.name + "님 반갑습니다!")
+            Swal.fire({
+              icon: 'success',
+              title: '로그인 성공!',
+              text: `관리자 ${data.name}님 반갑습니다!`,
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "../"; // 메인 페이지로 리다이렉트
+              }
+            });
           } else if (data === 2) {
-            alert("정지된 회원입니다.");
+            Swal.fire({
+              icon: 'error',
+              text: '정지된 회원입니다.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
           } else if (data === 1) {
-            alert("여기는 관리자 페이지입니다. 일반회원은 회원용 로그인 페이지로 돌아가세요.");
+            Swal.fire({
+              icon: 'warning',
+              text: '여기는 관리자 페이지입니다. 일반회원은 회원용 로그인 페이지로 돌아가세요.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
           } else {
-            // 로그인 실패를 나타내는 알림 표시
-            alert("로그인 실패");
-            // window.location.href = "Login"; // 로그인 페이지로 이동
+            Swal.fire({
+              icon: 'error',
+              text: '아이디 또는 비밀번호를 잘못 입력했습니다.',
+              confirmButtonText: '확인'
+            }).then((result) => {
+              if (result.isConfirmed) {
+              }
+            });
           }
         })
         .catch((error) => {
